@@ -19,7 +19,7 @@ function NewEstimate() {
   const navigate = useNavigate();
   const { companyId, user } = useAuth();
   const [customers, setCustomers] = useState<Opt[]>([]);
-  const [properties, setProperties] = useState<Opt[]>([]);
+  const [properties, setProperties] = useState<(Opt & { customer_id: string | null })[]>([]);
   const [jobs, setJobs] = useState<Opt[]>([]);
   const [equipment, setEquipment] = useState<Opt[]>([]);
   const [form, setForm] = useState({
@@ -39,19 +39,19 @@ function NewEstimate() {
   const loadLists = async () => {
       const [{ data: c }, { data: p }, { data: j }, { data: e }] = await Promise.all([
         supabase.from("customers").select("id,name").order("name"),
-        supabase.from("properties").select("id,name,address").order("created_at", { ascending: false }),
+        supabase.from("properties").select("id,name,address,customer_id").order("created_at", { ascending: false }),
         supabase.from("jobs").select("id,job_number,title").order("created_at", { ascending: false }).limit(100),
         supabase.from("equipment").select("id,brand,model,type").order("created_at", { ascending: false }).limit(100),
       ]);
       setCustomers((c ?? []).map((x) => ({ id: x.id, label: x.name })));
-      setProperties((p ?? []).map((x) => ({ id: x.id, label: x.name ? `${x.name} — ${x.address}` : x.address })));
+      setProperties((p ?? []).map((x) => ({ id: x.id, label: x.name ? `${x.name} — ${x.address}` : x.address, customer_id: x.customer_id })));
       setJobs((j ?? []).map((x) => ({ id: x.id, label: `${x.job_number} • ${x.title}` })));
       setEquipment((e ?? []).map((x) => ({ id: x.id, label: `${x.type}${x.brand ? " — " + x.brand : ""}${x.model ? " " + x.model : ""}` })));
   };
   useEffect(() => { loadLists(); }, []);
 
   const filteredProps = form.customer_id
-    ? properties // already loaded; could filter by customer if needed
+    ? properties.filter((p) => p.customer_id === form.customer_id)
     : properties;
 
   const onSubmit = async (e: React.FormEvent) => {
