@@ -316,26 +316,22 @@ const priorityDot: Record<string,string> = {
 };
 
 /* ---------------- Page ---------------- */
-const WIDGETS_DEFS: { id: string; label: string; span: WidgetSpan }[] = [
-  { id: "kpis", label: "KPI Strip", span: 3 },
-  { id: "dispatch-board", label: "Dispatch Board", span: 2 },
-  { id: "technician-status", label: "Technician Status", span: 1 },
-  { id: "inventory-command", label: "Inventory Command", span: 2 },
-  { id: "ai-brain", label: "AI Operations Brain", span: 1 },
-  { id: "sales-pipeline", label: "Sales Pipeline", span: 2 },
-  { id: "maintenance-agreements", label: "Maintenance Agreements", span: 1 },
-  { id: "recent-invoices", label: "Recent Invoices", span: 2 },
-  { id: "ticket-alerts", label: "Service Ticket Alerts", span: 1 },
-  { id: "live-map", label: "Live Routes & Job Map", span: 2 },
-  { id: "reports-snapshot", label: "Reports Snapshot", span: 1 },
+const WIDGETS_DEFS: { id: string; label: string }[] = [
+  { id: "kpis", label: "KPI Strip" },
+  { id: "dispatch-board", label: "Dispatch Board" },
+  { id: "technician-status", label: "Technician Status" },
+  { id: "inventory-command", label: "Inventory Command" },
+  { id: "ai-brain", label: "AI Operations Brain" },
+  { id: "sales-pipeline", label: "Sales Pipeline" },
+  { id: "maintenance-agreements", label: "Maintenance Agreements" },
+  { id: "recent-invoices", label: "Recent Invoices" },
+  { id: "ticket-alerts", label: "Service Ticket Alerts" },
+  { id: "live-map", label: "Live Routes & Job Map" },
+  { id: "reports-snapshot", label: "Reports Snapshot" },
 ];
 
 function Dashboard() {
-  const { order, persist, reset } = useWidgetOrder(WIDGETS_DEFS.map((w) => w.id));
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
+  const { layouts, persist, reset } = useWidgetLayouts();
 
   const renderers: Record<string, () => ReactNode> = {
     "kpis": () => (
@@ -738,22 +734,7 @@ function Dashboard() {
     ),
   };
 
-  const widgets: Widget[] = order
-    .map((id) => {
-      const def = WIDGETS_DEFS.find((w) => w.id === id);
-      if (!def) return null;
-      return { ...def, render: renderers[id] };
-    })
-    .filter(Boolean) as Widget[];
-
-  const onDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-    const oldIndex = order.indexOf(String(active.id));
-    const newIndex = order.indexOf(String(over.id));
-    if (oldIndex < 0 || newIndex < 0) return;
-    persist(arrayMove(order, oldIndex, newIndex));
-  };
+  const widgets: Widget[] = WIDGETS_DEFS.map((def) => ({ ...def, render: renderers[def.id] }));
 
   return (
     <>
@@ -799,13 +780,26 @@ function Dashboard() {
       />
 
       <div className="p-4 md:p-6 lg:p-8">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-          <SortableContext items={order} strategy={rectSortingStrategy}>
-            <div className="grid auto-rows-min grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {widgets.map((w) => <SortableWidget key={w.id} widget={w} />)}
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={layouts}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={40}
+          margin={[16, 16]}
+          containerPadding={[0, 0]}
+          draggableHandle=".widget-drag-handle"
+          isDraggable
+          isResizable
+          compactType="vertical"
+          onLayoutChange={(_current, all) => persist(all)}
+        >
+          {widgets.map((w) => (
+            <div key={w.id}>
+              <WidgetShell id={w.id} label={w.label}>{w.render()}</WidgetShell>
             </div>
-          </SortableContext>
-        </DndContext>
+          ))}
+        </ResponsiveGridLayout>
       </div>
     </>
   );
