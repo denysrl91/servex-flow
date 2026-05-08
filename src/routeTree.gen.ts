@@ -17,6 +17,7 @@ import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PurchaseOrdersRouteImport } from './routes/purchase-orders'
 import { Route as PropertiesRouteImport } from './routes/properties'
 import { Route as PipelineRouteImport } from './routes/pipeline'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as InventoryRouteImport } from './routes/inventory'
@@ -64,6 +65,11 @@ const PropertiesRoute = PropertiesRouteImport.update({
 const PipelineRoute = PipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsRoute = JobsRouteImport.update({
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof InventoryRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
+  '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
   '/properties': typeof PropertiesRoute
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/inventory': typeof InventoryRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
+  '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
   '/properties': typeof PropertiesRoute
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/inventory': typeof InventoryRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
+  '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
   '/properties': typeof PropertiesRoute
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/invoices'
     | '/jobs'
+    | '/login'
     | '/pipeline'
     | '/properties'
     | '/purchase-orders'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/invoices'
     | '/jobs'
+    | '/login'
     | '/pipeline'
     | '/properties'
     | '/purchase-orders'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/invoices'
     | '/jobs'
+    | '/login'
     | '/pipeline'
     | '/properties'
     | '/purchase-orders'
@@ -228,6 +240,7 @@ export interface RootRouteChildren {
   InventoryRoute: typeof InventoryRoute
   InvoicesRoute: typeof InvoicesRoute
   JobsRoute: typeof JobsRoute
+  LoginRoute: typeof LoginRoute
   PipelineRoute: typeof PipelineRoute
   PropertiesRoute: typeof PropertiesRoute
   PurchaseOrdersRoute: typeof PurchaseOrdersRoute
@@ -294,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/pipeline'
       fullPath: '/pipeline'
       preLoaderRoute: typeof PipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs': {
@@ -364,6 +384,7 @@ const rootRouteChildren: RootRouteChildren = {
   InventoryRoute: InventoryRoute,
   InvoicesRoute: InvoicesRoute,
   JobsRoute: JobsRoute,
+  LoginRoute: LoginRoute,
   PipelineRoute: PipelineRoute,
   PropertiesRoute: PropertiesRoute,
   PurchaseOrdersRoute: PurchaseOrdersRoute,
