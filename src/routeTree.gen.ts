@@ -37,6 +37,7 @@ import { Route as InventoryTransferRouteImport } from './routes/inventory.transf
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as EstimatesNewRouteImport } from './routes/estimates.new'
 import { Route as EstimatesEstimateIdRouteImport } from './routes/estimates.$estimateId'
+import { Route as EquipmentEquipmentIdRouteImport } from './routes/equipment.$equipmentId'
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
@@ -182,6 +183,11 @@ const EstimatesEstimateIdRoute = EstimatesEstimateIdRouteImport.update({
   path: '/$estimateId',
   getParentRoute: () => EstimatesRoute,
 } as any)
+const EquipmentEquipmentIdRoute = EquipmentEquipmentIdRouteImport.update({
+  id: '/$equipmentId',
+  path: '/$equipmentId',
+  getParentRoute: () => EquipmentRoute,
+} as any)
 const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
   id: '/$customerId',
   path: '/$customerId',
@@ -208,7 +214,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/equipment': typeof EquipmentRoute
+  '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inventory': typeof InventoryRouteWithChildren
@@ -226,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
@@ -242,7 +249,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/equipment': typeof EquipmentRoute
+  '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/invoices': typeof InvoicesRoute
@@ -259,6 +266,7 @@ export interface FileRoutesByTo {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
@@ -276,7 +284,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/equipment': typeof EquipmentRoute
+  '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inventory': typeof InventoryRouteWithChildren
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
@@ -330,6 +339,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/customers/$customerId'
+    | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/customers/$customerId'
+    | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/customers/$customerId'
+    | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
@@ -414,7 +426,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CustomersRoute: typeof CustomersRouteWithChildren
   DispatchRoute: typeof DispatchRoute
-  EquipmentRoute: typeof EquipmentRoute
+  EquipmentRoute: typeof EquipmentRouteWithChildren
   EstimatesRoute: typeof EstimatesRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   InventoryRoute: typeof InventoryRouteWithChildren
@@ -631,6 +643,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimatesEstimateIdRouteImport
       parentRoute: typeof EstimatesRoute
     }
+    '/equipment/$equipmentId': {
+      id: '/equipment/$equipmentId'
+      path: '/$equipmentId'
+      fullPath: '/equipment/$equipmentId'
+      preLoaderRoute: typeof EquipmentEquipmentIdRouteImport
+      parentRoute: typeof EquipmentRoute
+    }
     '/customers/$customerId': {
       id: '/customers/$customerId'
       path: '/$customerId'
@@ -672,6 +691,18 @@ const CustomersRouteChildren: CustomersRouteChildren = {
 
 const CustomersRouteWithChildren = CustomersRoute._addFileChildren(
   CustomersRouteChildren,
+)
+
+interface EquipmentRouteChildren {
+  EquipmentEquipmentIdRoute: typeof EquipmentEquipmentIdRoute
+}
+
+const EquipmentRouteChildren: EquipmentRouteChildren = {
+  EquipmentEquipmentIdRoute: EquipmentEquipmentIdRoute,
+}
+
+const EquipmentRouteWithChildren = EquipmentRoute._addFileChildren(
+  EquipmentRouteChildren,
 )
 
 interface EstimatesEstimateIdRouteChildren {
@@ -757,7 +788,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CustomersRoute: CustomersRouteWithChildren,
   DispatchRoute: DispatchRoute,
-  EquipmentRoute: EquipmentRoute,
+  EquipmentRoute: EquipmentRouteWithChildren,
   EstimatesRoute: EstimatesRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   InventoryRoute: InventoryRouteWithChildren,
@@ -778,3 +809,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
