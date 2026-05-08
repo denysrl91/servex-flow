@@ -30,6 +30,7 @@ import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
+import { Route as PropertiesPropertyIdRouteImport } from './routes/properties.$propertyId'
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
 import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
@@ -146,6 +147,11 @@ const InventoryIndexRoute = InventoryIndexRouteImport.update({
   path: '/',
   getParentRoute: () => InventoryRoute,
 } as any)
+const PropertiesPropertyIdRoute = PropertiesPropertyIdRouteImport.update({
+  id: '/$propertyId',
+  path: '/$propertyId',
+  getParentRoute: () => PropertiesRoute,
+} as any)
 const InventoryWarehouseRoute = InventoryWarehouseRouteImport.update({
   id: '/warehouse',
   path: '/warehouse',
@@ -210,7 +216,7 @@ export interface FileRoutesByFullPath {
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -226,6 +232,7 @@ export interface FileRoutesByFullPath {
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -242,7 +249,7 @@ export interface FileRoutesByTo {
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -276,7 +284,7 @@ export interface FileRoutesById {
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -292,6 +300,7 @@ export interface FileRoutesById {
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
@@ -359,6 +369,7 @@ export interface FileRouteTypes {
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/properties/$propertyId'
     | '/inventory'
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
@@ -410,7 +422,7 @@ export interface RootRouteChildren {
   JobsRoute: typeof JobsRouteWithChildren
   LoginRoute: typeof LoginRoute
   PipelineRoute: typeof PipelineRoute
-  PropertiesRoute: typeof PropertiesRoute
+  PropertiesRoute: typeof PropertiesRouteWithChildren
   PurchaseOrdersRoute: typeof PurchaseOrdersRoute
   ReportsRoute: typeof ReportsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -570,6 +582,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryIndexRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/properties/$propertyId': {
+      id: '/properties/$propertyId'
+      path: '/$propertyId'
+      fullPath: '/properties/$propertyId'
+      preLoaderRoute: typeof PropertiesPropertyIdRouteImport
+      parentRoute: typeof PropertiesRoute
+    }
     '/inventory/warehouse': {
       id: '/inventory/warehouse'
       path: '/warehouse'
@@ -722,6 +741,18 @@ const JobsRouteChildren: JobsRouteChildren = {
 
 const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
+interface PropertiesRouteChildren {
+  PropertiesPropertyIdRoute: typeof PropertiesPropertyIdRoute
+}
+
+const PropertiesRouteChildren: PropertiesRouteChildren = {
+  PropertiesPropertyIdRoute: PropertiesPropertyIdRoute,
+}
+
+const PropertiesRouteWithChildren = PropertiesRoute._addFileChildren(
+  PropertiesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CustomersRoute: CustomersRouteWithChildren,
@@ -734,7 +765,7 @@ const rootRouteChildren: RootRouteChildren = {
   JobsRoute: JobsRouteWithChildren,
   LoginRoute: LoginRoute,
   PipelineRoute: PipelineRoute,
-  PropertiesRoute: PropertiesRoute,
+  PropertiesRoute: PropertiesRouteWithChildren,
   PurchaseOrdersRoute: PurchaseOrdersRoute,
   ReportsRoute: ReportsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
