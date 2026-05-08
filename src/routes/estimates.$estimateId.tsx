@@ -23,6 +23,7 @@ import {
   type EstimatePhoto,
   type EstimateRow,
 } from "@/lib/estimates-api";
+import { useAllPriceBook } from "@/lib/price-book-store";
 
 export const Route = createFileRoute("/estimates/$estimateId")({ component: BuilderPage });
 
@@ -126,6 +127,30 @@ function BuilderPage() {
       sort_order: lines.length,
     });
     if (error) return toast.error(error.message);
+    reload();
+  };
+
+  const addFromPriceBook = async (codeKey: string) => {
+    if (!companyId || !activeOptionId) return;
+    const [kind, code] = codeKey.split("::");
+    const entry = priceBook.find((p) => p.kind === kind && p.item.code === code);
+    if (!entry) return;
+    const it = entry.item;
+    const lineType: EstimateLineItem["type"] =
+      entry.kind === "services" ? "labor" : "equipment";
+    const { error } = await supabase.from("estimate_line_items").insert({
+      company_id: companyId,
+      estimate_id: est.id,
+      option_id: activeOptionId,
+      type: lineType,
+      description: `${it.code} — ${it.name}`,
+      quantity: 1,
+      unit_price: it.price,
+      total: it.price,
+      sort_order: lines.length,
+    });
+    if (error) return toast.error(error.message);
+    toast.success(`Added "${it.name}" from price book`);
     reload();
   };
 
@@ -333,6 +358,7 @@ function BuilderPage() {
                 <Button size="sm" variant="outline" onClick={() => addLine("material")}><Package className="mr-2 h-4 w-4" /> Material</Button>
                 <Button size="sm" variant="outline" onClick={() => addLine("equipment")}><Cog className="mr-2 h-4 w-4" /> Equipment</Button>
                 <InventoryPicker items={inventory} onPick={addFromInventory} />
+                <PriceBookPicker entries={priceBook} onPick={addFromPriceBook} />
               </div>
             </CardHeader>
             <CardContent>
