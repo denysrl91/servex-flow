@@ -19,6 +19,7 @@ import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PurchaseOrdersRouteImport } from './routes/purchase-orders'
 import { Route as PropertiesRouteImport } from './routes/properties'
 import { Route as PipelineRouteImport } from './routes/pipeline'
+import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as InvoicesRouteImport } from './routes/invoices'
@@ -28,6 +29,7 @@ import { Route as EstimatesRouteImport } from './routes/estimates'
 import { Route as EquipmentRouteImport } from './routes/equipment'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as CrmRouteImport } from './routes/crm'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as PropertiesPropertyIdRouteImport } from './routes/properties.$propertyId'
@@ -93,6 +95,11 @@ const PipelineRoute = PipelineRouteImport.update({
   path: '/pipeline',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaymentsRoute = PaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -136,6 +143,11 @@ const DispatchRoute = DispatchRouteImport.update({
 const CustomersRoute = CustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrmRoute = CrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -212,6 +224,7 @@ const EstimatesEstimateIdProposalRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/crm': typeof CrmRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRouteWithChildren
@@ -221,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
+  '/payments': typeof PaymentsRoute
   '/pipeline': typeof PipelineRoute
   '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -247,6 +261,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/crm': typeof CrmRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRouteWithChildren
@@ -255,6 +270,7 @@ export interface FileRoutesByTo {
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
+  '/payments': typeof PaymentsRoute
   '/pipeline': typeof PipelineRoute
   '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -282,6 +298,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/crm': typeof CrmRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRouteWithChildren
@@ -291,6 +308,7 @@ export interface FileRoutesById {
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
+  '/payments': typeof PaymentsRoute
   '/pipeline': typeof PipelineRoute
   '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -319,6 +337,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/crm'
     | '/customers'
     | '/dispatch'
     | '/equipment'
@@ -328,6 +347,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/jobs'
     | '/login'
+    | '/payments'
     | '/pipeline'
     | '/properties'
     | '/purchase-orders'
@@ -354,6 +374,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/crm'
     | '/customers'
     | '/dispatch'
     | '/equipment'
@@ -362,6 +383,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/jobs'
     | '/login'
+    | '/payments'
     | '/pipeline'
     | '/properties'
     | '/purchase-orders'
@@ -388,6 +410,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/crm'
     | '/customers'
     | '/dispatch'
     | '/equipment'
@@ -397,6 +420,7 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/jobs'
     | '/login'
+    | '/payments'
     | '/pipeline'
     | '/properties'
     | '/purchase-orders'
@@ -424,6 +448,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CrmRoute: typeof CrmRoute
   CustomersRoute: typeof CustomersRouteWithChildren
   DispatchRoute: typeof DispatchRoute
   EquipmentRoute: typeof EquipmentRouteWithChildren
@@ -433,6 +458,7 @@ export interface RootRouteChildren {
   InvoicesRoute: typeof InvoicesRoute
   JobsRoute: typeof JobsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  PaymentsRoute: typeof PaymentsRoute
   PipelineRoute: typeof PipelineRoute
   PropertiesRoute: typeof PropertiesRouteWithChildren
   PurchaseOrdersRoute: typeof PurchaseOrdersRoute
@@ -517,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PipelineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payments': {
+      id: '/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof PaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -578,6 +611,13 @@ declare module '@tanstack/react-router' {
       path: '/customers'
       fullPath: '/customers'
       preLoaderRoute: typeof CustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crm': {
+      id: '/crm'
+      path: '/crm'
+      fullPath: '/crm'
+      preLoaderRoute: typeof CrmRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -786,6 +826,7 @@ const PropertiesRouteWithChildren = PropertiesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CrmRoute: CrmRoute,
   CustomersRoute: CustomersRouteWithChildren,
   DispatchRoute: DispatchRoute,
   EquipmentRoute: EquipmentRouteWithChildren,
@@ -795,6 +836,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvoicesRoute: InvoicesRoute,
   JobsRoute: JobsRouteWithChildren,
   LoginRoute: LoginRoute,
+  PaymentsRoute: PaymentsRoute,
   PipelineRoute: PipelineRoute,
   PropertiesRoute: PropertiesRouteWithChildren,
   PurchaseOrdersRoute: PurchaseOrdersRoute,

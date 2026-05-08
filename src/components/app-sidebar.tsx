@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Users, Building2, Wrench, Calendar, Radio,
-  Briefcase, FileText, Receipt, Package, ShoppingCart, HardHat,
-  TrendingUp, Headphones, BarChart3, Settings, Snowflake,
+  LayoutDashboard, Contact2, Users, Building2, Wrench, Calendar, Radio,
+  Briefcase, FileText, Receipt, CreditCard, Package, Truck, Warehouse,
+  ShoppingCart, HardHat, TrendingUp, Headphones, BarChart3, Settings, Snowflake,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -10,27 +10,40 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const mainNav = [
+const overviewNav = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
+  { title: "CRM", url: "/crm", icon: Contact2 },
+];
+
+const customersNav = [
   { title: "Customers", url: "/customers", icon: Users },
   { title: "Properties", url: "/properties", icon: Building2 },
   { title: "Equipment", url: "/equipment", icon: Wrench },
+];
+
+const opsNav = [
   { title: "Schedule", url: "/schedule", icon: Calendar },
-  { title: "Dispatch", url: "/dispatch", icon: Radio },
+  { title: "Dispatch Board", url: "/dispatch", icon: Radio },
   { title: "Jobs", url: "/jobs", icon: Briefcase },
 ];
 
 const salesNav = [
   { title: "Estimates", url: "/estimates", icon: FileText },
   { title: "Invoices", url: "/invoices", icon: Receipt },
+  { title: "Payments", url: "/payments", icon: CreditCard },
   { title: "Sales Pipeline", url: "/pipeline", icon: TrendingUp },
 ];
 
-const opsNav = [
+const inventoryNav = [
   { title: "Inventory", url: "/inventory", icon: Package },
+  { title: "Van Inventory", url: "/inventory/vans", icon: Truck },
+  { title: "Warehouse", url: "/inventory/warehouse", icon: Warehouse },
   { title: "Purchase Orders", url: "/purchase-orders", icon: ShoppingCart },
+];
+
+const workforceNav = [
   { title: "Technicians", url: "/technicians", icon: HardHat },
-  { title: "Tickets", url: "/tickets", icon: Headphones },
+  { title: "Service Tickets", url: "/tickets", icon: Headphones },
 ];
 
 const systemNav = [
@@ -38,7 +51,7 @@ const systemNav = [
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
-function NavGroup({ label, items, currentPath }: { label: string; items: typeof mainNav; currentPath: string }) {
+function NavGroup({ label, items, currentPath }: { label: string; items: typeof overviewNav; currentPath: string }) {
   const { state } = useSidebar();
   return (
     <SidebarGroup>
@@ -78,15 +91,18 @@ export function AppSidebar() {
           {state !== "collapsed" && (
             <div className="flex flex-col">
               <span className="text-base font-bold tracking-tight text-sidebar-foreground text-glow">Servex</span>
-              <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">HVAC Field Service</span>
+              <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">Field Service</span>
             </div>
           )}
         </Link>
       </SidebarHeader>
       <SidebarContent className="gap-0">
-        <NavGroup label="Operations" items={mainNav} currentPath={currentPath} />
+        <NavGroup label="Overview" items={overviewNav} currentPath={currentPath} />
+        <NavGroup label="Customers" items={customersNav} currentPath={currentPath} />
+        <NavGroup label="Operations" items={opsNav} currentPath={currentPath} />
         <NavGroup label="Sales & Billing" items={salesNav} currentPath={currentPath} />
-        <NavGroup label="Workforce" items={opsNav} currentPath={currentPath} />
+        <NavGroup label="Inventory" items={inventoryNav} currentPath={currentPath} />
+        <NavGroup label="Workforce" items={workforceNav} currentPath={currentPath} />
         <NavGroup label="System" items={systemNav} currentPath={currentPath} />
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">
