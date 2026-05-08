@@ -1732,7 +1732,15 @@ export type Database = {
     }
     Enums: {
       agreement_status: "draft" | "active" | "paused" | "expired" | "cancelled"
-      app_role: "owner" | "admin" | "dispatcher" | "technician" | "accountant"
+      app_role:
+        | "owner"
+        | "admin"
+        | "dispatcher"
+        | "technician"
+        | "accountant"
+        | "sales_rep"
+        | "office_staff"
+        | "warehouse_manager"
       customer_status: "lead" | "active" | "inactive" | "archived"
       customer_type: "residential" | "commercial"
       equipment_status:
@@ -1909,7 +1917,16 @@ export const Constants = {
   public: {
     Enums: {
       agreement_status: ["draft", "active", "paused", "expired", "cancelled"],
-      app_role: ["owner", "admin", "dispatcher", "technician", "accountant"],
+      app_role: [
+        "owner",
+        "admin",
+        "dispatcher",
+        "technician",
+        "accountant",
+        "sales_rep",
+        "office_staff",
+        "warehouse_manager",
+      ],
       customer_status: ["lead", "active", "inactive", "archived"],
       customer_type: ["residential", "commercial"],
       equipment_status: [
