@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState, type ReactNode } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ import {
   ClipboardCheck, Headphones, ShieldAlert, Snowflake,
   Users, FileText, Boxes, Home, Wind, HardHat, Briefcase as BriefcaseIcon,
   ShoppingCart, LifeBuoy, Tag, ChevronDown,
+  ChevronUp, ChevronDown as ChevronDownIcon, RotateCcw, GripVertical,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Dashboard });
