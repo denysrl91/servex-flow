@@ -28,16 +28,16 @@ export const Route = createFileRoute("/")({ component: Dashboard });
 
 /* ---------------- Mock Data ---------------- */
 const kpis = [
-  { label: "Today's Revenue",       value: "$8,420",   delta: "+12.4%", up: true,  icon: DollarSign,       trend: [4,6,5,7,8,9,8,10] },
-  { label: "Month-to-Date Revenue", value: "$184,320", delta: "+8.1%",  up: true,  icon: TrendingUp,       trend: [5,6,7,6,8,9,11,12] },
-  { label: "Open Invoices",         value: "$32,450",  delta: "4 overdue", up: false, icon: Receipt,       trend: [9,8,8,7,7,6,6,5] },
-  { label: "Active Jobs",           value: "23",       delta: "+3",     up: true,  icon: Briefcase,        trend: [3,4,4,5,6,5,6,7] },
-  { label: "Scheduled Today",       value: "31",       delta: "+5",     up: true,  icon: Calendar,         trend: [6,7,7,8,8,9,9,10] },
-  { label: "Completed Jobs",        value: "14",       delta: "+18%",   up: true,  icon: CheckCircle2,     trend: [2,3,4,5,6,7,8,9] },
-  { label: "Average Ticket",        value: "$612",     delta: "+4.2%",  up: true,  icon: CircleDollarSign, trend: [4,5,5,6,6,7,7,8] },
-  { label: "Gross Margin",          value: "42.6%",    delta: "+1.1pt", up: true,  icon: Activity,         trend: [6,6,7,7,7,8,8,9] },
-  { label: "Membership Revenue",    value: "$24,180",  delta: "+6.4%",  up: true,  icon: BadgeCheck,       trend: [3,4,4,5,5,6,7,8] },
-  { label: "Inventory Value",       value: "$148,900", delta: "-1.8%",  up: false, icon: Package,          trend: [9,9,8,8,7,8,7,7] },
+  { label: "Today's Revenue",       value: "$8,420",   delta: "+12.4%", up: true,  icon: DollarSign,       trend: [4,6,5,7,8,9,8,10], to: "/payments" },
+  { label: "Month-to-Date Revenue", value: "$184,320", delta: "+8.1%",  up: true,  icon: TrendingUp,       trend: [5,6,7,6,8,9,11,12], to: "/reports" },
+  { label: "Open Invoices",         value: "$32,450",  delta: "4 overdue", up: false, icon: Receipt,       trend: [9,8,8,7,7,6,6,5], to: "/invoices" },
+  { label: "Active Jobs",           value: "23",       delta: "+3",     up: true,  icon: Briefcase,        trend: [3,4,4,5,6,5,6,7], to: "/jobs" },
+  { label: "Scheduled Today",       value: "31",       delta: "+5",     up: true,  icon: Calendar,         trend: [6,7,7,8,8,9,9,10], to: "/schedule" },
+  { label: "Completed Jobs",        value: "14",       delta: "+18%",   up: true,  icon: CheckCircle2,     trend: [2,3,4,5,6,7,8,9], to: "/jobs" },
+  { label: "Average Ticket",        value: "$612",     delta: "+4.2%",  up: true,  icon: CircleDollarSign, trend: [4,5,5,6,6,7,7,8], to: "/tickets" },
+  { label: "Gross Margin",          value: "42.6%",    delta: "+1.1pt", up: true,  icon: Activity,         trend: [6,6,7,7,7,8,8,9], to: "/reports" },
+  { label: "Membership Revenue",    value: "$24,180",  delta: "+6.4%",  up: true,  icon: BadgeCheck,       trend: [3,4,4,5,5,6,7,8], to: "/crm" },
+  { label: "Inventory Value",       value: "$148,900", delta: "-1.8%",  up: false, icon: Package,          trend: [9,9,8,8,7,8,7,7], to: "/inventory" },
 ];
 
 const dispatchBoard = [
@@ -107,12 +107,12 @@ const pipeline = [
 ];
 
 const aiInsights = [
-  { icon: Truck,         tone: "primary",  text: "3 vans are below minimum inventory levels.", cta: "Review restock" },
-  { icon: MapPin,        tone: "primary",  text: "Tech Carlos has the shortest route for emergency call #1842.", cta: "Dispatch Carlos" },
-  { icon: ClipboardCheck,tone: "warning",  text: "5 estimates over $5,000 need follow-up today.", cta: "Open list" },
-  { icon: Zap,           tone: "primary",  text: "Capacitor usage trending +28% this week.", cta: "Adjust min stock" },
-  { icon: BadgeCheck,    tone: "success",  text: "12 maintenance memberships expiring this month.", cta: "Send renewals" },
-  { icon: ShieldAlert,   tone: "danger",   text: "Job #1045 is below target gross margin.", cta: "Inspect job" },
+  { icon: Truck,         tone: "primary",  text: "3 vans are below minimum inventory levels.", cta: "Review restock", to: "/inventory/vans" },
+  { icon: MapPin,        tone: "primary",  text: "Tech Carlos has the shortest route for emergency call #1842.", cta: "Dispatch Carlos", to: "/dispatch" },
+  { icon: ClipboardCheck,tone: "warning",  text: "5 estimates over $5,000 need follow-up today.", cta: "Open list", to: "/estimates" },
+  { icon: Zap,           tone: "primary",  text: "Capacitor usage trending +28% this week.", cta: "Adjust min stock", to: "/inventory/low-stock" },
+  { icon: BadgeCheck,    tone: "success",  text: "12 maintenance memberships expiring this month.", cta: "Send renewals", to: "/crm" },
+  { icon: ShieldAlert,   tone: "danger",   text: "Job #1045 is below target gross margin.", cta: "Inspect job", to: "/jobs" },
 ];
 
 const aiToneClass: Record<string,string> = {
