@@ -1,22 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import {
-  DndContext,
-  PointerSensor,
-  KeyboardSensor,
-  useSensor,
-  useSensors,
-  closestCenter,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  rectSortingStrategy,
-  arrayMove,
-  useSortable,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { Responsive, WidthProvider, type LayoutItem, type ResponsiveLayouts } from "react-grid-layout/legacy";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -240,68 +224,91 @@ function SectionEyebrow({ label }: { label: string }) {
 }
 
 /* ---------------- Drag-and-drop widget shell ---------------- */
-const WIDGET_ORDER_KEY = "servex.dashboard.widgetOrder.v2";
+const WIDGET_LAYOUTS_KEY = "servex.dashboard.layouts.v3";
+const ResponsiveGridLayout = WidthProvider(Responsive);
 
-type WidgetSpan = 1 | 2 | 3;
-type Widget = { id: string; label: string; span: WidgetSpan; render: () => ReactNode };
+type Widget = { id: string; label: string; render: () => ReactNode };
 
-const SPAN_CLASS: Record<WidgetSpan, string> = {
-  1: "xl:col-span-1",
-  2: "xl:col-span-2 md:col-span-2",
-  3: "xl:col-span-3 md:col-span-2",
+/** Default layout per breakpoint. Cols: lg=12, md=10, sm=6, xs=4, xxs=2. */
+const DEFAULT_LAYOUTS: ResponsiveLayouts = {
+  lg: [
+    { i: "kpis",                  x: 0, y: 0,  w: 12, h: 4, minW: 6, minH: 3 },
+    { i: "dispatch-board",        x: 0, y: 4,  w: 8,  h: 8, minW: 4, minH: 5 },
+    { i: "technician-status",     x: 8, y: 4,  w: 4,  h: 8, minW: 3, minH: 5 },
+    { i: "inventory-command",     x: 0, y: 12, w: 8,  h: 11, minW: 4, minH: 6 },
+    { i: "ai-brain",              x: 8, y: 12, w: 4,  h: 11, minW: 3, minH: 6 },
+    { i: "sales-pipeline",        x: 0, y: 23, w: 8,  h: 9, minW: 4, minH: 6 },
+    { i: "maintenance-agreements",x: 8, y: 23, w: 4,  h: 9, minW: 3, minH: 5 },
+    { i: "recent-invoices",       x: 0, y: 32, w: 8,  h: 8, minW: 4, minH: 5 },
+    { i: "ticket-alerts",         x: 8, y: 32, w: 4,  h: 8, minW: 3, minH: 5 },
+    { i: "live-map",              x: 0, y: 40, w: 8,  h: 9, minW: 4, minH: 6 },
+    { i: "reports-snapshot",      x: 8, y: 40, w: 4,  h: 9, minW: 3, minH: 5 },
+  ],
+  md: [
+    { i: "kpis",                  x: 0, y: 0,  w: 10, h: 4 },
+    { i: "dispatch-board",        x: 0, y: 4,  w: 6,  h: 8 },
+    { i: "technician-status",     x: 6, y: 4,  w: 4,  h: 8 },
+    { i: "inventory-command",     x: 0, y: 12, w: 6,  h: 11 },
+    { i: "ai-brain",              x: 6, y: 12, w: 4,  h: 11 },
+    { i: "sales-pipeline",        x: 0, y: 23, w: 6,  h: 9 },
+    { i: "maintenance-agreements",x: 6, y: 23, w: 4,  h: 9 },
+    { i: "recent-invoices",       x: 0, y: 32, w: 6,  h: 8 },
+    { i: "ticket-alerts",         x: 6, y: 32, w: 4,  h: 8 },
+    { i: "live-map",              x: 0, y: 40, w: 6,  h: 9 },
+    { i: "reports-snapshot",      x: 6, y: 40, w: 4,  h: 9 },
+  ],
+  sm: [
+    { i: "kpis",                  x: 0, y: 0,  w: 6, h: 6 },
+    { i: "dispatch-board",        x: 0, y: 6,  w: 6, h: 8 },
+    { i: "technician-status",     x: 0, y: 14, w: 6, h: 8 },
+    { i: "inventory-command",     x: 0, y: 22, w: 6, h: 11 },
+    { i: "ai-brain",              x: 0, y: 33, w: 6, h: 9 },
+    { i: "sales-pipeline",        x: 0, y: 42, w: 6, h: 9 },
+    { i: "maintenance-agreements",x: 0, y: 51, w: 6, h: 7 },
+    { i: "recent-invoices",       x: 0, y: 58, w: 6, h: 8 },
+    { i: "ticket-alerts",         x: 0, y: 66, w: 6, h: 8 },
+    { i: "live-map",              x: 0, y: 74, w: 6, h: 9 },
+    { i: "reports-snapshot",      x: 0, y: 83, w: 6, h: 9 },
+  ],
 };
+// Mirror sm to xs/xxs (single column stacks)
+DEFAULT_LAYOUTS.xs  = (DEFAULT_LAYOUTS.sm  as LayoutItem[]).map((l) => ({ ...l, w: 4 }));
+DEFAULT_LAYOUTS.xxs = (DEFAULT_LAYOUTS.sm  as LayoutItem[]).map((l) => ({ ...l, w: 2 }));
 
-function SortableWidget({ widget }: { widget: Widget }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: widget.id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 30 : undefined,
-  };
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`group/widget relative ${SPAN_CLASS[widget.span]} ${
-        isDragging ? "opacity-80 shadow-[var(--shadow-elegant)]" : ""
-      }`}
-    >
-      <button
-        type="button"
-        {...attributes}
-        {...listeners}
-        aria-label={`Drag ${widget.label}`}
-        className="absolute right-2 top-2 z-20 flex h-7 items-center gap-1 rounded-md border hairline bg-card/85 px-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground opacity-0 shadow-sm backdrop-blur transition-opacity hover:text-foreground group-hover/widget:opacity-100 focus-visible:opacity-100 cursor-grab active:cursor-grabbing"
-      >
-        <GripVertical className="h-3 w-3" />
-        <span className="hidden sm:inline">{widget.label}</span>
-      </button>
-      {widget.render()}
-    </div>
-  );
-}
-
-function useWidgetOrder(defaults: string[]) {
-  const [order, setOrder] = useState<string[]>(defaults);
+function useWidgetLayouts() {
+  const [layouts, setLayouts] = useState<ResponsiveLayouts>(DEFAULT_LAYOUTS);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(WIDGET_ORDER_KEY);
-      if (raw) {
-        const saved = JSON.parse(raw) as string[];
-        const filtered = saved.filter((id) => defaults.includes(id));
-        const missing = defaults.filter((id) => !filtered.includes(id));
-        setOrder([...filtered, ...missing]);
-      }
+      const raw = localStorage.getItem(WIDGET_LAYOUTS_KEY);
+      if (raw) setLayouts(JSON.parse(raw));
     } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const persist = (next: string[]) => {
-    setOrder(next);
-    try { localStorage.setItem(WIDGET_ORDER_KEY, JSON.stringify(next)); } catch {}
+  const persist = (next: ResponsiveLayouts) => {
+    setLayouts(next);
+    try { localStorage.setItem(WIDGET_LAYOUTS_KEY, JSON.stringify(next)); } catch {}
   };
-  const reset = () => persist(defaults);
-  return { order, persist, reset };
+  const reset = () => {
+    try { localStorage.removeItem(WIDGET_LAYOUTS_KEY); } catch {}
+    setLayouts(DEFAULT_LAYOUTS);
+  };
+  return { layouts, persist, reset };
+}
+
+function WidgetShell({ id, label, children }: { id: string; label: string; children: ReactNode }) {
+  return (
+    <div key={id} className="group/widget relative h-full w-full overflow-hidden">
+      <div
+        aria-label={`Drag ${label}`}
+        className="widget-drag-handle absolute right-2 top-2 z-20 flex h-7 items-center gap-1 rounded-md border hairline bg-card/85 px-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground opacity-0 shadow-sm backdrop-blur transition-opacity hover:text-foreground group-hover/widget:opacity-100 cursor-grab active:cursor-grabbing"
+      >
+        <GripVertical className="h-3 w-3" />
+        <span className="hidden sm:inline">{label}</span>
+      </div>
+      <div className="h-full w-full overflow-auto">
+        {children}
+      </div>
+    </div>
+  );
 }
 
 const priorityDot: Record<string,string> = {
@@ -309,26 +316,22 @@ const priorityDot: Record<string,string> = {
 };
 
 /* ---------------- Page ---------------- */
-const WIDGETS_DEFS: { id: string; label: string; span: WidgetSpan }[] = [
-  { id: "kpis", label: "KPI Strip", span: 3 },
-  { id: "dispatch-board", label: "Dispatch Board", span: 2 },
-  { id: "technician-status", label: "Technician Status", span: 1 },
-  { id: "inventory-command", label: "Inventory Command", span: 2 },
-  { id: "ai-brain", label: "AI Operations Brain", span: 1 },
-  { id: "sales-pipeline", label: "Sales Pipeline", span: 2 },
-  { id: "maintenance-agreements", label: "Maintenance Agreements", span: 1 },
-  { id: "recent-invoices", label: "Recent Invoices", span: 2 },
-  { id: "ticket-alerts", label: "Service Ticket Alerts", span: 1 },
-  { id: "live-map", label: "Live Routes & Job Map", span: 2 },
-  { id: "reports-snapshot", label: "Reports Snapshot", span: 1 },
+const WIDGETS_DEFS: { id: string; label: string }[] = [
+  { id: "kpis", label: "KPI Strip" },
+  { id: "dispatch-board", label: "Dispatch Board" },
+  { id: "technician-status", label: "Technician Status" },
+  { id: "inventory-command", label: "Inventory Command" },
+  { id: "ai-brain", label: "AI Operations Brain" },
+  { id: "sales-pipeline", label: "Sales Pipeline" },
+  { id: "maintenance-agreements", label: "Maintenance Agreements" },
+  { id: "recent-invoices", label: "Recent Invoices" },
+  { id: "ticket-alerts", label: "Service Ticket Alerts" },
+  { id: "live-map", label: "Live Routes & Job Map" },
+  { id: "reports-snapshot", label: "Reports Snapshot" },
 ];
 
 function Dashboard() {
-  const { order, persist, reset } = useWidgetOrder(WIDGETS_DEFS.map((w) => w.id));
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
+  const { layouts, persist, reset } = useWidgetLayouts();
 
   const renderers: Record<string, () => ReactNode> = {
     "kpis": () => (
@@ -731,22 +734,7 @@ function Dashboard() {
     ),
   };
 
-  const widgets: Widget[] = order
-    .map((id) => {
-      const def = WIDGETS_DEFS.find((w) => w.id === id);
-      if (!def) return null;
-      return { ...def, render: renderers[id] };
-    })
-    .filter(Boolean) as Widget[];
-
-  const onDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-    const oldIndex = order.indexOf(String(active.id));
-    const newIndex = order.indexOf(String(over.id));
-    if (oldIndex < 0 || newIndex < 0) return;
-    persist(arrayMove(order, oldIndex, newIndex));
-  };
+  const widgets: Widget[] = WIDGETS_DEFS.map((def) => ({ ...def, render: renderers[def.id] }));
 
   return (
     <>
@@ -792,13 +780,26 @@ function Dashboard() {
       />
 
       <div className="p-4 md:p-6 lg:p-8">
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-          <SortableContext items={order} strategy={rectSortingStrategy}>
-            <div className="grid auto-rows-min grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {widgets.map((w) => <SortableWidget key={w.id} widget={w} />)}
+        <ResponsiveGridLayout
+          className="layout"
+          layouts={layouts}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={40}
+          margin={[16, 16]}
+          containerPadding={[0, 0]}
+          draggableHandle=".widget-drag-handle"
+          isDraggable
+          isResizable
+          compactType="vertical"
+          onLayoutChange={(_current, all) => persist(all)}
+        >
+          {widgets.map((w) => (
+            <div key={w.id}>
+              <WidgetShell id={w.id} label={w.label}>{w.render()}</WidgetShell>
             </div>
-          </SortableContext>
-        </DndContext>
+          ))}
+        </ResponsiveGridLayout>
       </div>
     </>
   );
