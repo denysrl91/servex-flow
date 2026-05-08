@@ -149,5 +149,78 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    background-image:
+      radial-gradient(1100px 600px at 12% -10%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, color-mix(in oklab, var(--primary-glow) 12%, transparent), transparent 65%),
+      radial-gradient(700px 500px at 50% 110%, color-mix(in oklab, var(--accent-orange) 6%, transparent), transparent 70%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Premium scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--primary) 25%, transparent);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--primary) 45%, transparent);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism surface */
+  .glass {
+    background: color-mix(in oklab, var(--card) 65%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--primary) 14%, transparent);
+  }
+  .glass-strong {
+    background: color-mix(in oklab, var(--card) 85%, transparent);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid color-mix(in oklab, var(--primary) 18%, transparent);
+  }
+  /* Subtle premium card */
+  .premium-card {
+    background:
+      linear-gradient(180deg,
+        color-mix(in oklab, var(--card) 92%, transparent),
+        color-mix(in oklab, var(--card) 78%, transparent));
+    border: 1px solid color-mix(in oklab, var(--primary) 14%, transparent);
+    box-shadow:
+      0 1px 0 0 color-mix(in oklab, white 6%, transparent) inset,
+      0 20px 40px -24px oklch(0 0 0 / 0.55);
+  }
+  /* Glow accents */
+  .glow-primary { box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 40%, transparent), 0 12px 40px -12px color-mix(in oklab, var(--primary) 65%, transparent); }
+  .text-glow { text-shadow: 0 0 22px color-mix(in oklab, var(--primary-glow) 55%, transparent); }
+  /* Hairline divider */
+  .hairline { border-color: color-mix(in oklab, var(--primary) 14%, transparent); }
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    border-radius: var(--radius);
+    background: var(--card);
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute; inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--primary) 70%, transparent),
+      color-mix(in oklab, var(--primary-glow) 30%, transparent) 50%,
+      transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    pointer-events: none;
   }
 }

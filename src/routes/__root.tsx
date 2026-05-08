@@ -167,7 +167,7 @@ function AppShell() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-border bg-card/80 px-4 backdrop-blur">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b hairline glass-strong px-4">
             <SidebarTrigger />
             <div className="relative hidden flex-1 max-w-md md:block">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -175,7 +175,7 @@ function AppShell() {
             </div>
             <div className="ml-auto flex items-center gap-2">
               <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground glow-primary" style={{ backgroundImage: "var(--gradient-primary)" }}>
                 {initials}
               </div>
               <Button variant="ghost" size="icon" onClick={() => signOut()} title="Sign out">
