@@ -787,13 +787,18 @@ export type Database = {
           created_by: string | null
           customer_id: string
           description: string | null
+          duration_minutes: number | null
           equipment_id: string | null
+          eta_minutes: number | null
           id: string
+          is_emergency: boolean
           job_number: string
           priority: Database["public"]["Enums"]["job_priority"]
           property_id: string | null
+          recurrence: string | null
           scheduled_end: string | null
           scheduled_start: string | null
+          service_address: string | null
           status: Database["public"]["Enums"]["job_status"]
           technician_id: string | null
           title: string
@@ -808,13 +813,18 @@ export type Database = {
           created_by?: string | null
           customer_id: string
           description?: string | null
+          duration_minutes?: number | null
           equipment_id?: string | null
+          eta_minutes?: number | null
           id?: string
+          is_emergency?: boolean
           job_number: string
           priority?: Database["public"]["Enums"]["job_priority"]
           property_id?: string | null
+          recurrence?: string | null
           scheduled_end?: string | null
           scheduled_start?: string | null
+          service_address?: string | null
           status?: Database["public"]["Enums"]["job_status"]
           technician_id?: string | null
           title: string
@@ -829,13 +839,18 @@ export type Database = {
           created_by?: string | null
           customer_id?: string
           description?: string | null
+          duration_minutes?: number | null
           equipment_id?: string | null
+          eta_minutes?: number | null
           id?: string
+          is_emergency?: boolean
           job_number?: string
           priority?: Database["public"]["Enums"]["job_priority"]
           property_id?: string | null
+          recurrence?: string | null
           scheduled_end?: string | null
           scheduled_start?: string | null
+          service_address?: string | null
           status?: Database["public"]["Enums"]["job_status"]
           technician_id?: string | null
           title?: string
@@ -1777,6 +1792,11 @@ export type Database = {
         | "on_hold"
         | "completed"
         | "cancelled"
+        | "unassigned"
+        | "on_the_way"
+        | "arrived"
+        | "invoiced"
+        | "paid"
       location_type: "warehouse" | "van" | "other"
       notification_type:
         | "job"
@@ -1964,6 +1984,11 @@ export const Constants = {
         "on_hold",
         "completed",
         "cancelled",
+        "unassigned",
+        "on_the_way",
+        "arrived",
+        "invoiced",
+        "paid",
       ],
       location_type: ["warehouse", "van", "other"],
       notification_type: [
