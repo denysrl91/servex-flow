@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { ArrowLeft, Mail, Phone, MapPin, Plus, Image as ImageIcon, Trash2, MessageSquare, FileText, Receipt, Wrench, Ticket, ShieldCheck, StickyNote, Tag } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
@@ -165,8 +166,8 @@ function CustomerProfile() {
           <Tabs defaultValue="activity">
             <TabsList className="flex w-full flex-wrap justify-start">
               <TabsTrigger value="activity"><MessageSquare className="mr-1.5 h-3.5 w-3.5" />Activity</TabsTrigger>
-              <TabsTrigger value="properties"><MapPin className="mr-1.5 h-3.5 w-3.5" />Properties</TabsTrigger>
-              <TabsTrigger value="equipment"><Wrench className="mr-1.5 h-3.5 w-3.5" />Equipment</TabsTrigger>
+              <TabsTrigger value="properties"><MapPin className="mr-1.5 h-3.5 w-3.5" />Properties{props.length > 0 && <Badge variant="secondary" className="ml-1.5 h-4 px-1.5 text-[10px]">{props.length}</Badge>}</TabsTrigger>
+              <TabsTrigger value="equipment"><Wrench className="mr-1.5 h-3.5 w-3.5" />Equipment{equipment.length > 0 && <Badge variant="secondary" className="ml-1.5 h-4 px-1.5 text-[10px]">{equipment.length}</Badge>}</TabsTrigger>
               <TabsTrigger value="jobs">Jobs</TabsTrigger>
               <TabsTrigger value="estimates"><FileText className="mr-1.5 h-3.5 w-3.5" />Estimates</TabsTrigger>
               <TabsTrigger value="invoices"><Receipt className="mr-1.5 h-3.5 w-3.5" />Invoices</TabsTrigger>
@@ -181,6 +182,10 @@ function CustomerProfile() {
             </TabsContent>
 
             <TabsContent value="properties" className="mt-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{props.length} {props.length === 1 ? "property" : "properties"} linked to this customer</div>
+                <AddPropertyDialog customerId={c.id} companyId={companyId} userId={user?.id ?? null} defaultAddress={c.service_address ?? ""} onAdded={reload} />
+              </div>
               <SimpleList
                 empty="No properties linked yet."
                 rows={props}
