@@ -188,3 +188,12 @@ function JobsPage() {
     </>
   );
 }
+
+function Field({ label, required, className, children }: { label: string; required?: boolean; className?: string; children: React.ReactNode }) {
+  return (
+    <div className={"space-y-1.5 " + (className ?? "")}>
+      <Label>{label}{required && <span className="text-destructive"> *</span>}</Label>
+      {children}
+    </div>
+  );
+}
