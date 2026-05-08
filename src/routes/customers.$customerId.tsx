@@ -323,7 +323,7 @@ function AddPropertyDialog({ customerId, companyId, userId, defaultAddress, onAd
     city: "",
     region: "",
     postal_code: "",
-    type: "single_family" as "single_family" | "multi_family" | "commercial" | "industrial",
+    type: "single_family" as "single_family" | "multi_family" | "office" | "retail" | "industrial" | "healthcare" | "education" | "other",
     units: "1",
     system_count: "1",
     access_notes: "",
@@ -368,8 +368,12 @@ function AddPropertyDialog({ customerId, companyId, userId, defaultAddress, onAd
               <SelectContent>
                 <SelectItem value="single_family">Single family</SelectItem>
                 <SelectItem value="multi_family">Multi family</SelectItem>
-                <SelectItem value="commercial">Commercial</SelectItem>
+                <SelectItem value="office">Office</SelectItem>
+                <SelectItem value="retail">Retail</SelectItem>
                 <SelectItem value="industrial">Industrial</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="education">Education</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </FieldX>
