@@ -6,14 +6,19 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useLocation,
+  useNavigate,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Bell, Search } from "lucide-react";
+import { Bell, LogOut, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
 
 function NotFoundComponent() {
   return (
@@ -118,29 +123,71 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-background">
-          <AppSidebar />
-          <div className="flex flex-1 flex-col">
-            <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-border bg-card/80 px-4 backdrop-blur">
-              <SidebarTrigger />
-              <div className="relative hidden flex-1 max-w-md md:block">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Search customers, jobs, invoices..." className="pl-9" />
-              </div>
-              <div className="ml-auto flex items-center gap-2">
-                <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary text-xs font-semibold text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
-                  RM
-                </div>
-              </div>
-            </header>
-            <main className="flex-1 overflow-x-hidden">
-              <Outlet />
-            </main>
-          </div>
-        </div>
-      </SidebarProvider>
+      <AuthProvider>
+        <AppShell />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+const PUBLIC_ROUTES = ["/login", "/signup", "/forgot-password", "/reset-password"];
+
+function AppShell() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
+  const isPublic = PUBLIC_ROUTES.includes(location.pathname);
+
+  useEffect(() => {
+    if (!loading && !user && !isPublic) {
+      navigate({ to: "/login" });
+    }
+  }, [loading, user, isPublic, navigate]);
+
+  if (isPublic) return <Outlet />;
+
+  if (loading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-sm text-muted-foreground">Loading…</div>
+      </div>
+    );
+  }
+
+  const initials = (user.user_metadata?.full_name || user.email || "U")
+    .split(" ")
+    .map((s: string) => s[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full bg-background">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col">
+          <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-border bg-card/80 px-4 backdrop-blur">
+            <SidebarTrigger />
+            <div className="relative hidden flex-1 max-w-md md:block">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder="Search customers, jobs, invoices..." className="pl-9" />
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
+                {initials}
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => signOut()} title="Sign out">
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          </header>
+          <main className="flex-1 overflow-x-hidden">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 }
