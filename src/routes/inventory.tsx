@@ -1,31 +1,45 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "@/components/page-header";
-import { DataTable } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { inventory } from "@/lib/mock-data";
-import { Plus } from "lucide-react";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/inventory")({ component: InventoryPage });
+export const Route = createFileRoute("/inventory")({ component: InventoryLayout });
 
-function InventoryPage() {
+const TABS = [
+  { to: "/inventory", label: "Dashboard", exact: true },
+  { to: "/inventory/items", label: "All Items" },
+  { to: "/inventory/warehouse", label: "Warehouse Stock" },
+  { to: "/inventory/vans", label: "Van Stock" },
+  { to: "/inventory/transfer", label: "Transfer" },
+  { to: "/inventory/low-stock", label: "Low Stock" },
+  { to: "/inventory/reports", label: "Reports" },
+  { to: "/purchase-orders", label: "Purchase Orders" },
+] as const;
+
+function InventoryLayout() {
+  const { pathname } = useLocation();
   return (
-    <>
-      <PageHeader title="Inventory" description="Parts, refrigerants, and consumables across trucks and warehouses." actions={<Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}><Plus className="mr-2 h-4 w-4" /> Add Item</Button>} />
-      <div className="p-6">
-        <DataTable
-          rows={inventory}
-          columns={[
-            { key: "id", header: "SKU" },
-            { key: "name", header: "Item", render: (r) => <span className="font-medium">{r.name}</span> },
-            { key: "category", header: "Category", render: (r) => <Badge variant="outline">{r.category}</Badge> },
-            { key: "onHand", header: "On hand", render: (r) => <span className={r.onHand <= r.reorder ? "font-medium text-destructive" : "font-medium"}>{r.onHand}</span>, className: "text-right" },
-            { key: "reorder", header: "Reorder at", className: "text-right" },
-            { key: "cost", header: "Unit cost", render: (r) => `$${r.cost.toFixed(2)}`, className: "text-right" },
-            { key: "location", header: "Location" },
-          ]}
-        />
+    <div className="flex h-full flex-col">
+      <div className="border-b border-border bg-card/40">
+        <div className="flex flex-wrap gap-1 overflow-x-auto px-4 pt-3">
+          {TABS.map((t) => {
+            const active = t.exact ? pathname === t.to : pathname.startsWith(t.to);
+            return (
+              <Link
+                key={t.to}
+                to={t.to}
+                className={cn(
+                  "whitespace-nowrap rounded-t-md border-b-2 px-3 py-2 text-sm font-medium transition-colors",
+                  active
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {t.label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
-    </>
+      <Outlet />
+    </div>
   );
 }
