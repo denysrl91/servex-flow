@@ -26,6 +26,7 @@ import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimatesRouteImport } from './routes/estimates'
 import { Route as EquipmentRouteImport } from './routes/equipment'
+import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
@@ -121,6 +122,11 @@ const EquipmentRoute = EquipmentRouteImport.update({
   path: '/equipment',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DispatchRoute = DispatchRouteImport.update({
+  id: '/dispatch',
+  path: '/dispatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CustomersRoute = CustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
@@ -170,6 +176,7 @@ const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRoute
+  '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -198,6 +205,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRoute
+  '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/customers': typeof CustomersRoute
+  '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/customers'
+    | '/dispatch'
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/customers'
+    | '/dispatch'
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/customers'
+    | '/dispatch'
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
@@ -340,6 +352,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CustomersRoute: typeof CustomersRoute
+  DispatchRoute: typeof DispatchRoute
   EquipmentRoute: typeof EquipmentRoute
   EstimatesRoute: typeof EstimatesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -480,6 +493,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EquipmentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dispatch': {
+      id: '/dispatch'
+      path: '/dispatch'
+      fullPath: '/dispatch'
+      preLoaderRoute: typeof DispatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/customers': {
       id: '/customers'
       path: '/customers'
@@ -591,6 +611,7 @@ const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CustomersRoute: CustomersRoute,
+  DispatchRoute: DispatchRoute,
   EquipmentRoute: EquipmentRoute,
   EstimatesRoute: EstimatesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
