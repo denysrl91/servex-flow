@@ -29,6 +29,8 @@ import { Route as EquipmentRouteImport } from './routes/equipment'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
+import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
@@ -130,6 +132,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InventoryIndexRoute = InventoryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryItemsRoute = InventoryItemsRouteImport.update({
+  id: '/items',
+  path: '/items',
+  getParentRoute: () => InventoryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,7 +150,7 @@ export interface FileRoutesByFullPath {
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/inventory': typeof InventoryRoute
+  '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
@@ -152,6 +164,8 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/inventory/items': typeof InventoryItemsRoute
+  '/inventory/': typeof InventoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -160,7 +174,6 @@ export interface FileRoutesByTo {
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/inventory': typeof InventoryRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
@@ -174,6 +187,8 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/inventory/items': typeof InventoryItemsRoute
+  '/inventory': typeof InventoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -183,7 +198,7 @@ export interface FileRoutesById {
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/inventory': typeof InventoryRoute
+  '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
@@ -197,6 +212,8 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/inventory/items': typeof InventoryItemsRoute
+  '/inventory/': typeof InventoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -221,6 +238,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/inventory/items'
+    | '/inventory/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -229,7 +248,6 @@ export interface FileRouteTypes {
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
-    | '/inventory'
     | '/invoices'
     | '/jobs'
     | '/login'
@@ -243,6 +261,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/inventory/items'
+    | '/inventory'
   id:
     | '__root__'
     | '/'
@@ -265,6 +285,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/inventory/items'
+    | '/inventory/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -274,7 +296,7 @@ export interface RootRouteChildren {
   EquipmentRoute: typeof EquipmentRoute
   EstimatesRoute: typeof EstimatesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  InventoryRoute: typeof InventoryRoute
+  InventoryRoute: typeof InventoryRouteWithChildren
   InvoicesRoute: typeof InvoicesRoute
   JobsRoute: typeof JobsRoute
   LoginRoute: typeof LoginRoute
@@ -432,8 +454,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inventory/': {
+      id: '/inventory/'
+      path: '/'
+      fullPath: '/inventory/'
+      preLoaderRoute: typeof InventoryIndexRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/items': {
+      id: '/inventory/items'
+      path: '/items'
+      fullPath: '/inventory/items'
+      preLoaderRoute: typeof InventoryItemsRouteImport
+      parentRoute: typeof InventoryRoute
+    }
   }
 }
+
+interface InventoryRouteChildren {
+  InventoryItemsRoute: typeof InventoryItemsRoute
+  InventoryIndexRoute: typeof InventoryIndexRoute
+}
+
+const InventoryRouteChildren: InventoryRouteChildren = {
+  InventoryItemsRoute: InventoryItemsRoute,
+  InventoryIndexRoute: InventoryIndexRoute,
+}
+
+const InventoryRouteWithChildren = InventoryRoute._addFileChildren(
+  InventoryRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -442,7 +492,7 @@ const rootRouteChildren: RootRouteChildren = {
   EquipmentRoute: EquipmentRoute,
   EstimatesRoute: EstimatesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  InventoryRoute: InventoryRoute,
+  InventoryRoute: InventoryRouteWithChildren,
   InvoicesRoute: InvoicesRoute,
   JobsRoute: JobsRoute,
   LoginRoute: LoginRoute,
@@ -460,3 +510,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
