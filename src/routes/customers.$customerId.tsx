@@ -314,6 +314,82 @@ function SimpleTable({ cols, rows, empty }: { cols: string[]; rows: React.ReactN
   );
 }
 
+function AddPropertyDialog({ customerId, companyId, userId, defaultAddress, onAdded }: { customerId: string; companyId: string | null; userId: string | null; defaultAddress: string; onAdded: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    address: defaultAddress,
+    city: "",
+    region: "",
+    postal_code: "",
+    type: "single_family" as "single_family" | "multi_family" | "commercial" | "industrial",
+    units: "1",
+    system_count: "1",
+    access_notes: "",
+  });
+  const submit = async () => {
+    if (!companyId) return toast.error("Workspace still loading");
+    if (!form.address.trim()) return toast.error("Address is required");
+    setSaving(true);
+    const { error } = await supabase.from("properties").insert({
+      company_id: companyId,
+      customer_id: customerId,
+      name: form.name || null,
+      address: form.address.trim(),
+      city: form.city || null,
+      region: form.region || null,
+      postal_code: form.postal_code || null,
+      type: form.type,
+      units: Number(form.units) || 1,
+      system_count: Number(form.system_count) || 1,
+      access_notes: form.access_notes || null,
+      created_by: userId,
+    });
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Property added");
+    setOpen(false);
+    setForm({ ...form, name: "", address: "", city: "", region: "", postal_code: "", access_notes: "" });
+    onAdded();
+  };
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}><Plus className="mr-2 h-4 w-4" /> Add property</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-xl">
+        <DialogHeader><DialogTitle>Add a property for this customer</DialogTitle></DialogHeader>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <FieldX label="Nickname (optional)"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Main office" /></FieldX>
+          <FieldX label="Type">
+            <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as typeof form.type })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="single_family">Single family</SelectItem>
+                <SelectItem value="multi_family">Multi family</SelectItem>
+                <SelectItem value="commercial">Commercial</SelectItem>
+                <SelectItem value="industrial">Industrial</SelectItem>
+              </SelectContent>
+            </Select>
+          </FieldX>
+          <div className="sm:col-span-2"><FieldX label="Street address *"><Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="123 Main St" /></FieldX></div>
+          <FieldX label="City"><Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} /></FieldX>
+          <FieldX label="State / Region"><Input value={form.region} onChange={(e) => setForm({ ...form, region: e.target.value })} /></FieldX>
+          <FieldX label="Postal code"><Input value={form.postal_code} onChange={(e) => setForm({ ...form, postal_code: e.target.value })} /></FieldX>
+          <FieldX label="Units"><Input type="number" min="1" value={form.units} onChange={(e) => setForm({ ...form, units: e.target.value })} /></FieldX>
+          <FieldX label="HVAC systems"><Input type="number" min="1" value={form.system_count} onChange={(e) => setForm({ ...form, system_count: e.target.value })} /></FieldX>
+          <div className="sm:col-span-2"><FieldX label="Access notes"><Textarea rows={2} value={form.access_notes} onChange={(e) => setForm({ ...form, access_notes: e.target.value })} placeholder="Gate code, lockbox, pets, etc." /></FieldX></div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={submit} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>{saving ? "Saving…" : "Add property"}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function CommunicationLog({ comms, onLog }: { comms: any[]; onLog: (f: { channel: string; direction: string; subject: string; body: string }) => void }) {
   const [form, setForm] = useState({ channel: "call", direction: "outbound", subject: "", body: "" });
   const submit = () => {
