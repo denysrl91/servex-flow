@@ -40,6 +40,7 @@ function BuilderPage() {
   const [inventory, setInventory] = useState<InvItem[]>([]);
   const [activeOptionId, setActiveOptionId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const priceBook = useAllPriceBook();
 
   const reload = async () => {
     const r = await fetchEstimate(estimateId);
@@ -515,5 +516,36 @@ function InventoryPicker({ items, onPick }: { items: InvItem[]; onPick: (id: str
         </SelectContent>
       </Select>
     </div>
+  );
+}
+
+type PriceEntry = ReturnType<typeof useAllPriceBook>[number];
+
+function PriceBookPicker({ entries, onPick }: { entries: PriceEntry[]; onPick: (key: string) => void }) {
+  const [v, setV] = useState("");
+  const sales = entries.filter((e) => e.kind === "sales" && e.item.active);
+  const services = entries.filter((e) => e.kind === "services" && e.item.active);
+  return (
+    <Select value={v} onValueChange={(val) => { setV(""); onPick(val); }}>
+      <SelectTrigger className="h-9 w-[240px]"><SelectValue placeholder="From price book…" /></SelectTrigger>
+      <SelectContent className="max-h-[360px]">
+        {sales.length > 0 && (
+          <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Sales</div>
+        )}
+        {sales.map((e) => (
+          <SelectItem key={`sales::${e.item.code}`} value={`sales::${e.item.code}`}>
+            {e.item.code} — {e.item.name} (${e.item.price})
+          </SelectItem>
+        ))}
+        {services.length > 0 && (
+          <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Services</div>
+        )}
+        {services.map((e) => (
+          <SelectItem key={`services::${e.item.code}`} value={`services::${e.item.code}`}>
+            {e.item.code} — {e.item.name} (${e.item.price})
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
