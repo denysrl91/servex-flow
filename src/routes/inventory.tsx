@@ -3,7 +3,8 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/inventory")({ component: InventoryLayout });
 
-const TABS = [
+type Tab = { to: string; label: string; exact?: boolean };
+const TABS: Tab[] = [
   { to: "/inventory", label: "Dashboard", exact: true },
   { to: "/inventory/items", label: "All Items" },
   { to: "/inventory/warehouse", label: "Warehouse Stock" },
@@ -12,7 +13,7 @@ const TABS = [
   { to: "/inventory/low-stock", label: "Low Stock" },
   { to: "/inventory/reports", label: "Reports" },
   { to: "/purchase-orders", label: "Purchase Orders" },
-] as const;
+];
 
 function InventoryLayout() {
   const { pathname } = useLocation();
@@ -25,7 +26,7 @@ function InventoryLayout() {
             return (
               <Link
                 key={t.to}
-                to={t.to}
+                to={t.to as never}
                 className={cn(
                   "whitespace-nowrap rounded-t-md border-b-2 px-3 py-2 text-sm font-medium transition-colors",
                   active
