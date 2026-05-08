@@ -1217,6 +1217,48 @@ export type Database = {
           },
         ]
       }
+      module_records: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          data: Json
+          id: string
+          module_key: string
+          notes: string | null
+          status: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          id?: string
+          module_key: string
+          notes?: string | null
+          status?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          id?: string
+          module_key?: string
+          notes?: string | null
+          status?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
