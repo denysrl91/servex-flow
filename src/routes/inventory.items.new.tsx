@@ -37,12 +37,13 @@ function NewItem() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!companyId) return toast.error("Missing company");
+    if (!companyId) return toast.error("Workspace still loading — try again in a moment");
+    if (!form.sku.trim() || !form.name.trim()) return toast.error("SKU and Name are required");
     setSaving(true);
     const { error } = await supabase.from("inventory_items").insert({
       company_id: companyId,
-      sku: form.sku,
-      name: form.name,
+      sku: form.sku.trim(),
+      name: form.name.trim(),
       description: form.description || null,
       category: form.category || null,
       unit: form.unit,
@@ -57,7 +58,10 @@ function NewItem() {
       track_serial: form.track_serial,
     });
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      console.error("inventory_items insert failed", error);
+      return toast.error(error.message || "Could not save item");
+    }
     toast.success("Item added");
     navigate({ to: "/inventory/items" });
   };
@@ -106,8 +110,8 @@ function NewItem() {
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={() => navigate({ to: "/inventory/items" })}>Cancel</Button>
-          <Button type="submit" disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>
-            {saving ? "Saving..." : "Save item"}
+          <Button type="submit" disabled={saving || !companyId} style={{ backgroundImage: "var(--gradient-primary)" }}>
+            {saving ? "Saving..." : !companyId ? "Loading workspace…" : "Save item"}
           </Button>
         </div>
       </form>
