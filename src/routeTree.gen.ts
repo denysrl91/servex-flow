@@ -36,6 +36,7 @@ import { Route as InventoryTransferRouteImport } from './routes/inventory.transf
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as EstimatesNewRouteImport } from './routes/estimates.new'
 import { Route as EstimatesEstimateIdRouteImport } from './routes/estimates.$estimateId'
+import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 import { Route as EstimatesEstimateIdProposalRouteImport } from './routes/estimates.$estimateId.proposal'
@@ -175,6 +176,11 @@ const EstimatesEstimateIdRoute = EstimatesEstimateIdRouteImport.update({
   path: '/$estimateId',
   getParentRoute: () => EstimatesRoute,
 } as any)
+const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
+  id: '/$customerId',
+  path: '/$customerId',
+  getParentRoute: () => CustomersRoute,
+} as any)
 const JobsJobIdPartsRoute = JobsJobIdPartsRouteImport.update({
   id: '/$jobId/parts',
   path: '/$jobId/parts',
@@ -194,7 +200,7 @@ const EstimatesEstimateIdProposalRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRouteWithChildren
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
@@ -226,7 +233,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRouteWithChildren
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
@@ -258,7 +266,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRouteWithChildren
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/customers/$customerId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/customers/$customerId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/customers/$customerId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
@@ -388,7 +400,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CustomersRoute: typeof CustomersRoute
+  CustomersRoute: typeof CustomersRouteWithChildren
   DispatchRoute: typeof DispatchRoute
   EquipmentRoute: typeof EquipmentRoute
   EstimatesRoute: typeof EstimatesRouteWithChildren
@@ -600,6 +612,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimatesEstimateIdRouteImport
       parentRoute: typeof EstimatesRoute
     }
+    '/customers/$customerId': {
+      id: '/customers/$customerId'
+      path: '/$customerId'
+      fullPath: '/customers/$customerId'
+      preLoaderRoute: typeof CustomersCustomerIdRouteImport
+      parentRoute: typeof CustomersRoute
+    }
     '/jobs/$jobId/parts': {
       id: '/jobs/$jobId/parts'
       path: '/$jobId/parts'
@@ -623,6 +642,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface CustomersRouteChildren {
+  CustomersCustomerIdRoute: typeof CustomersCustomerIdRoute
+}
+
+const CustomersRouteChildren: CustomersRouteChildren = {
+  CustomersCustomerIdRoute: CustomersCustomerIdRoute,
+}
+
+const CustomersRouteWithChildren = CustomersRoute._addFileChildren(
+  CustomersRouteChildren,
+)
 
 interface EstimatesEstimateIdRouteChildren {
   EstimatesEstimateIdProposalRoute: typeof EstimatesEstimateIdProposalRoute
@@ -693,7 +724,7 @@ const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CustomersRoute: CustomersRoute,
+  CustomersRoute: CustomersRouteWithChildren,
   DispatchRoute: DispatchRoute,
   EquipmentRoute: EquipmentRoute,
   EstimatesRoute: EstimatesRouteWithChildren,

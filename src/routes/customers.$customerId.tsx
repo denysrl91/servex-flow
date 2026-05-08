@@ -63,7 +63,7 @@ function CustomerProfile() {
   };
   useEffect(() => { reload(); /* eslint-disable-next-line */ }, [customerId]);
 
-  const save = async (patch: Partial<Customer>) => {
+  const save = async (patch: Record<string, any>) => {
     if (!c) return;
     setC({ ...c, ...patch });
     await supabase.from("customers").update(patch).eq("id", c.id);
