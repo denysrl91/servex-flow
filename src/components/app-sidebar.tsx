@@ -72,12 +72,12 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border">
         <Link to="/" className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground shadow-sm">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg text-sidebar-primary-foreground glow-primary" style={{ backgroundImage: "var(--gradient-primary)" }}>
             <Snowflake className="h-5 w-5" />
           </div>
           {state !== "collapsed" && (
             <div className="flex flex-col">
-              <span className="text-base font-bold tracking-tight text-sidebar-foreground">Servex</span>
+              <span className="text-base font-bold tracking-tight text-sidebar-foreground text-glow">Servex</span>
               <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">HVAC Field Service</span>
             </div>
           )}
