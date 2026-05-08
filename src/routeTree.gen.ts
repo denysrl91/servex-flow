@@ -32,6 +32,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
+import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 
@@ -150,6 +151,11 @@ const InventoryVansRoute = InventoryVansRouteImport.update({
   path: '/vans',
   getParentRoute: () => InventoryRoute,
 } as any)
+const InventoryTransferRoute = InventoryTransferRouteImport.update({
+  id: '/transfer',
+  path: '/transfer',
+  getParentRoute: () => InventoryRoute,
+} as any)
 const InventoryItemsRoute = InventoryItemsRouteImport.update({
   id: '/items',
   path: '/items',
@@ -183,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByTo {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory': typeof InventoryIndexRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory/'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory/'
@@ -511,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryVansRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/inventory/transfer': {
+      id: '/inventory/transfer'
+      path: '/transfer'
+      fullPath: '/inventory/transfer'
+      preLoaderRoute: typeof InventoryTransferRouteImport
+      parentRoute: typeof InventoryRoute
+    }
     '/inventory/items': {
       id: '/inventory/items'
       path: '/items'
@@ -542,6 +561,7 @@ const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
 
 interface InventoryRouteChildren {
   InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
+  InventoryTransferRoute: typeof InventoryTransferRoute
   InventoryVansRoute: typeof InventoryVansRoute
   InventoryWarehouseRoute: typeof InventoryWarehouseRoute
   InventoryIndexRoute: typeof InventoryIndexRoute
@@ -549,6 +569,7 @@ interface InventoryRouteChildren {
 
 const InventoryRouteChildren: InventoryRouteChildren = {
   InventoryItemsRoute: InventoryItemsRouteWithChildren,
+  InventoryTransferRoute: InventoryTransferRoute,
   InventoryVansRoute: InventoryVansRoute,
   InventoryWarehouseRoute: InventoryWarehouseRoute,
   InventoryIndexRoute: InventoryIndexRoute,
