@@ -3,6 +3,7 @@ import {
   LayoutDashboard, Contact2, Users, Building2, Wrench, Calendar, Radio,
   Briefcase, FileText, Receipt, CreditCard, Package, Truck, Warehouse,
   ShoppingCart, HardHat, TrendingUp, Headphones, BarChart3, Settings, Snowflake,
+  Tag, BookOpen,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -32,6 +33,8 @@ const salesNav = [
   { title: "Invoices", url: "/invoices", icon: Receipt },
   { title: "Payments", url: "/payments", icon: CreditCard },
   { title: "Sales Pipeline", url: "/pipeline", icon: TrendingUp },
+  { title: "Sales Price Book", url: "/sales-catalog", icon: Tag },
+  { title: "Services Price Book", url: "/services-catalog", icon: BookOpen },
 ];
 
 const inventoryNav = [
