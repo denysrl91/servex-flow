@@ -18,6 +18,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { ThemeProvider } from "@/hooks/use-theme";
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { useEffect } from "react";
 
 function NotFoundComponent() {
@@ -123,10 +128,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <AppShell />
-        <Toaster />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppShell />
+          <Toaster />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
@@ -169,11 +176,22 @@ function AppShell() {
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b hairline glass-strong px-4">
             <SidebarTrigger />
+            <Select defaultValue="acme">
+              <SelectTrigger className="hidden h-9 w-[180px] border-border/60 bg-card/40 md:flex">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="acme">Acme HVAC Co.</SelectItem>
+                <SelectItem value="north">Northstar Mechanical</SelectItem>
+                <SelectItem value="bay">Bay Area Climate</SelectItem>
+              </SelectContent>
+            </Select>
             <div className="relative hidden flex-1 max-w-md md:block">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Search customers, jobs, invoices..." className="pl-9" />
             </div>
             <div className="ml-auto flex items-center gap-2">
+              <ThemeToggle />
               <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
               <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground glow-primary" style={{ backgroundImage: "var(--gradient-primary)" }}>
                 {initials}
