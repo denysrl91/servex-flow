@@ -2014,10 +2014,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      bootstrap_company_for_current_user: {
-        Args: { _company_name?: string }
-        Returns: string
-      }
       get_my_company_id: { Args: never; Returns: string }
       has_role: {
         Args: {
