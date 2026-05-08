@@ -20,7 +20,7 @@ import {
   ClipboardCheck, Headphones, ShieldAlert, Snowflake,
   Users, FileText, Boxes, Home, Wind, HardHat, Briefcase as BriefcaseIcon,
   ShoppingCart, LifeBuoy, Tag, ChevronDown,
-  ChevronUp, ChevronDown as ChevronDownIcon, RotateCcw, GripVertical,
+  ChevronUp, RotateCcw, GripVertical,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Dashboard });
