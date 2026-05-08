@@ -29,6 +29,12 @@ import { Route as EquipmentRouteImport } from './routes/equipment'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
+import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
+import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
+import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
+import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
+import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
@@ -130,6 +136,36 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InventoryIndexRoute = InventoryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryWarehouseRoute = InventoryWarehouseRouteImport.update({
+  id: '/warehouse',
+  path: '/warehouse',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryVansRoute = InventoryVansRouteImport.update({
+  id: '/vans',
+  path: '/vans',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryTransferRoute = InventoryTransferRouteImport.update({
+  id: '/transfer',
+  path: '/transfer',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryItemsRoute = InventoryItemsRouteImport.update({
+  id: '/items',
+  path: '/items',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => InventoryItemsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,7 +174,7 @@ export interface FileRoutesByFullPath {
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/inventory': typeof InventoryRoute
+  '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
@@ -152,6 +188,12 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/transfer': typeof InventoryTransferRoute
+  '/inventory/vans': typeof InventoryVansRoute
+  '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/inventory/': typeof InventoryIndexRoute
+  '/inventory/items/new': typeof InventoryItemsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -160,7 +202,6 @@ export interface FileRoutesByTo {
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/inventory': typeof InventoryRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
@@ -174,6 +215,12 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/transfer': typeof InventoryTransferRoute
+  '/inventory/vans': typeof InventoryVansRoute
+  '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/inventory': typeof InventoryIndexRoute
+  '/inventory/items/new': typeof InventoryItemsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -183,7 +230,7 @@ export interface FileRoutesById {
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/inventory': typeof InventoryRoute
+  '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
@@ -197,6 +244,12 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/transfer': typeof InventoryTransferRoute
+  '/inventory/vans': typeof InventoryVansRoute
+  '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/inventory/': typeof InventoryIndexRoute
+  '/inventory/items/new': typeof InventoryItemsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -221,6 +274,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/inventory/items'
+    | '/inventory/transfer'
+    | '/inventory/vans'
+    | '/inventory/warehouse'
+    | '/inventory/'
+    | '/inventory/items/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -229,7 +288,6 @@ export interface FileRouteTypes {
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
-    | '/inventory'
     | '/invoices'
     | '/jobs'
     | '/login'
@@ -243,6 +301,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/inventory/items'
+    | '/inventory/transfer'
+    | '/inventory/vans'
+    | '/inventory/warehouse'
+    | '/inventory'
+    | '/inventory/items/new'
   id:
     | '__root__'
     | '/'
@@ -265,6 +329,12 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/inventory/items'
+    | '/inventory/transfer'
+    | '/inventory/vans'
+    | '/inventory/warehouse'
+    | '/inventory/'
+    | '/inventory/items/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -274,7 +344,7 @@ export interface RootRouteChildren {
   EquipmentRoute: typeof EquipmentRoute
   EstimatesRoute: typeof EstimatesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  InventoryRoute: typeof InventoryRoute
+  InventoryRoute: typeof InventoryRouteWithChildren
   InvoicesRoute: typeof InvoicesRoute
   JobsRoute: typeof JobsRoute
   LoginRoute: typeof LoginRoute
@@ -432,8 +502,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inventory/': {
+      id: '/inventory/'
+      path: '/'
+      fullPath: '/inventory/'
+      preLoaderRoute: typeof InventoryIndexRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/warehouse': {
+      id: '/inventory/warehouse'
+      path: '/warehouse'
+      fullPath: '/inventory/warehouse'
+      preLoaderRoute: typeof InventoryWarehouseRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/vans': {
+      id: '/inventory/vans'
+      path: '/vans'
+      fullPath: '/inventory/vans'
+      preLoaderRoute: typeof InventoryVansRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/transfer': {
+      id: '/inventory/transfer'
+      path: '/transfer'
+      fullPath: '/inventory/transfer'
+      preLoaderRoute: typeof InventoryTransferRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/items': {
+      id: '/inventory/items'
+      path: '/items'
+      fullPath: '/inventory/items'
+      preLoaderRoute: typeof InventoryItemsRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/items/new': {
+      id: '/inventory/items/new'
+      path: '/new'
+      fullPath: '/inventory/items/new'
+      preLoaderRoute: typeof InventoryItemsNewRouteImport
+      parentRoute: typeof InventoryItemsRoute
+    }
   }
 }
+
+interface InventoryItemsRouteChildren {
+  InventoryItemsNewRoute: typeof InventoryItemsNewRoute
+}
+
+const InventoryItemsRouteChildren: InventoryItemsRouteChildren = {
+  InventoryItemsNewRoute: InventoryItemsNewRoute,
+}
+
+const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
+  InventoryItemsRouteChildren,
+)
+
+interface InventoryRouteChildren {
+  InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
+  InventoryTransferRoute: typeof InventoryTransferRoute
+  InventoryVansRoute: typeof InventoryVansRoute
+  InventoryWarehouseRoute: typeof InventoryWarehouseRoute
+  InventoryIndexRoute: typeof InventoryIndexRoute
+}
+
+const InventoryRouteChildren: InventoryRouteChildren = {
+  InventoryItemsRoute: InventoryItemsRouteWithChildren,
+  InventoryTransferRoute: InventoryTransferRoute,
+  InventoryVansRoute: InventoryVansRoute,
+  InventoryWarehouseRoute: InventoryWarehouseRoute,
+  InventoryIndexRoute: InventoryIndexRoute,
+}
+
+const InventoryRouteWithChildren = InventoryRoute._addFileChildren(
+  InventoryRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -442,7 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   EquipmentRoute: EquipmentRoute,
   EstimatesRoute: EstimatesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  InventoryRoute: InventoryRoute,
+  InventoryRoute: InventoryRouteWithChildren,
   InvoicesRoute: InvoicesRoute,
   JobsRoute: JobsRoute,
   LoginRoute: LoginRoute,
