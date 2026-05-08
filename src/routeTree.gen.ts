@@ -36,6 +36,8 @@ import { Route as PropertiesPropertyIdRouteImport } from './routes/properties.$p
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
 import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
+import { Route as InventoryReportsRouteImport } from './routes/inventory.reports'
+import { Route as InventoryLowStockRouteImport } from './routes/inventory.low-stock'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as EstimatesNewRouteImport } from './routes/estimates.new'
 import { Route as EstimatesEstimateIdRouteImport } from './routes/estimates.$estimateId'
@@ -180,6 +182,16 @@ const InventoryTransferRoute = InventoryTransferRouteImport.update({
   path: '/transfer',
   getParentRoute: () => InventoryRoute,
 } as any)
+const InventoryReportsRoute = InventoryReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => InventoryRoute,
+} as any)
+const InventoryLowStockRoute = InventoryLowStockRouteImport.update({
+  id: '/low-stock',
+  path: '/low-stock',
+  getParentRoute: () => InventoryRoute,
+} as any)
 const InventoryItemsRoute = InventoryItemsRouteImport.update({
   id: '/items',
   path: '/items',
@@ -250,6 +262,8 @@ export interface FileRoutesByFullPath {
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/low-stock': typeof InventoryLowStockRoute
+  '/inventory/reports': typeof InventoryReportsRoute
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
@@ -286,6 +300,8 @@ export interface FileRoutesByTo {
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/low-stock': typeof InventoryLowStockRoute
+  '/inventory/reports': typeof InventoryReportsRoute
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
@@ -324,6 +340,8 @@ export interface FileRoutesById {
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/low-stock': typeof InventoryLowStockRoute
+  '/inventory/reports': typeof InventoryReportsRoute
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
@@ -363,6 +381,8 @@ export interface FileRouteTypes {
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
+    | '/inventory/low-stock'
+    | '/inventory/reports'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
@@ -399,6 +419,8 @@ export interface FileRouteTypes {
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
+    | '/inventory/low-stock'
+    | '/inventory/reports'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
@@ -436,6 +458,8 @@ export interface FileRouteTypes {
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
+    | '/inventory/low-stock'
+    | '/inventory/reports'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
@@ -662,6 +686,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryTransferRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/inventory/reports': {
+      id: '/inventory/reports'
+      path: '/reports'
+      fullPath: '/inventory/reports'
+      preLoaderRoute: typeof InventoryReportsRouteImport
+      parentRoute: typeof InventoryRoute
+    }
+    '/inventory/low-stock': {
+      id: '/inventory/low-stock'
+      path: '/low-stock'
+      fullPath: '/inventory/low-stock'
+      preLoaderRoute: typeof InventoryLowStockRouteImport
+      parentRoute: typeof InventoryRoute
+    }
     '/inventory/items': {
       id: '/inventory/items'
       path: '/items'
@@ -784,6 +822,8 @@ const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
 
 interface InventoryRouteChildren {
   InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
+  InventoryLowStockRoute: typeof InventoryLowStockRoute
+  InventoryReportsRoute: typeof InventoryReportsRoute
   InventoryTransferRoute: typeof InventoryTransferRoute
   InventoryVansRoute: typeof InventoryVansRoute
   InventoryWarehouseRoute: typeof InventoryWarehouseRoute
@@ -792,6 +832,8 @@ interface InventoryRouteChildren {
 
 const InventoryRouteChildren: InventoryRouteChildren = {
   InventoryItemsRoute: InventoryItemsRouteWithChildren,
+  InventoryLowStockRoute: InventoryLowStockRoute,
+  InventoryReportsRoute: InventoryReportsRoute,
   InventoryTransferRoute: InventoryTransferRoute,
   InventoryVansRoute: InventoryVansRoute,
   InventoryWarehouseRoute: InventoryWarehouseRoute,

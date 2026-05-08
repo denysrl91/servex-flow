@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
 
@@ -22,7 +23,7 @@ function SettingsPage() {
             <div className="space-y-2"><Label>Company name</Label><Input defaultValue="Acme HVAC Co." /></div>
             <div className="space-y-2"><Label>Email</Label><Input defaultValue="dispatch@acmehvac.com" /></div>
             <div className="space-y-2"><Label>Phone</Label><Input defaultValue="(415) 555-0100" /></div>
-            <Button style={{ backgroundImage: "var(--gradient-primary)" }}>Save changes</Button>
+            <Button style={{ backgroundImage: "var(--gradient-primary)" }} onClick={() => toast.success("Settings saved")}>Save changes</Button>
           </CardContent>
         </Card>
         <Card className="shadow-[var(--shadow-card)]">
