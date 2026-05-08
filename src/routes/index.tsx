@@ -182,10 +182,30 @@ function Sparkline({ data, color = "var(--primary)" }: { data: number[]; color?:
 function MiniBars({ data, color = "var(--primary)" }: { data: number[]; color?: string }) {
   const max = Math.max(...data);
   return (
-    <div className="flex h-16 items-end gap-1">
+    <div className="flex h-20 items-end gap-1">
       {data.map((v, i) => (
-        <div key={i} className="flex-1 rounded-sm" style={{ height: `${(v / max) * 100}%`, background: `linear-gradient(180deg, ${color}, color-mix(in oklab, ${color} 35%, transparent))` }} />
+        <div
+          key={i}
+          className="flex-1 rounded-[3px] transition-all duration-300 hover:opacity-90"
+          style={{
+            height: `${Math.max(8, (v / max) * 100)}%`,
+            background: `linear-gradient(180deg, ${color}, color-mix(in oklab, ${color} 25%, transparent))`,
+            boxShadow: `0 0 12px color-mix(in oklab, ${color} 30%, transparent)`,
+          }}
+        />
       ))}
+    </div>
+  );
+}
+
+function SectionEyebrow({ label }: { label: string }) {
+  return (
+    <div className="mb-3 flex items-center gap-3">
+      <span className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+      <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+        {label}
+      </span>
+      <span className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
     </div>
   );
 }
@@ -199,6 +219,7 @@ function Dashboard() {
   return (
     <>
       <PageHeader
+        eyebrow="Servex · Live Operations"
         title="Operations Command Center"
         description="Real-time overview of revenue, dispatch, technicians, and inventory."
         actions={
@@ -213,22 +234,38 @@ function Dashboard() {
         }
       />
 
-      <div className="space-y-6 p-4 md:p-6">
+      <div className="space-y-8 p-4 md:p-6 lg:p-8">
         {/* KPI ROW */}
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {kpis.map((k) => (
-            <Card key={k.label} className="premium-card transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)]">
+            <Card
+              key={k.label}
+              className="premium-card group relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)]"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-60"
+                style={{ background: "linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 60%, transparent), transparent)" }}
+              />
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <div className="flex items-start justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 text-primary shadow-[inset_0_1px_0_0_color-mix(in_oklab,white_8%,transparent)]">
                     <k.icon className="h-4 w-4" />
                   </div>
                   <Sparkline data={k.trend} />
                 </div>
-                <p className="mt-3 text-2xl font-semibold tracking-tight">{k.value}</p>
-                <div className="mt-1 flex items-center justify-between">
-                  <p className="text-xs text-muted-foreground">{k.label}</p>
-                  <span className={`flex items-center gap-0.5 text-[11px] font-medium ${k.up ? "text-[oklch(0.7_0.20_145)]" : "text-[oklch(0.69_0.21_45)]"}`}>
+                <p className="mt-3 text-[26px] font-semibold leading-none tracking-tight tabular-nums">
+                  {k.value}
+                </p>
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="truncate text-xs text-muted-foreground">{k.label}</p>
+                  <span
+                    className={`flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[10px] font-medium tabular-nums ${
+                      k.up
+                        ? "border-[oklch(0.65_0.20_145)/0.35] bg-[oklch(0.65_0.20_145)/0.08] text-[oklch(0.7_0.20_145)]"
+                        : "border-[oklch(0.69_0.21_45)/0.35] bg-[oklch(0.69_0.21_45)/0.08] text-[oklch(0.69_0.21_45)]"
+                    }`}
+                  >
                     {k.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />} {k.delta}
                   </span>
                 </div>
@@ -238,11 +275,15 @@ function Dashboard() {
         </section>
 
         {/* DISPATCH + TECHNICIANS */}
-        <section className="grid gap-4 xl:grid-cols-3">
+        <section className="space-y-3">
+        <SectionEyebrow label="Dispatch · Workforce" />
+        <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2 text-base"><Radio /> Dispatch Board</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Radio className="h-4 w-4 text-primary" /> Dispatch Board
+                </CardTitle>
                 <p className="text-xs text-muted-foreground">Live job pipeline · {dispatchBoard.reduce((a,b)=>a+b.count,0)} active jobs</p>
               </div>
               <Button asChild variant="ghost" size="sm"><Link to="/dispatch">Open board <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
@@ -250,26 +291,43 @@ function Dashboard() {
             <CardContent className="overflow-x-auto pb-4">
               <div className="flex min-w-[860px] gap-3">
                 {dispatchBoard.map((c) => (
-                  <div key={c.col} className="w-[180px] flex-1 rounded-lg border hairline bg-card/40 p-2">
-                    <div className="mb-2 flex items-center justify-between px-1">
+                  <div
+                    key={c.col}
+                    className="w-[180px] flex-1 rounded-xl border hairline bg-card/40 p-2"
+                    style={{
+                      backgroundImage: `linear-gradient(180deg, color-mix(in oklab, ${c.color} 10%, transparent), transparent 60%)`,
+                    }}
+                  >
+                    <div className="mb-2 flex items-center justify-between px-1.5 pt-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full" style={{ background: c.color }} />
-                        <span className="text-xs font-semibold tracking-wide">{c.col}</span>
+                        <span
+                          className="h-2 w-2 rounded-full"
+                          style={{ background: c.color, boxShadow: `0 0 8px ${c.color}` }}
+                        />
+                        <span className="text-[11px] font-semibold uppercase tracking-wider">{c.col}</span>
                       </div>
-                      <span className="text-[10px] text-muted-foreground">{c.count}</span>
+                      <span
+                        className="rounded-full border px-1.5 py-0.5 text-[10px] font-semibold tabular-nums"
+                        style={{ borderColor: `color-mix(in oklab, ${c.color} 35%, transparent)`, color: c.color }}
+                      >
+                        {c.count}
+                      </span>
                     </div>
                     <div className="space-y-2">
                       {c.jobs.map((j) => (
-                        <div key={j.id} className="rounded-md border hairline bg-background/40 p-2 hover:bg-background/70">
+                        <div
+                          key={j.id}
+                          className="group cursor-grab rounded-lg border hairline bg-background/50 p-2 transition hover:bg-background/80 hover:shadow-[0_4px_18px_-8px_color-mix(in_oklab,var(--primary)_45%,transparent)]"
+                        >
                           <div className="flex items-center justify-between">
                             <span className="text-[11px] font-medium text-muted-foreground">{j.id}</span>
                             <span className={`h-1.5 w-1.5 rounded-full ${priorityDot[j.priority] ?? "bg-muted"}`} />
                           </div>
                           <p className="mt-0.5 truncate text-sm font-medium">{j.customer}</p>
                           <p className="truncate text-xs text-muted-foreground">{j.type}</p>
-                          <div className="mt-1 flex items-center justify-between text-[10px] text-muted-foreground">
+                          <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground">
                             <span>ETA {j.eta}</span>
-                            <span className="rounded-sm border hairline px-1">{j.priority}</span>
+                            <span className="rounded-sm border hairline px-1.5 py-px">{j.priority}</span>
                           </div>
                         </div>
                       ))}
@@ -282,14 +340,22 @@ function Dashboard() {
 
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-base"><Wrench /> Technician Status</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Wrench className="h-4 w-4 text-primary" /> Technician Status
+              </CardTitle>
               <Button asChild variant="ghost" size="sm"><Link to="/technicians">All <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
             </CardHeader>
             <CardContent className="space-y-2">
               {techs.map((t) => (
-                <div key={t.name} className="flex items-center gap-3 rounded-md border hairline bg-card/40 p-2">
+                <div
+                  key={t.name}
+                  className="flex items-center gap-3 rounded-lg border hairline bg-card/40 p-2.5 transition hover:bg-card/70"
+                >
                   <div className="relative">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground ring-2 ring-primary/30"
+                      style={{ backgroundImage: "var(--gradient-primary)" }}
+                    >
                       {t.name.split(" ").map((s)=>s[0]).join("")}
                     </div>
                     {t.lowStock && <Flame className="absolute -right-1 -top-1 h-3.5 w-3.5 rounded-full bg-card p-0.5 text-[#FF6A00]" />}
@@ -309,43 +375,50 @@ function Dashboard() {
               ))}
             </CardContent>
           </Card>
+        </div>
         </section>
 
         {/* INVENTORY + AI */}
-        <section className="grid gap-4 xl:grid-cols-3">
+        <section className="space-y-3">
+        <SectionEyebrow label="Inventory · AI Insights" />
+        <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2 text-base"><Package /> Inventory Command</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Package className="h-4 w-4 text-primary" /> Inventory Command
+                </CardTitle>
                 <p className="text-xs text-muted-foreground">Critical HVAC parts running low across vans and warehouses.</p>
               </div>
               <Button asChild variant="ghost" size="sm"><Link to="/inventory">Open inventory <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-2 sm:grid-cols-4">
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   { label: "Van Alerts",          value: "9",       icon: Truck },
                   { label: "Warehouse Alerts",    value: "5",       icon: Package },
                   { label: "Parts Used Today",    value: "126",     icon: Activity },
                   { label: "POs Awaiting Approval",value: "3",      icon: ClipboardCheck },
                 ].map((s) => (
-                  <div key={s.label} className="rounded-md border hairline bg-card/40 p-3">
+                  <div key={s.label} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
                     <div className="flex items-center justify-between text-muted-foreground">
-                      <s.icon className="h-4 w-4 text-primary" />
-                      <span className="text-[10px]">{s.label}</span>
+                      <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <s.icon className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="text-[10px] uppercase tracking-wider">{s.label}</span>
                     </div>
-                    <p className="mt-1 text-xl font-semibold">{s.value}</p>
+                    <p className="mt-2 text-2xl font-semibold tabular-nums">{s.value}</p>
                   </div>
                 ))}
               </div>
-              <div className="mt-3 max-h-[260px] overflow-y-auto rounded-md border hairline">
+              <div className="mt-3 max-h-[260px] overflow-y-auto rounded-lg border hairline">
                 <table className="w-full text-sm">
-                  <thead className="bg-card/60 text-xs uppercase tracking-wide text-muted-foreground">
+                  <thead className="sticky top-0 z-10 bg-card/90 text-xs uppercase tracking-wide text-muted-foreground backdrop-blur">
                     <tr>
-                      <th className="px-3 py-2 text-left font-medium">Item</th>
-                      <th className="px-3 py-2 text-left font-medium">Location</th>
-                      <th className="px-3 py-2 text-right font-medium">On Hand / Min</th>
-                      <th className="px-3 py-2 text-right font-medium">Status</th>
+                      <th className="px-3 py-2.5 text-left font-medium">Item</th>
+                      <th className="px-3 py-2.5 text-left font-medium">Location</th>
+                      <th className="px-3 py-2.5 text-right font-medium">On Hand / Min</th>
+                      <th className="px-3 py-2.5 text-right font-medium">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -353,10 +426,15 @@ function Dashboard() {
                       const ratio = i.onHand / i.min;
                       const danger = ratio < 0.4;
                       return (
-                        <tr key={i.name} className="hover:bg-card/40">
-                          <td className="px-3 py-2">{i.name}</td>
+                        <tr key={i.name} className="transition hover:bg-card/40">
+                          <td className="px-3 py-2 font-medium">{i.name}</td>
                           <td className="px-3 py-2 text-muted-foreground">{i.location}</td>
-                          <td className="px-3 py-2 text-right tabular-nums">{i.onHand} / {i.min}</td>
+                          <td className="px-3 py-2 text-right tabular-nums">
+                            <span className={danger ? "text-[oklch(0.69_0.21_45)]" : "text-foreground"}>
+                              {i.onHand}
+                            </span>
+                            <span className="text-muted-foreground"> / {i.min}</span>
+                          </td>
                           <td className="px-3 py-2 text-right">
                             <Badge variant="outline" className={danger ? "border-[oklch(0.69_0.21_45)/0.5] text-[oklch(0.69_0.21_45)]" : "border-[oklch(0.78_0.16_75)/0.5] text-[oklch(0.78_0.16_75)]"}>
                               {danger ? "Critical" : "Low"}
@@ -372,33 +450,70 @@ function Dashboard() {
           </Card>
 
           <Card className="premium-card relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-0 opacity-60" style={{ background: "radial-gradient(400px 200px at 100% 0%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 60%)" }} />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(420px 220px at 100% 0%, color-mix(in oklab, var(--primary) 26%, transparent), transparent 60%)," +
+                  "radial-gradient(280px 180px at 0% 100%, color-mix(in oklab, var(--primary-glow) 18%, transparent), transparent 65%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 70%, transparent), transparent)" }}
+            />
             <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Brain className="text-primary" /> AI Operations Brain
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/15 text-primary glow-primary">
+                    <Brain className="h-4 w-4" />
+                  </span>
+                  AI Operations Brain
+                </CardTitle>
+                <span className="flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+                  </span>
+                  Live
+                </span>
+              </div>
               <p className="text-xs text-muted-foreground">Recommendations updated 2 minutes ago</p>
             </CardHeader>
             <CardContent className="relative space-y-2">
               {aiInsights.map((a, i) => (
-                <div key={i} className={`flex items-start gap-3 rounded-md border p-3 ${aiToneClass[a.tone]}`}>
-                  <a.icon className="mt-0.5 h-4 w-4 shrink-0" />
+                <div
+                  key={i}
+                  className={`group flex items-start gap-3 rounded-lg border p-3 transition hover:translate-x-0.5 ${aiToneClass[a.tone]}`}
+                >
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-background/40">
+                    <a.icon className="h-3.5 w-3.5" />
+                  </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm leading-snug text-foreground">{a.text}</p>
-                    <button className="mt-1 text-[11px] font-medium opacity-80 hover:opacity-100">{a.cta} →</button>
+                    <button className="mt-1 text-[11px] font-medium opacity-80 transition hover:opacity-100">
+                      {a.cta} →
+                    </button>
                   </div>
                 </div>
               ))}
             </CardContent>
           </Card>
+        </div>
         </section>
 
         {/* PIPELINE + AGREEMENTS */}
-        <section className="grid gap-4 xl:grid-cols-3">
+        <section className="space-y-3">
+        <SectionEyebrow label="Sales · Recurring Revenue" />
+        <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2 text-base"><TrendingUp /> Sales Pipeline</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <TrendingUp className="h-4 w-4 text-primary" /> Sales Pipeline
+                </CardTitle>
                 <p className="text-xs text-muted-foreground">Total pipeline ${pipeline.reduce((a,p)=>a+p.value,0).toLocaleString()} · Close rate 38%</p>
               </div>
               <Button asChild variant="ghost" size="sm"><Link to="/pipeline">Open pipeline <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
@@ -406,14 +521,14 @@ function Dashboard() {
             <CardContent>
               <div className="grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6">
                 {pipeline.map((p) => (
-                  <div key={p.stage} className="rounded-md border hairline bg-card/40 p-3">
+                  <div key={p.stage} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
                     <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full" style={{ background: p.color }} />
+                      <span className="h-2 w-2 rounded-full" style={{ background: p.color, boxShadow: `0 0 6px ${p.color}` }} />
                       <span className="text-[11px] font-medium text-muted-foreground">{p.stage}</span>
                     </div>
-                    <p className="mt-2 text-xl font-semibold">{p.count}</p>
+                    <p className="mt-2 text-2xl font-semibold tabular-nums">{p.count}</p>
                     <p className="text-xs text-muted-foreground">${(p.value/1000).toFixed(1)}k</p>
-                    <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted/60">
                       <div className="h-full" style={{ width: `${Math.min(100, p.count*5)}%`, background: p.color }} />
                     </div>
                   </div>
@@ -425,9 +540,11 @@ function Dashboard() {
                   { tier: "Better", value: 22, hue: "#25B7FF" },
                   { tier: "Best",   value: 9,  hue: "#009DFF" },
                 ].map((t) => (
-                  <div key={t.tier} className="rounded-md border hairline bg-card/40 p-3">
+                  <div key={t.tier} className="rounded-lg border hairline bg-card/40 p-3">
                     <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{t.tier} tier</p>
-                    <p className="mt-1 text-xl font-semibold" style={{ color: t.hue }}>{t.value}</p>
+                    <p className="mt-1 text-2xl font-semibold tabular-nums" style={{ color: t.hue, textShadow: `0 0 16px color-mix(in oklab, ${t.hue} 45%, transparent)` }}>
+                      {t.value}
+                    </p>
                     <p className="text-[10px] text-muted-foreground">selected this month</p>
                   </div>
                 ))}
@@ -437,55 +554,62 @@ function Dashboard() {
 
           <Card className="premium-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base"><BadgeCheck /> Maintenance Agreements</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <BadgeCheck className="h-4 w-4 text-primary" /> Maintenance Agreements
+              </CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-2">
               {agreements.map((a) => (
-                <div key={a.label} className="rounded-md border hairline bg-card/40 p-3">
+                <div key={a.label} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
                   <p className="text-[11px] text-muted-foreground">{a.label}</p>
-                  <p className="mt-1 text-lg font-semibold">{a.value}</p>
+                  <p className="mt-1 text-lg font-semibold tabular-nums">{a.value}</p>
                 </div>
               ))}
-              <div className="col-span-2 rounded-md border hairline bg-card/40 p-3">
+              <div className="col-span-2 rounded-lg border hairline bg-card/40 p-3">
                 <div className="mb-1 flex justify-between text-xs"><span>Annual renewal target</span><span className="text-muted-foreground">$310k / $500k</span></div>
                 <Progress value={62} />
               </div>
             </CardContent>
           </Card>
+        </div>
         </section>
 
         {/* INVOICES + TICKETS */}
-        <section className="grid gap-4 xl:grid-cols-3">
+        <section className="space-y-3">
+        <SectionEyebrow label="Billing · Service Tickets" />
+        <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-base"><Receipt /> Recent Invoices</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Receipt className="h-4 w-4 text-primary" /> Recent Invoices
+              </CardTitle>
               <Button asChild variant="ghost" size="sm"><Link to="/invoices">All invoices <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
             </CardHeader>
             <CardContent className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[640px] text-sm">
                 <thead className="text-xs uppercase tracking-wide text-muted-foreground">
                   <tr className="border-b hairline">
-                    <th className="py-2 pr-3 text-left font-medium">Invoice</th>
-                    <th className="py-2 pr-3 text-left font-medium">Customer</th>
-                    <th className="py-2 pr-3 text-left font-medium">Job</th>
-                    <th className="py-2 pr-3 text-right font-medium">Amount</th>
-                    <th className="py-2 pr-3 text-left font-medium">Status</th>
-                    <th className="py-2 pr-3 text-left font-medium">Due</th>
-                    <th className="py-2 pr-3 text-left font-medium">Method</th>
-                    <th className="py-2 text-left font-medium">Tech</th>
+                    <th className="py-2.5 pr-3 text-left font-medium">Invoice</th>
+                    <th className="py-2.5 pr-3 text-left font-medium">Customer</th>
+                    <th className="py-2.5 pr-3 text-left font-medium">Job</th>
+                    <th className="py-2.5 pr-3 text-right font-medium">Amount</th>
+                    <th className="py-2.5 pr-3 text-left font-medium">Status</th>
+                    <th className="py-2.5 pr-3 text-left font-medium">Due</th>
+                    <th className="py-2.5 pr-3 text-left font-medium">Method</th>
+                    <th className="py-2.5 text-left font-medium">Tech</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
                   {recentInvoices.map((r) => (
-                    <tr key={r.num} className="hover:bg-card/40">
-                      <td className="py-2 pr-3 font-medium">{r.num}</td>
-                      <td className="py-2 pr-3">{r.cust}</td>
-                      <td className="py-2 pr-3 text-muted-foreground">{r.job}</td>
-                      <td className="py-2 pr-3 text-right tabular-nums">${r.amount.toLocaleString()}</td>
-                      <td className="py-2 pr-3"><Badge variant="outline" className={invoiceStatus[r.status]}>{r.status}</Badge></td>
-                      <td className="py-2 pr-3 text-muted-foreground">{r.due}</td>
-                      <td className="py-2 pr-3 text-muted-foreground">{r.method}</td>
-                      <td className="py-2 text-muted-foreground">{r.tech}</td>
+                    <tr key={r.num} className="transition hover:bg-card/40">
+                      <td className="py-2.5 pr-3 font-medium text-primary">{r.num}</td>
+                      <td className="py-2.5 pr-3">{r.cust}</td>
+                      <td className="py-2.5 pr-3 text-muted-foreground">{r.job}</td>
+                      <td className="py-2.5 pr-3 text-right font-medium tabular-nums">${r.amount.toLocaleString()}</td>
+                      <td className="py-2.5 pr-3"><Badge variant="outline" className={invoiceStatus[r.status]}>{r.status}</Badge></td>
+                      <td className="py-2.5 pr-3 text-muted-foreground">{r.due}</td>
+                      <td className="py-2.5 pr-3 text-muted-foreground">{r.method}</td>
+                      <td className="py-2.5 text-muted-foreground">{r.tech}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -495,12 +619,14 @@ function Dashboard() {
 
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-base"><Headphones /> Service Ticket Alerts</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Headphones className="h-4 w-4 text-primary" /> Service Ticket Alerts
+              </CardTitle>
               <Button asChild variant="ghost" size="sm"><Link to="/tickets">All <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
             </CardHeader>
             <CardContent className="space-y-2">
               {ticketAlerts.map((t) => (
-                <div key={t.id} className="rounded-md border hairline bg-card/40 p-3">
+                <div key={t.id} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
@@ -515,20 +641,25 @@ function Dashboard() {
               ))}
             </CardContent>
           </Card>
+        </div>
         </section>
 
         {/* MAP + REPORTS */}
-        <section className="grid gap-4 xl:grid-cols-3">
+        <section className="space-y-3">
+        <SectionEyebrow label="Live Field · Reports" />
+        <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-base"><MapPin /> Live Routes & Job Map</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <MapPin className="h-4 w-4 text-primary" /> Live Routes & Job Map
+              </CardTitle>
               <div className="flex gap-2">
                 <Badge variant="outline" className="border-primary/40 text-primary">8 in field</Badge>
                 <Badge variant="outline" className="border-[oklch(0.69_0.21_45)/0.5] text-[oklch(0.69_0.21_45)]"><AlertTriangle className="mr-1 h-3 w-3" />2 emergency</Badge>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="relative h-[320px] overflow-hidden rounded-md border hairline">
+              <div className="relative h-[320px] overflow-hidden rounded-lg border hairline">
                 <div className="absolute inset-0" style={{
                   background:
                     "radial-gradient(600px 320px at 30% 30%, color-mix(in oklab, var(--primary) 25%, transparent), transparent 60%)," +
@@ -559,7 +690,7 @@ function Dashboard() {
                   <div key={i} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: p.x, top: p.y }}>
                     <div className="flex flex-col items-center">
                       <div className="h-3 w-3 rounded-full ring-2 ring-background" style={{ background: p.color, boxShadow: `0 0 16px ${p.color}` }} />
-                      <span className="mt-1 whitespace-nowrap rounded-full border hairline bg-card/80 px-2 py-0.5 text-[10px] backdrop-blur">{p.label}</span>
+                      <span className="mt-1 hidden whitespace-nowrap rounded-full border hairline bg-card/80 px-2 py-0.5 text-[10px] backdrop-blur sm:inline">{p.label}</span>
                     </div>
                   </div>
                 ))}
@@ -572,17 +703,20 @@ function Dashboard() {
 
           <Card className="premium-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base"><BarChart3Icon /> Reports Snapshot</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <BarChart3Icon className="h-4 w-4 text-primary" /> Reports Snapshot
+              </CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-3">
+            <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {reportSnapshots.map((r) => (
-                <div key={r.title} className="rounded-md border hairline bg-card/40 p-3">
-                  <p className="text-[11px] text-muted-foreground">{r.title}</p>
-                  <div className="mt-2"><MiniBars data={r.bars} /></div>
+                <div key={r.title} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{r.title}</p>
+                  <div className="mt-3"><MiniBars data={r.bars} /></div>
                 </div>
               ))}
             </CardContent>
           </Card>
+        </div>
         </section>
       </div>
     </>
