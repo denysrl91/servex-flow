@@ -13,7 +13,6 @@ import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as TechniciansRouteImport } from './routes/technicians'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PurchaseOrdersRouteImport } from './routes/purchase-orders'
@@ -26,7 +25,6 @@ import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EstimatesRouteImport } from './routes/estimates'
 import { Route as EquipmentRouteImport } from './routes/equipment'
-import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
@@ -55,11 +53,6 @@ const SignupRoute = SignupRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScheduleRoute = ScheduleRouteImport.update({
-  id: '/schedule',
-  path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -122,11 +115,6 @@ const EquipmentRoute = EquipmentRouteImport.update({
   path: '/equipment',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DispatchRoute = DispatchRouteImport.update({
-  id: '/dispatch',
-  path: '/dispatch',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CustomersRoute = CustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
@@ -176,7 +164,6 @@ const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRoute
-  '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -189,7 +176,6 @@ export interface FileRoutesByFullPath {
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
@@ -205,7 +191,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/customers': typeof CustomersRoute
-  '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -217,7 +202,6 @@ export interface FileRoutesByTo {
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
@@ -234,7 +218,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/customers': typeof CustomersRoute
-  '/dispatch': typeof DispatchRoute
   '/equipment': typeof EquipmentRoute
   '/estimates': typeof EstimatesRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -247,7 +230,6 @@ export interface FileRoutesById {
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
@@ -265,7 +247,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/customers'
-    | '/dispatch'
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
@@ -278,7 +259,6 @@ export interface FileRouteTypes {
     | '/purchase-orders'
     | '/reports'
     | '/reset-password'
-    | '/schedule'
     | '/settings'
     | '/signup'
     | '/technicians'
@@ -294,7 +274,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/customers'
-    | '/dispatch'
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
@@ -306,7 +285,6 @@ export interface FileRouteTypes {
     | '/purchase-orders'
     | '/reports'
     | '/reset-password'
-    | '/schedule'
     | '/settings'
     | '/signup'
     | '/technicians'
@@ -322,7 +300,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/customers'
-    | '/dispatch'
     | '/equipment'
     | '/estimates'
     | '/forgot-password'
@@ -335,7 +312,6 @@ export interface FileRouteTypes {
     | '/purchase-orders'
     | '/reports'
     | '/reset-password'
-    | '/schedule'
     | '/settings'
     | '/signup'
     | '/technicians'
@@ -352,7 +328,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CustomersRoute: typeof CustomersRoute
-  DispatchRoute: typeof DispatchRoute
   EquipmentRoute: typeof EquipmentRoute
   EstimatesRoute: typeof EstimatesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -365,7 +340,6 @@ export interface RootRouteChildren {
   PurchaseOrdersRoute: typeof PurchaseOrdersRoute
   ReportsRoute: typeof ReportsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  ScheduleRoute: typeof ScheduleRoute
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   TechniciansRoute: typeof TechniciansRoute
@@ -400,13 +374,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schedule': {
-      id: '/schedule'
-      path: '/schedule'
-      fullPath: '/schedule'
-      preLoaderRoute: typeof ScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -491,13 +458,6 @@ declare module '@tanstack/react-router' {
       path: '/equipment'
       fullPath: '/equipment'
       preLoaderRoute: typeof EquipmentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dispatch': {
-      id: '/dispatch'
-      path: '/dispatch'
-      fullPath: '/dispatch'
-      preLoaderRoute: typeof DispatchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers': {
@@ -611,7 +571,6 @@ const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CustomersRoute: CustomersRoute,
-  DispatchRoute: DispatchRoute,
   EquipmentRoute: EquipmentRoute,
   EstimatesRoute: EstimatesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
@@ -624,7 +583,6 @@ const rootRouteChildren: RootRouteChildren = {
   PurchaseOrdersRoute: PurchaseOrdersRoute,
   ReportsRoute: ReportsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  ScheduleRoute: ScheduleRoute,
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   TechniciansRoute: TechniciansRoute,
@@ -633,3 +591,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
