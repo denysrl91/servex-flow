@@ -222,6 +222,88 @@ function SectionEyebrow({ label }: { label: string }) {
   );
 }
 
+/* ---------------- Reorderable section shell ---------------- */
+const DASH_ORDER_KEY = "servex.dashboard.sectionOrder.v1";
+
+function SectionShell({
+  label,
+  isFirst,
+  isLast,
+  onUp,
+  onDown,
+  children,
+}: {
+  label: string;
+  isFirst: boolean;
+  isLast: boolean;
+  onUp: () => void;
+  onDown: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <section className="group/sec relative space-y-3">
+      <div className="absolute right-0 top-0 z-20 flex translate-y-[-2px] items-center gap-1 rounded-md border hairline bg-card/80 p-0.5 opacity-0 shadow-sm backdrop-blur transition-opacity group-hover/sec:opacity-100 focus-within:opacity-100">
+        <span className="hidden items-center gap-1 px-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:flex">
+          <GripVertical className="h-3 w-3" /> {label}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6"
+          aria-label={`Move ${label} up`}
+          disabled={isFirst}
+          onClick={onUp}
+        >
+          <ChevronUp className="h-3.5 w-3.5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6"
+          aria-label={`Move ${label} down`}
+          disabled={isLast}
+          onClick={onDown}
+        >
+          <ChevronDown className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function useSectionOrder(defaultOrder: string[]) {
+  const [order, setOrder] = useState<string[]>(defaultOrder);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DASH_ORDER_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as string[];
+        // merge: keep saved order, append any new ids, drop unknown
+        const filtered = saved.filter((id) => defaultOrder.includes(id));
+        const missing = defaultOrder.filter((id) => !filtered.includes(id));
+        setOrder([...filtered, ...missing]);
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const persist = (next: string[]) => {
+    setOrder(next);
+    try { localStorage.setItem(DASH_ORDER_KEY, JSON.stringify(next)); } catch {}
+  };
+  const move = (id: string, dir: -1 | 1) => {
+    const idx = order.indexOf(id);
+    if (idx < 0) return;
+    const target = idx + dir;
+    if (target < 0 || target >= order.length) return;
+    const next = order.slice();
+    [next[idx], next[target]] = [next[target], next[idx]];
+    persist(next);
+  };
+  const reset = () => persist(defaultOrder);
+  return { order, move, reset };
+}
+
 const priorityDot: Record<string,string> = {
   Urgent: "bg-[#FF6A00]", High: "bg-[#FFB020]", Medium: "bg-[#25B7FF]", Low: "bg-[#7E8A97]",
 };
