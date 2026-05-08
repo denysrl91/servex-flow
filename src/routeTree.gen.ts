@@ -31,6 +31,7 @@ import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
+import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
@@ -142,6 +143,11 @@ const InventoryItemsRoute = InventoryItemsRouteImport.update({
   path: '/items',
   getParentRoute: () => InventoryRoute,
 } as any)
+const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => InventoryItemsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -164,8 +170,9 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
-  '/inventory/items': typeof InventoryItemsRoute
+  '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/': typeof InventoryIndexRoute
+  '/inventory/items/new': typeof InventoryItemsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -187,8 +194,9 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
-  '/inventory/items': typeof InventoryItemsRoute
+  '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory': typeof InventoryIndexRoute
+  '/inventory/items/new': typeof InventoryItemsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -212,8 +220,9 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
-  '/inventory/items': typeof InventoryItemsRoute
+  '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/': typeof InventoryIndexRoute
+  '/inventory/items/new': typeof InventoryItemsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/inventory/items'
     | '/inventory/'
+    | '/inventory/items/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/inventory/items'
     | '/inventory'
+    | '/inventory/items/new'
   id:
     | '__root__'
     | '/'
@@ -287,6 +298,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/inventory/items'
     | '/inventory/'
+    | '/inventory/items/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -468,16 +480,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryItemsRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/inventory/items/new': {
+      id: '/inventory/items/new'
+      path: '/new'
+      fullPath: '/inventory/items/new'
+      preLoaderRoute: typeof InventoryItemsNewRouteImport
+      parentRoute: typeof InventoryItemsRoute
+    }
   }
 }
 
+interface InventoryItemsRouteChildren {
+  InventoryItemsNewRoute: typeof InventoryItemsNewRoute
+}
+
+const InventoryItemsRouteChildren: InventoryItemsRouteChildren = {
+  InventoryItemsNewRoute: InventoryItemsNewRoute,
+}
+
+const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
+  InventoryItemsRouteChildren,
+)
+
 interface InventoryRouteChildren {
-  InventoryItemsRoute: typeof InventoryItemsRoute
+  InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
   InventoryIndexRoute: typeof InventoryIndexRoute
 }
 
 const InventoryRouteChildren: InventoryRouteChildren = {
-  InventoryItemsRoute: InventoryItemsRoute,
+  InventoryItemsRoute: InventoryItemsRouteWithChildren,
   InventoryIndexRoute: InventoryIndexRoute,
 }
 
