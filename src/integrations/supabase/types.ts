@@ -71,6 +71,84 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_communications: {
+        Row: {
+          body: string | null
+          channel: string
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          direction: string
+          id: string
+          status: string
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          channel?: string
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          direction?: string
+          id?: string
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          channel?: string
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          direction?: string
+          id?: string
+          status?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_photos: {
+        Row: {
+          caption: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          id: string
+          status: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          caption?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          id?: string
+          status?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          caption?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           billing_address: string | null
@@ -84,7 +162,9 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
+          service_address: string | null
           status: Database["public"]["Enums"]["customer_status"]
+          tags: string[]
           type: Database["public"]["Enums"]["customer_type"]
           updated_at: string
         }
@@ -100,7 +180,9 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
+          service_address?: string | null
           status?: Database["public"]["Enums"]["customer_status"]
+          tags?: string[]
           type?: Database["public"]["Enums"]["customer_type"]
           updated_at?: string
         }
@@ -116,7 +198,9 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
+          service_address?: string | null
           status?: Database["public"]["Enums"]["customer_status"]
+          tags?: string[]
           type?: Database["public"]["Enums"]["customer_type"]
           updated_at?: string
         }
@@ -144,8 +228,11 @@ export type Database = {
           next_service_due: string | null
           notes: string | null
           property_id: string
+          refrigerant_type: string | null
+          seer_rating: number | null
           serial_number: string | null
           status: Database["public"]["Enums"]["equipment_status"]
+          tonnage: number | null
           type: string
           updated_at: string
           warranty_expires: string | null
@@ -163,8 +250,11 @@ export type Database = {
           next_service_due?: string | null
           notes?: string | null
           property_id: string
+          refrigerant_type?: string | null
+          seer_rating?: number | null
           serial_number?: string | null
           status?: Database["public"]["Enums"]["equipment_status"]
+          tonnage?: number | null
           type: string
           updated_at?: string
           warranty_expires?: string | null
@@ -182,8 +272,11 @@ export type Database = {
           next_service_due?: string | null
           notes?: string | null
           property_id?: string
+          refrigerant_type?: string | null
+          seer_rating?: number | null
           serial_number?: string | null
           status?: Database["public"]["Enums"]["equipment_status"]
+          tonnage?: number | null
           type?: string
           updated_at?: string
           warranty_expires?: string | null
@@ -211,6 +304,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      equipment_photos: {
+        Row: {
+          caption: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          equipment_id: string
+          id: string
+          status: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          caption?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          equipment_id: string
+          id?: string
+          status?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          caption?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          equipment_id?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
       }
       estimate_line_items: {
         Row: {
@@ -1251,55 +1380,70 @@ export type Database = {
       }
       properties: {
         Row: {
+          access_notes: string | null
           address: string
           city: string | null
           company_id: string
           created_at: string
           created_by: string | null
           customer_id: string
+          gate_code: string | null
           id: string
           name: string | null
           notes: string | null
+          pets: string | null
           postal_code: string | null
+          preferred_appointment_times: string | null
           region: string | null
           square_feet: number | null
           status: string
+          system_count: number
           type: Database["public"]["Enums"]["property_type"]
           units: number | null
           updated_at: string
         }
         Insert: {
+          access_notes?: string | null
           address: string
           city?: string | null
           company_id: string
           created_at?: string
           created_by?: string | null
           customer_id: string
+          gate_code?: string | null
           id?: string
           name?: string | null
           notes?: string | null
+          pets?: string | null
           postal_code?: string | null
+          preferred_appointment_times?: string | null
           region?: string | null
           square_feet?: number | null
           status?: string
+          system_count?: number
           type?: Database["public"]["Enums"]["property_type"]
           units?: number | null
           updated_at?: string
         }
         Update: {
+          access_notes?: string | null
           address?: string
           city?: string | null
           company_id?: string
           created_at?: string
           created_by?: string | null
           customer_id?: string
+          gate_code?: string | null
           id?: string
           name?: string | null
           notes?: string | null
+          pets?: string | null
           postal_code?: string | null
+          preferred_appointment_times?: string | null
           region?: string | null
           square_feet?: number | null
           status?: string
+          system_count?: number
           type?: Database["public"]["Enums"]["property_type"]
           units?: number | null
           updated_at?: string

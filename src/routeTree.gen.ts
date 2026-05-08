@@ -30,12 +30,15 @@ import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
+import { Route as PropertiesPropertyIdRouteImport } from './routes/properties.$propertyId'
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
 import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as EstimatesNewRouteImport } from './routes/estimates.new'
 import { Route as EstimatesEstimateIdRouteImport } from './routes/estimates.$estimateId'
+import { Route as EquipmentEquipmentIdRouteImport } from './routes/equipment.$equipmentId'
+import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 import { Route as EstimatesEstimateIdProposalRouteImport } from './routes/estimates.$estimateId.proposal'
@@ -145,6 +148,11 @@ const InventoryIndexRoute = InventoryIndexRouteImport.update({
   path: '/',
   getParentRoute: () => InventoryRoute,
 } as any)
+const PropertiesPropertyIdRoute = PropertiesPropertyIdRouteImport.update({
+  id: '/$propertyId',
+  path: '/$propertyId',
+  getParentRoute: () => PropertiesRoute,
+} as any)
 const InventoryWarehouseRoute = InventoryWarehouseRouteImport.update({
   id: '/warehouse',
   path: '/warehouse',
@@ -175,6 +183,16 @@ const EstimatesEstimateIdRoute = EstimatesEstimateIdRouteImport.update({
   path: '/$estimateId',
   getParentRoute: () => EstimatesRoute,
 } as any)
+const EquipmentEquipmentIdRoute = EquipmentEquipmentIdRouteImport.update({
+  id: '/$equipmentId',
+  path: '/$equipmentId',
+  getParentRoute: () => EquipmentRoute,
+} as any)
+const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
+  id: '/$customerId',
+  path: '/$customerId',
+  getParentRoute: () => CustomersRoute,
+} as any)
 const JobsJobIdPartsRoute = JobsJobIdPartsRouteImport.update({
   id: '/$jobId/parts',
   path: '/$jobId/parts',
@@ -194,9 +212,9 @@ const EstimatesEstimateIdProposalRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/equipment': typeof EquipmentRoute
+  '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inventory': typeof InventoryRouteWithChildren
@@ -204,7 +222,7 @@ export interface FileRoutesByFullPath {
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -213,12 +231,15 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -226,16 +247,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/equipment': typeof EquipmentRoute
+  '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -244,12 +265,15 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -258,9 +282,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
+  '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/equipment': typeof EquipmentRoute
+  '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/inventory': typeof InventoryRouteWithChildren
@@ -268,7 +292,7 @@ export interface FileRoutesById {
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
   '/pipeline': typeof PipelineRoute
-  '/properties': typeof PropertiesRoute
+  '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
   '/reports': typeof ReportsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -277,12 +301,15 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -311,12 +338,15 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/customers/$customerId'
+    | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
@@ -342,12 +372,15 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/customers/$customerId'
+    | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/properties/$propertyId'
     | '/inventory'
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
@@ -374,12 +407,15 @@ export interface FileRouteTypes {
     | '/signup'
     | '/technicians'
     | '/tickets'
+    | '/customers/$customerId'
+    | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
     | '/estimates/new'
     | '/inventory/items'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
@@ -388,9 +424,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CustomersRoute: typeof CustomersRoute
+  CustomersRoute: typeof CustomersRouteWithChildren
   DispatchRoute: typeof DispatchRoute
-  EquipmentRoute: typeof EquipmentRoute
+  EquipmentRoute: typeof EquipmentRouteWithChildren
   EstimatesRoute: typeof EstimatesRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   InventoryRoute: typeof InventoryRouteWithChildren
@@ -398,7 +434,7 @@ export interface RootRouteChildren {
   JobsRoute: typeof JobsRouteWithChildren
   LoginRoute: typeof LoginRoute
   PipelineRoute: typeof PipelineRoute
-  PropertiesRoute: typeof PropertiesRoute
+  PropertiesRoute: typeof PropertiesRouteWithChildren
   PurchaseOrdersRoute: typeof PurchaseOrdersRoute
   ReportsRoute: typeof ReportsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -558,6 +594,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryIndexRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/properties/$propertyId': {
+      id: '/properties/$propertyId'
+      path: '/$propertyId'
+      fullPath: '/properties/$propertyId'
+      preLoaderRoute: typeof PropertiesPropertyIdRouteImport
+      parentRoute: typeof PropertiesRoute
+    }
     '/inventory/warehouse': {
       id: '/inventory/warehouse'
       path: '/warehouse'
@@ -600,6 +643,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimatesEstimateIdRouteImport
       parentRoute: typeof EstimatesRoute
     }
+    '/equipment/$equipmentId': {
+      id: '/equipment/$equipmentId'
+      path: '/$equipmentId'
+      fullPath: '/equipment/$equipmentId'
+      preLoaderRoute: typeof EquipmentEquipmentIdRouteImport
+      parentRoute: typeof EquipmentRoute
+    }
+    '/customers/$customerId': {
+      id: '/customers/$customerId'
+      path: '/$customerId'
+      fullPath: '/customers/$customerId'
+      preLoaderRoute: typeof CustomersCustomerIdRouteImport
+      parentRoute: typeof CustomersRoute
+    }
     '/jobs/$jobId/parts': {
       id: '/jobs/$jobId/parts'
       path: '/$jobId/parts'
@@ -623,6 +680,30 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface CustomersRouteChildren {
+  CustomersCustomerIdRoute: typeof CustomersCustomerIdRoute
+}
+
+const CustomersRouteChildren: CustomersRouteChildren = {
+  CustomersCustomerIdRoute: CustomersCustomerIdRoute,
+}
+
+const CustomersRouteWithChildren = CustomersRoute._addFileChildren(
+  CustomersRouteChildren,
+)
+
+interface EquipmentRouteChildren {
+  EquipmentEquipmentIdRoute: typeof EquipmentEquipmentIdRoute
+}
+
+const EquipmentRouteChildren: EquipmentRouteChildren = {
+  EquipmentEquipmentIdRoute: EquipmentEquipmentIdRoute,
+}
+
+const EquipmentRouteWithChildren = EquipmentRoute._addFileChildren(
+  EquipmentRouteChildren,
+)
 
 interface EstimatesEstimateIdRouteChildren {
   EstimatesEstimateIdProposalRoute: typeof EstimatesEstimateIdProposalRoute
@@ -691,11 +772,23 @@ const JobsRouteChildren: JobsRouteChildren = {
 
 const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
+interface PropertiesRouteChildren {
+  PropertiesPropertyIdRoute: typeof PropertiesPropertyIdRoute
+}
+
+const PropertiesRouteChildren: PropertiesRouteChildren = {
+  PropertiesPropertyIdRoute: PropertiesPropertyIdRoute,
+}
+
+const PropertiesRouteWithChildren = PropertiesRoute._addFileChildren(
+  PropertiesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CustomersRoute: CustomersRoute,
+  CustomersRoute: CustomersRouteWithChildren,
   DispatchRoute: DispatchRoute,
-  EquipmentRoute: EquipmentRoute,
+  EquipmentRoute: EquipmentRouteWithChildren,
   EstimatesRoute: EstimatesRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   InventoryRoute: InventoryRouteWithChildren,
@@ -703,7 +796,7 @@ const rootRouteChildren: RootRouteChildren = {
   JobsRoute: JobsRouteWithChildren,
   LoginRoute: LoginRoute,
   PipelineRoute: PipelineRoute,
-  PropertiesRoute: PropertiesRoute,
+  PropertiesRoute: PropertiesRouteWithChildren,
   PurchaseOrdersRoute: PurchaseOrdersRoute,
   ReportsRoute: ReportsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
