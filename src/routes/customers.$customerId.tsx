@@ -13,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { ArrowLeft, Mail, Phone, MapPin, Plus, Image as ImageIcon, Trash2, MessageSquare, FileText, Receipt, Wrench, Ticket, ShieldCheck, StickyNote, Tag } from "lucide-react";
+import type { Database } from "@/integrations/supabase/types";
+
+type CustomerUpdate = Database["public"]["Tables"]["customers"]["Update"];
 
 export const Route = createFileRoute("/customers/$customerId")({ component: CustomerProfile });
 
@@ -63,9 +66,9 @@ function CustomerProfile() {
   };
   useEffect(() => { reload(); /* eslint-disable-next-line */ }, [customerId]);
 
-  const save = async (patch: Record<string, any>) => {
+  const save = async (patch: CustomerUpdate) => {
     if (!c) return;
-    setC({ ...c, ...patch });
+    setC({ ...c, ...(patch as Partial<Customer>) });
     await supabase.from("customers").update(patch).eq("id", c.id);
   };
 
