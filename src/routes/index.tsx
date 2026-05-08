@@ -391,7 +391,9 @@ function Dashboard() {
       />
 
       <div className="space-y-8 p-4 md:p-6 lg:p-8">
-        {/* KPI ROW */}
+        {(() => {
+          const sectionNodes: Record<string, ReactNode> = {};
+          sectionNodes["kpis"] = (
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {kpis.map((k) => (
             <Card
@@ -429,9 +431,9 @@ function Dashboard() {
             </Card>
           ))}
         </section>
-
-        {/* DISPATCH + TECHNICIANS */}
-        <section className="space-y-3">
+          );
+          sectionNodes["dispatch"] = (
+        <>
         <SectionEyebrow label="Dispatch · Workforce" />
         <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
@@ -532,10 +534,10 @@ function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        </section>
-
-        {/* INVENTORY + AI */}
-        <section className="space-y-3">
+        </>
+          );
+          sectionNodes["inventory"] = (
+        <>
         <SectionEyebrow label="Inventory · AI Insights" />
         <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
@@ -658,10 +660,10 @@ function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        </section>
-
-        {/* PIPELINE + AGREEMENTS */}
-        <section className="space-y-3">
+        </>
+          );
+          sectionNodes["sales"] = (
+        <>
         <SectionEyebrow label="Sales · Recurring Revenue" />
         <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
@@ -728,10 +730,10 @@ function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        </section>
-
-        {/* INVOICES + TICKETS */}
-        <section className="space-y-3">
+        </>
+          );
+          sectionNodes["billing"] = (
+        <>
         <SectionEyebrow label="Billing · Service Tickets" />
         <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2">
@@ -798,10 +800,10 @@ function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        </section>
-
-        {/* MAP + REPORTS */}
-        <section className="space-y-3">
+        </>
+          );
+          sectionNodes["field"] = (
+        <>
         <SectionEyebrow label="Live Field · Reports" />
         <div className="grid gap-4 xl:grid-cols-3">
           <Card className="premium-card xl:col-span-2 overflow-hidden">
@@ -873,7 +875,25 @@ function Dashboard() {
             </CardContent>
           </Card>
         </div>
-        </section>
+        </>
+          );
+          return order.map((id, i) => {
+            const def = SECTION_DEFS.find((s) => s.id === id);
+            if (!def || !sectionNodes[id]) return null;
+            return (
+              <SectionShell
+                key={id}
+                label={def.label}
+                isFirst={i === 0}
+                isLast={i === order.length - 1}
+                onUp={() => move(id, -1)}
+                onDown={() => move(id, 1)}
+              >
+                {sectionNodes[id]}
+              </SectionShell>
+            );
+          });
+        })()}
       </div>
     </>
   );
