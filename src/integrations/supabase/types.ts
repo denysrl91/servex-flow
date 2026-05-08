@@ -360,52 +360,70 @@ export type Database = {
       }
       inventory_items: {
         Row: {
+          barcode: string | null
           category: string | null
           company_id: string
           created_at: string
           created_by: string | null
           description: string | null
           id: string
+          min_stock_level: number
           name: string
           reorder_point: number
           sku: string
           status: string
+          track_serial: boolean
           unit: string | null
           unit_cost: number
           unit_price: number
           updated_at: string
+          vendor_email: string | null
+          vendor_name: string | null
+          vendor_phone: string | null
         }
         Insert: {
+          barcode?: string | null
           category?: string | null
           company_id: string
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: string
+          min_stock_level?: number
           name: string
           reorder_point?: number
           sku: string
           status?: string
+          track_serial?: boolean
           unit?: string | null
           unit_cost?: number
           unit_price?: number
           updated_at?: string
+          vendor_email?: string | null
+          vendor_name?: string | null
+          vendor_phone?: string | null
         }
         Update: {
+          barcode?: string | null
           category?: string | null
           company_id?: string
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: string
+          min_stock_level?: number
           name?: string
           reorder_point?: number
           sku?: string
           status?: string
+          track_serial?: boolean
           unit?: string | null
           unit_cost?: number
           unit_price?: number
           updated_at?: string
+          vendor_email?: string | null
+          vendor_name?: string | null
+          vendor_phone?: string | null
         }
         Relationships: [
           {
