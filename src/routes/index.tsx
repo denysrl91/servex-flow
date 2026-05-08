@@ -337,7 +337,7 @@ function Dashboard() {
     "kpis": () => (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {kpis.map((k) => (
-          <Link key={k.label} to={k.to} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-xl">
+          <Link key={k.label} to={k.to as never} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-xl">
           <Card className="premium-card group relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)] cursor-pointer">
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-60" style={{ background: "linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 60%, transparent), transparent)" }} />
             <CardContent className="p-4">
@@ -456,7 +456,7 @@ function Dashboard() {
               { label: "Parts Used Today", value: "126", icon: Activity, to: "/inventory/reports" as const },
               { label: "POs Awaiting Approval", value: "3", icon: ClipboardCheck, to: "/purchase-orders" as const },
             ].map((s) => (
-              <Link key={s.label} to={s.to} className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
+              <Link key={s.label} to={s.to as never} className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
                     <s.icon className="h-3.5 w-3.5" />
@@ -482,7 +482,7 @@ function Dashboard() {
                   const ratio = i.onHand / i.min;
                   const danger = ratio < 0.4;
                   return (
-                    <tr key={i.name} className="cursor-pointer transition hover:bg-card/40" onClick={() => { window.location.href = "/inventory/low-stock"; }}>
+                    <tr key={i.name} className="transition hover:bg-card/40">
                       <td className="px-3 py-2 font-medium"><Link to="/inventory/low-stock" className="hover:text-primary">{i.name}</Link></td>
                       <td className="px-3 py-2 text-muted-foreground">{i.location}</td>
                       <td className="px-3 py-2 text-right tabular-nums">
@@ -527,7 +527,7 @@ function Dashboard() {
         </CardHeader>
         <CardContent className="relative space-y-2">
           {aiInsights.map((a, i) => (
-            <Link key={i} to={a.to} className={`flex items-start gap-3 rounded-lg border p-3 transition hover:translate-x-0.5 ${aiToneClass[a.tone]}`}>
+            <Link key={i} to={a.to as never} className={`flex items-start gap-3 rounded-lg border p-3 transition hover:translate-x-0.5 ${aiToneClass[a.tone]}`}>
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-background/40">
                 <a.icon className="h-3.5 w-3.5" />
               </span>
