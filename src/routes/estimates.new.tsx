@@ -25,6 +25,9 @@ function NewEstimate() {
   const [form, setForm] = useState({
     title: "HVAC System Replacement Proposal",
     customer_id: "",
+    new_customer_name: "",
+    new_customer_email: "",
+    new_customer_phone: "",
     property_id: "",
     job_id: "",
     equipment_id: "",
@@ -33,8 +36,7 @@ function NewEstimate() {
   });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    (async () => {
+  const loadLists = async () => {
       const [{ data: c }, { data: p }, { data: j }, { data: e }] = await Promise.all([
         supabase.from("customers").select("id,name").order("name"),
         supabase.from("properties").select("id,name,address").order("created_at", { ascending: false }),
@@ -45,8 +47,8 @@ function NewEstimate() {
       setProperties((p ?? []).map((x) => ({ id: x.id, label: x.name ? `${x.name} — ${x.address}` : x.address })));
       setJobs((j ?? []).map((x) => ({ id: x.id, label: `${x.job_number} • ${x.title}` })));
       setEquipment((e ?? []).map((x) => ({ id: x.id, label: `${x.type}${x.brand ? " — " + x.brand : ""}${x.model ? " " + x.model : ""}` })));
-    })();
-  }, []);
+  };
+  useEffect(() => { loadLists(); }, []);
 
   const filteredProps = form.customer_id
     ? properties // already loaded; could filter by customer if needed
@@ -54,9 +56,33 @@ function NewEstimate() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!companyId) return toast.error("Missing company");
-    if (!form.customer_id) return toast.error("Pick a customer");
+    if (!companyId) return toast.error("Workspace still loading — try again in a moment");
     setSaving(true);
+    let customerId = form.customer_id;
+    if (!customerId) {
+      const name = form.new_customer_name.trim();
+      if (!name) {
+        setSaving(false);
+        return toast.error("Pick a customer or enter a new customer name");
+      }
+      const { data: cust, error: cErr } = await supabase
+        .from("customers")
+        .insert({
+          company_id: companyId,
+          name,
+          email: form.new_customer_email || null,
+          phone: form.new_customer_phone || null,
+          created_by: user?.id ?? null,
+        })
+        .select("id")
+        .single();
+      if (cErr || !cust) {
+        setSaving(false);
+        console.error("customer insert failed", cErr);
+        return toast.error(cErr?.message ?? "Could not create customer");
+      }
+      customerId = cust.id;
+    }
     const number = nextEstimateNumber();
     const { data: est, error } = await supabase
       .from("estimates")
@@ -64,7 +90,7 @@ function NewEstimate() {
         company_id: companyId,
         estimate_number: number,
         title: form.title,
-        customer_id: form.customer_id,
+        customer_id: customerId,
         property_id: form.property_id || null,
         job_id: form.job_id || null,
         equipment_id: form.equipment_id || null,
@@ -76,7 +102,8 @@ function NewEstimate() {
       .single();
     if (error || !est) {
       setSaving(false);
-      return toast.error(error?.message ?? "Failed");
+      console.error("estimate insert failed", error);
+      return toast.error(error?.message ?? "Could not create estimate");
     }
     if (form.seedTiers) {
       await supabase.from("estimate_options").insert([
@@ -120,6 +147,24 @@ function NewEstimate() {
             </Field>
           </CardContent>
         </Card>
+        {!form.customer_id && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Or create a new customer</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-3">
+              <Field label="Customer name">
+                <Input value={form.new_customer_name} onChange={(e) => setForm({ ...form, new_customer_name: e.target.value })} placeholder="Jane Doe / Acme HVAC" />
+              </Field>
+              <Field label="Email">
+                <Input type="email" value={form.new_customer_email} onChange={(e) => setForm({ ...form, new_customer_email: e.target.value })} />
+              </Field>
+              <Field label="Phone">
+                <Input value={form.new_customer_phone} onChange={(e) => setForm({ ...form, new_customer_phone: e.target.value })} />
+              </Field>
+            </CardContent>
+          </Card>
+        )}
         <Card>
           <CardContent className="flex items-center justify-between p-4">
             <div>
@@ -130,8 +175,8 @@ function NewEstimate() {
           </CardContent>
         </Card>
         <div className="flex justify-end">
-          <Button type="submit" disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>
-            {saving ? "Creating…" : "Create estimate"}
+          <Button type="submit" disabled={saving || !companyId} style={{ backgroundImage: "var(--gradient-primary)" }}>
+            {saving ? "Creating…" : !companyId ? "Loading workspace…" : "Create estimate"}
           </Button>
         </div>
       </form>
