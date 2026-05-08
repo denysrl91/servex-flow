@@ -337,7 +337,8 @@ function Dashboard() {
     "kpis": () => (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {kpis.map((k) => (
-          <Card key={k.label} className="premium-card group relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)]">
+          <Link key={k.label} to={k.to} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-xl">
+          <Card className="premium-card group relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)] cursor-pointer">
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-60" style={{ background: "linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 60%, transparent), transparent)" }} />
             <CardContent className="p-4">
               <div className="flex items-start justify-between">
@@ -355,6 +356,7 @@ function Dashboard() {
               </div>
             </CardContent>
           </Card>
+          </Link>
         ))}
       </div>
     ),
@@ -382,7 +384,7 @@ function Dashboard() {
                 </div>
                 <div className="space-y-2">
                   {c.jobs.map((j) => (
-                    <div key={j.id} className="rounded-lg border hairline bg-background/50 p-2 transition hover:bg-background/80">
+                    <Link key={j.id} to="/jobs" className="block rounded-lg border hairline bg-background/50 p-2 transition hover:bg-background/80 hover:border-primary/40">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-medium text-muted-foreground">{j.id}</span>
                         <span className={`h-1.5 w-1.5 rounded-full ${priorityDot[j.priority] ?? "bg-muted"}`} />
@@ -393,7 +395,7 @@ function Dashboard() {
                         <span>ETA {j.eta}</span>
                         <span className="rounded-sm border hairline px-1.5 py-px">{j.priority}</span>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -412,7 +414,7 @@ function Dashboard() {
         </CardHeader>
         <CardContent className="space-y-2">
           {techs.map((t) => (
-            <div key={t.name} className="flex items-center gap-3 rounded-lg border hairline bg-card/40 p-2.5 transition hover:bg-card/70">
+            <Link key={t.name} to="/technicians" className="flex items-center gap-3 rounded-lg border hairline bg-card/40 p-2.5 transition hover:bg-card/70 hover:border-primary/40">
               <div className="relative">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground ring-2 ring-primary/30" style={{ backgroundImage: "var(--gradient-primary)" }}>
                   {t.name.split(" ").map((s)=>s[0]).join("")}
@@ -430,7 +432,7 @@ function Dashboard() {
                   <span><span className="text-foreground/80">{t.revenue}</span> · {t.done} done</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </CardContent>
       </Card>
@@ -449,12 +451,12 @@ function Dashboard() {
         <CardContent>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { label: "Van Alerts", value: "9", icon: Truck },
-              { label: "Warehouse Alerts", value: "5", icon: Package },
-              { label: "Parts Used Today", value: "126", icon: Activity },
-              { label: "POs Awaiting Approval", value: "3", icon: ClipboardCheck },
+              { label: "Van Alerts", value: "9", icon: Truck, to: "/inventory/vans" as const },
+              { label: "Warehouse Alerts", value: "5", icon: Package, to: "/inventory/warehouse" as const },
+              { label: "Parts Used Today", value: "126", icon: Activity, to: "/inventory/reports" as const },
+              { label: "POs Awaiting Approval", value: "3", icon: ClipboardCheck, to: "/purchase-orders" as const },
             ].map((s) => (
-              <div key={s.label} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
+              <Link key={s.label} to={s.to} className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
                     <s.icon className="h-3.5 w-3.5" />
@@ -462,7 +464,7 @@ function Dashboard() {
                   <span className="text-[10px] uppercase tracking-wider">{s.label}</span>
                 </div>
                 <p className="mt-2 text-2xl font-semibold tabular-nums">{s.value}</p>
-              </div>
+              </Link>
             ))}
           </div>
           <div className="mt-3 max-h-[260px] overflow-y-auto rounded-lg border hairline">
@@ -480,8 +482,8 @@ function Dashboard() {
                   const ratio = i.onHand / i.min;
                   const danger = ratio < 0.4;
                   return (
-                    <tr key={i.name} className="transition hover:bg-card/40">
-                      <td className="px-3 py-2 font-medium">{i.name}</td>
+                    <tr key={i.name} className="cursor-pointer transition hover:bg-card/40" onClick={() => { window.location.href = "/inventory/low-stock"; }}>
+                      <td className="px-3 py-2 font-medium"><Link to="/inventory/low-stock" className="hover:text-primary">{i.name}</Link></td>
                       <td className="px-3 py-2 text-muted-foreground">{i.location}</td>
                       <td className="px-3 py-2 text-right tabular-nums">
                         <span className={danger ? "text-[oklch(0.69_0.21_45)]" : "text-foreground"}>{i.onHand}</span>
@@ -525,15 +527,15 @@ function Dashboard() {
         </CardHeader>
         <CardContent className="relative space-y-2">
           {aiInsights.map((a, i) => (
-            <div key={i} className={`flex items-start gap-3 rounded-lg border p-3 transition hover:translate-x-0.5 ${aiToneClass[a.tone]}`}>
+            <Link key={i} to={a.to} className={`flex items-start gap-3 rounded-lg border p-3 transition hover:translate-x-0.5 ${aiToneClass[a.tone]}`}>
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-background/40">
                 <a.icon className="h-3.5 w-3.5" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm leading-snug text-foreground">{a.text}</p>
-                <button className="mt-1 text-[11px] font-medium opacity-80 transition hover:opacity-100">{a.cta} →</button>
+                <span className="mt-1 inline-block text-[11px] font-medium opacity-80 transition hover:opacity-100">{a.cta} →</span>
               </div>
-            </div>
+            </Link>
           ))}
         </CardContent>
       </Card>
@@ -552,7 +554,7 @@ function Dashboard() {
         <CardContent>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6">
             {pipeline.map((p) => (
-              <div key={p.stage} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
+              <Link key={p.stage} to="/pipeline" className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full" style={{ background: p.color, boxShadow: `0 0 6px ${p.color}` }} />
                   <span className="text-[11px] font-medium text-muted-foreground">{p.stage}</span>
@@ -562,7 +564,7 @@ function Dashboard() {
                 <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted/60">
                   <div className="h-full" style={{ width: `${Math.min(100, p.count*5)}%`, background: p.color }} />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           <div className="mt-4 grid grid-cols-3 gap-2 text-center">
@@ -571,11 +573,11 @@ function Dashboard() {
               { tier: "Better", value: 22, hue: "#25B7FF" },
               { tier: "Best", value: 9, hue: "#009DFF" },
             ].map((t) => (
-              <div key={t.tier} className="rounded-lg border hairline bg-card/40 p-3">
+              <Link key={t.tier} to="/estimates" className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{t.tier} tier</p>
                 <p className="mt-1 text-2xl font-semibold tabular-nums" style={{ color: t.hue, textShadow: `0 0 16px color-mix(in oklab, ${t.hue} 45%, transparent)` }}>{t.value}</p>
                 <p className="text-[10px] text-muted-foreground">selected this month</p>
-              </div>
+              </Link>
             ))}
           </div>
         </CardContent>
@@ -583,22 +585,23 @@ function Dashboard() {
     ),
     "maintenance-agreements": () => (
       <Card className="premium-card h-full">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
             <BadgeCheck className="h-4 w-4 text-primary" /> Maintenance Agreements
           </CardTitle>
+          <Button asChild variant="ghost" size="sm"><Link to="/crm">Manage <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-2">
           {agreements.map((a) => (
-            <div key={a.label} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
+            <Link key={a.label} to="/crm" className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
               <p className="text-[11px] text-muted-foreground">{a.label}</p>
               <p className="mt-1 text-lg font-semibold tabular-nums">{a.value}</p>
-            </div>
+            </Link>
           ))}
-          <div className="col-span-2 rounded-lg border hairline bg-card/40 p-3">
+          <Link to="/reports" className="col-span-2 block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
             <div className="mb-1 flex justify-between text-xs"><span>Annual renewal target</span><span className="text-muted-foreground">$310k / $500k</span></div>
             <Progress value={62} />
-          </div>
+          </Link>
         </CardContent>
       </Card>
     ),
@@ -626,8 +629,8 @@ function Dashboard() {
             </thead>
             <tbody className="divide-y divide-border">
               {recentInvoices.map((r) => (
-                <tr key={r.num} className="transition hover:bg-card/40">
-                  <td className="py-2.5 pr-3 font-medium text-primary">{r.num}</td>
+                <tr key={r.num} className="cursor-pointer transition hover:bg-card/40">
+                  <td className="py-2.5 pr-3 font-medium text-primary"><Link to="/invoices" className="hover:underline">{r.num}</Link></td>
                   <td className="py-2.5 pr-3">{r.cust}</td>
                   <td className="py-2.5 pr-3 text-muted-foreground">{r.job}</td>
                   <td className="py-2.5 pr-3 text-right font-medium tabular-nums">${r.amount.toLocaleString()}</td>
@@ -652,7 +655,7 @@ function Dashboard() {
         </CardHeader>
         <CardContent className="space-y-2">
           {ticketAlerts.map((t) => (
-            <div key={t.id} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
+            <Link key={t.id} to="/tickets" className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
@@ -663,7 +666,7 @@ function Dashboard() {
                 </div>
                 <Badge variant="outline" className={`${ticketTone[t.priority]} text-[10px] shrink-0`}>{t.priority}</Badge>
               </div>
-            </div>
+            </Link>
           ))}
         </CardContent>
       </Card>
@@ -677,6 +680,7 @@ function Dashboard() {
           <div className="flex gap-2">
             <Badge variant="outline" className="border-primary/40 text-primary">8 in field</Badge>
             <Badge variant="outline" className="border-[oklch(0.69_0.21_45)/0.5] text-[oklch(0.69_0.21_45)]"><AlertTriangle className="mr-1 h-3 w-3" />2 emergency</Badge>
+            <Button asChild variant="ghost" size="sm"><Link to="/dispatch">Open <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -717,17 +721,18 @@ function Dashboard() {
     ),
     "reports-snapshot": () => (
       <Card className="premium-card h-full">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
             <BarChart3Icon className="h-4 w-4 text-primary" /> Reports Snapshot
           </CardTitle>
+          <Button asChild variant="ghost" size="sm"><Link to="/reports">All reports <ArrowUpRight className="ml-1 h-3 w-3" /></Link></Button>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {reportSnapshots.map((r) => (
-            <div key={r.title} className="rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60">
+            <Link key={r.title} to="/reports" className="block rounded-lg border hairline bg-card/40 p-3 transition hover:bg-card/60 hover:border-primary/40">
               <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{r.title}</p>
               <div className="mt-3"><MiniBars data={r.bars} /></div>
-            </div>
+            </Link>
           ))}
         </CardContent>
       </Card>
