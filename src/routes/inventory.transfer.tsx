@@ -45,7 +45,7 @@ function TransferPage() {
       if (error) throw error;
     } else {
       const { error } = await supabase.from("inventory_stock").insert({
-        company_id: companyId,
+        company_id: companyId!,
         location_id: locationId,
         item_id: item,
         quantity: delta,
@@ -66,7 +66,7 @@ function TransferPage() {
       await adjustStock(from, itemId, -q);
       await adjustStock(to, itemId, q);
       const { error } = await supabase.from("inventory_transactions").insert({
-        company_id: companyId,
+        company_id: companyId!,
         item_id: itemId,
         from_location_id: from,
         to_location_id: to,
