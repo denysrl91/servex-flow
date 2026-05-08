@@ -310,6 +310,15 @@ const priorityDot: Record<string,string> = {
 
 /* ---------------- Page ---------------- */
 function Dashboard() {
+  const SECTION_DEFS: { id: string; label: string }[] = [
+    { id: "kpis", label: "KPIs" },
+    { id: "dispatch", label: "Dispatch · Workforce" },
+    { id: "inventory", label: "Inventory · AI Insights" },
+    { id: "sales", label: "Sales · Recurring Revenue" },
+    { id: "billing", label: "Billing · Service Tickets" },
+    { id: "field", label: "Live Field · Reports" },
+  ];
+  const { order, move, reset } = useSectionOrder(SECTION_DEFS.map((s) => s.id));
   return (
     <>
       <PageHeader
@@ -368,6 +377,15 @@ function Dashboard() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Button
+              variant="outline"
+              size="sm"
+              className="hairline"
+              onClick={reset}
+              title="Reset dashboard layout"
+            >
+              <RotateCcw className="mr-2 h-3.5 w-3.5" /> Reset layout
+            </Button>
           </>
         }
       />
