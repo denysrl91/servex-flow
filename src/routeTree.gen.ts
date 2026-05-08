@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as TechniciansRouteImport } from './routes/technicians'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ReportsRouteImport } from './routes/reports'
@@ -35,6 +36,11 @@ const TicketsRoute = TicketsRouteImport.update({
 const TechniciansRoute = TechniciansRouteImport.update({
   id: '/technicians',
   path: '/technicians',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
 }
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsRoute
   '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
 }
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/schedule': typeof ScheduleRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
 }
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schedule'
     | '/settings'
+    | '/signup'
     | '/technicians'
     | '/tickets'
   fileRoutesByTo: FileRoutesByTo
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schedule'
     | '/settings'
+    | '/signup'
     | '/technicians'
     | '/tickets'
   id:
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/schedule'
     | '/settings'
+    | '/signup'
     | '/technicians'
     | '/tickets'
   fileRoutesById: FileRoutesById
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   ScheduleRoute: typeof ScheduleRoute
   SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   TechniciansRoute: typeof TechniciansRoute
   TicketsRoute: typeof TicketsRoute
 }
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/technicians'
       fullPath: '/technicians'
       preLoaderRoute: typeof TechniciansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   ScheduleRoute: ScheduleRoute,
   SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   TechniciansRoute: TechniciansRoute,
   TicketsRoute: TicketsRoute,
 }
