@@ -239,66 +239,58 @@ function SectionEyebrow({ label }: { label: string }) {
   );
 }
 
-/* ---------------- Reorderable section shell ---------------- */
-const DASH_ORDER_KEY = "servex.dashboard.sectionOrder.v1";
+/* ---------------- Drag-and-drop widget shell ---------------- */
+const WIDGET_ORDER_KEY = "servex.dashboard.widgetOrder.v2";
 
-function SectionShell({
-  label,
-  isFirst,
-  isLast,
-  onUp,
-  onDown,
-  children,
-}: {
-  label: string;
-  isFirst: boolean;
-  isLast: boolean;
-  onUp: () => void;
-  onDown: () => void;
-  children: ReactNode;
-}) {
+type WidgetSpan = 1 | 2 | 3;
+type Widget = { id: string; label: string; span: WidgetSpan; render: () => ReactNode };
+
+const SPAN_CLASS: Record<WidgetSpan, string> = {
+  1: "xl:col-span-1",
+  2: "xl:col-span-2 md:col-span-2",
+  3: "xl:col-span-3 md:col-span-2",
+};
+
+function SortableWidget({ widget }: { widget: Widget }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: widget.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 30 : undefined,
+  };
   return (
-    <section className="group/sec relative space-y-3">
-      <div className="absolute right-0 top-0 z-20 flex translate-y-[-2px] items-center gap-1 rounded-md border hairline bg-card/80 p-0.5 opacity-0 shadow-sm backdrop-blur transition-opacity group-hover/sec:opacity-100 focus-within:opacity-100">
-        <span className="hidden items-center gap-1 px-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:flex">
-          <GripVertical className="h-3 w-3" /> {label}
-        </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          aria-label={`Move ${label} up`}
-          disabled={isFirst}
-          onClick={onUp}
-        >
-          <ChevronUp className="h-3.5 w-3.5" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          aria-label={`Move ${label} down`}
-          disabled={isLast}
-          onClick={onDown}
-        >
-          <ChevronDown className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-      {children}
-    </section>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`group/widget relative ${SPAN_CLASS[widget.span]} ${
+        isDragging ? "opacity-80 shadow-[var(--shadow-elegant)]" : ""
+      }`}
+    >
+      <button
+        type="button"
+        {...attributes}
+        {...listeners}
+        aria-label={`Drag ${widget.label}`}
+        className="absolute right-2 top-2 z-20 flex h-7 items-center gap-1 rounded-md border hairline bg-card/85 px-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground opacity-0 shadow-sm backdrop-blur transition-opacity hover:text-foreground group-hover/widget:opacity-100 focus-visible:opacity-100 cursor-grab active:cursor-grabbing"
+      >
+        <GripVertical className="h-3 w-3" />
+        <span className="hidden sm:inline">{widget.label}</span>
+      </button>
+      {widget.render()}
+    </div>
   );
 }
 
-function useSectionOrder(defaultOrder: string[]) {
-  const [order, setOrder] = useState<string[]>(defaultOrder);
+function useWidgetOrder(defaults: string[]) {
+  const [order, setOrder] = useState<string[]>(defaults);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(DASH_ORDER_KEY);
+      const raw = localStorage.getItem(WIDGET_ORDER_KEY);
       if (raw) {
         const saved = JSON.parse(raw) as string[];
-        // merge: keep saved order, append any new ids, drop unknown
-        const filtered = saved.filter((id) => defaultOrder.includes(id));
-        const missing = defaultOrder.filter((id) => !filtered.includes(id));
+        const filtered = saved.filter((id) => defaults.includes(id));
+        const missing = defaults.filter((id) => !filtered.includes(id));
         setOrder([...filtered, ...missing]);
       }
     } catch {}
@@ -306,19 +298,10 @@ function useSectionOrder(defaultOrder: string[]) {
   }, []);
   const persist = (next: string[]) => {
     setOrder(next);
-    try { localStorage.setItem(DASH_ORDER_KEY, JSON.stringify(next)); } catch {}
+    try { localStorage.setItem(WIDGET_ORDER_KEY, JSON.stringify(next)); } catch {}
   };
-  const move = (id: string, dir: -1 | 1) => {
-    const idx = order.indexOf(id);
-    if (idx < 0) return;
-    const target = idx + dir;
-    if (target < 0 || target >= order.length) return;
-    const next = order.slice();
-    [next[idx], next[target]] = [next[target], next[idx]];
-    persist(next);
-  };
-  const reset = () => persist(defaultOrder);
-  return { order, move, reset };
+  const reset = () => persist(defaults);
+  return { order, persist, reset };
 }
 
 const priorityDot: Record<string,string> = {
