@@ -38,6 +38,7 @@ import { Route as EstimatesNewRouteImport } from './routes/estimates.new'
 import { Route as EstimatesEstimateIdRouteImport } from './routes/estimates.$estimateId'
 import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
+import { Route as EstimatesEstimateIdProposalRouteImport } from './routes/estimates.$estimateId.proposal'
 
 const TicketsRoute = TicketsRouteImport.update({
   id: '/tickets',
@@ -184,6 +185,12 @@ const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
   path: '/new',
   getParentRoute: () => InventoryItemsRoute,
 } as any)
+const EstimatesEstimateIdProposalRoute =
+  EstimatesEstimateIdProposalRouteImport.update({
+    id: '/proposal',
+    path: '/proposal',
+    getParentRoute: () => EstimatesEstimateIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -206,13 +213,14 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
-  '/estimates/$estimateId': typeof EstimatesEstimateIdRoute
+  '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
+  '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
 }
@@ -236,13 +244,14 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
-  '/estimates/$estimateId': typeof EstimatesEstimateIdRoute
+  '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory': typeof InventoryIndexRoute
+  '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
 }
@@ -268,13 +277,14 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
-  '/estimates/$estimateId': typeof EstimatesEstimateIdRoute
+  '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
+  '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
 }
@@ -308,6 +318,7 @@ export interface FileRouteTypes {
     | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory/'
+    | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
   fileRoutesByTo: FileRoutesByTo
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory'
+    | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
   id:
@@ -369,6 +381,7 @@ export interface FileRouteTypes {
     | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory/'
+    | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
   fileRoutesById: FileRoutesById
@@ -601,16 +614,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryItemsNewRouteImport
       parentRoute: typeof InventoryItemsRoute
     }
+    '/estimates/$estimateId/proposal': {
+      id: '/estimates/$estimateId/proposal'
+      path: '/proposal'
+      fullPath: '/estimates/$estimateId/proposal'
+      preLoaderRoute: typeof EstimatesEstimateIdProposalRouteImport
+      parentRoute: typeof EstimatesEstimateIdRoute
+    }
   }
 }
 
+interface EstimatesEstimateIdRouteChildren {
+  EstimatesEstimateIdProposalRoute: typeof EstimatesEstimateIdProposalRoute
+}
+
+const EstimatesEstimateIdRouteChildren: EstimatesEstimateIdRouteChildren = {
+  EstimatesEstimateIdProposalRoute: EstimatesEstimateIdProposalRoute,
+}
+
+const EstimatesEstimateIdRouteWithChildren =
+  EstimatesEstimateIdRoute._addFileChildren(EstimatesEstimateIdRouteChildren)
+
 interface EstimatesRouteChildren {
-  EstimatesEstimateIdRoute: typeof EstimatesEstimateIdRoute
+  EstimatesEstimateIdRoute: typeof EstimatesEstimateIdRouteWithChildren
   EstimatesNewRoute: typeof EstimatesNewRoute
 }
 
 const EstimatesRouteChildren: EstimatesRouteChildren = {
-  EstimatesEstimateIdRoute: EstimatesEstimateIdRoute,
+  EstimatesEstimateIdRoute: EstimatesEstimateIdRouteWithChildren,
   EstimatesNewRoute: EstimatesNewRoute,
 }
 
