@@ -5,10 +5,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   DollarSign, Briefcase, Calendar, CheckCircle2, Receipt, TrendingUp, Package,
   CircleDollarSign, BadgeCheck, Activity, Plus, Sparkles, ArrowUpRight, ArrowDownRight,
   AlertTriangle, Flame, MapPin, Truck, Zap, Brain, Wrench, Radio,
   ClipboardCheck, Headphones, ShieldAlert, Snowflake,
+  Users, FileText, Boxes, Home, Wind, HardHat, Briefcase as BriefcaseIcon,
+  ShoppingCart, LifeBuoy, Tag, ChevronDown,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Dashboard });
@@ -227,9 +237,53 @@ function Dashboard() {
             <Button variant="outline" size="sm" className="hairline">
               <Sparkles className="mr-2 h-4 w-4 text-primary" /> Ask Servex AI
             </Button>
-            <Button size="sm" className="glow-primary" style={{ backgroundImage: "var(--gradient-primary)" }}>
-              <Plus className="mr-2 h-4 w-4" /> New Job
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" className="glow-primary" style={{ backgroundImage: "var(--gradient-primary)" }}>
+                  <Plus className="mr-2 h-4 w-4" /> Add New <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Operations</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/jobs"><BriefcaseIcon className="mr-2 h-4 w-4" /> Job</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/tickets"><LifeBuoy className="mr-2 h-4 w-4" /> Service Ticket</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/estimates/new"><FileText className="mr-2 h-4 w-4" /> Estimate</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>People & Places</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/customers"><Users className="mr-2 h-4 w-4" /> Customer</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/properties"><Home className="mr-2 h-4 w-4" /> Property</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/equipment"><Wind className="mr-2 h-4 w-4" /> Equipment</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/technicians"><HardHat className="mr-2 h-4 w-4" /> Technician</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Inventory & Catalog</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/inventory/items/new"><Boxes className="mr-2 h-4 w-4" /> Inventory Item</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/purchase-orders"><ShoppingCart className="mr-2 h-4 w-4" /> Purchase Order</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/sales-catalog"><Tag className="mr-2 h-4 w-4" /> Sale Item</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/services-catalog"><Wrench className="mr-2 h-4 w-4" /> Service Item</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         }
       />
