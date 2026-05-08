@@ -1898,7 +1898,13 @@ export type Database = {
         | "needs_service"
         | "out_of_service"
         | "decommissioned"
-      estimate_status: "draft" | "sent" | "approved" | "rejected" | "expired"
+      estimate_status:
+        | "draft"
+        | "sent"
+        | "approved"
+        | "rejected"
+        | "expired"
+        | "converted"
       inv_txn_type: "receipt" | "issue" | "transfer" | "adjustment" | "return"
       invoice_status: "draft" | "sent" | "partial" | "paid" | "overdue" | "void"
       job_priority: "low" | "medium" | "high" | "urgent"
@@ -2090,7 +2096,14 @@ export const Constants = {
         "out_of_service",
         "decommissioned",
       ],
-      estimate_status: ["draft", "sent", "approved", "rejected", "expired"],
+      estimate_status: [
+        "draft",
+        "sent",
+        "approved",
+        "rejected",
+        "expired",
+        "converted",
+      ],
       inv_txn_type: ["receipt", "issue", "transfer", "adjustment", "return"],
       invoice_status: ["draft", "sent", "partial", "paid", "overdue", "void"],
       job_priority: ["low", "medium", "high", "urgent"],
