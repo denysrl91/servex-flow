@@ -55,7 +55,11 @@ function NavGroup({ label, items, currentPath }: { label: string; items: typeof 
   const { state } = useSidebar();
   return (
     <SidebarGroup>
-      {state !== "collapsed" && <SidebarGroupLabel className="text-sidebar-foreground/60">{label}</SidebarGroupLabel>}
+      {state !== "collapsed" && (
+        <SidebarGroupLabel className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/50">
+          {label}
+        </SidebarGroupLabel>
+      )}
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => {
