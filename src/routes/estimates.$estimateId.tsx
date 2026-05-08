@@ -23,6 +23,7 @@ import {
   type EstimatePhoto,
   type EstimateRow,
 } from "@/lib/estimates-api";
+import { useAllPriceBook } from "@/lib/price-book-store";
 
 export const Route = createFileRoute("/estimates/$estimateId")({ component: BuilderPage });
 
@@ -39,6 +40,7 @@ function BuilderPage() {
   const [inventory, setInventory] = useState<InvItem[]>([]);
   const [activeOptionId, setActiveOptionId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const priceBook = useAllPriceBook();
 
   const reload = async () => {
     const r = await fetchEstimate(estimateId);
@@ -126,6 +128,30 @@ function BuilderPage() {
       sort_order: lines.length,
     });
     if (error) return toast.error(error.message);
+    reload();
+  };
+
+  const addFromPriceBook = async (codeKey: string) => {
+    if (!companyId || !activeOptionId) return;
+    const [kind, code] = codeKey.split("::");
+    const entry = priceBook.find((p) => p.kind === kind && p.item.code === code);
+    if (!entry) return;
+    const it = entry.item;
+    const lineType: EstimateLineItem["type"] =
+      entry.kind === "services" ? "labor" : "equipment";
+    const { error } = await supabase.from("estimate_line_items").insert({
+      company_id: companyId,
+      estimate_id: est.id,
+      option_id: activeOptionId,
+      type: lineType,
+      description: `${it.code} — ${it.name}`,
+      quantity: 1,
+      unit_price: it.price,
+      total: it.price,
+      sort_order: lines.length,
+    });
+    if (error) return toast.error(error.message);
+    toast.success(`Added "${it.name}" from price book`);
     reload();
   };
 
@@ -333,6 +359,7 @@ function BuilderPage() {
                 <Button size="sm" variant="outline" onClick={() => addLine("material")}><Package className="mr-2 h-4 w-4" /> Material</Button>
                 <Button size="sm" variant="outline" onClick={() => addLine("equipment")}><Cog className="mr-2 h-4 w-4" /> Equipment</Button>
                 <InventoryPicker items={inventory} onPick={addFromInventory} />
+                <PriceBookPicker entries={priceBook} onPick={addFromPriceBook} />
               </div>
             </CardHeader>
             <CardContent>
@@ -489,5 +516,36 @@ function InventoryPicker({ items, onPick }: { items: InvItem[]; onPick: (id: str
         </SelectContent>
       </Select>
     </div>
+  );
+}
+
+type PriceEntry = ReturnType<typeof useAllPriceBook>[number];
+
+function PriceBookPicker({ entries, onPick }: { entries: PriceEntry[]; onPick: (key: string) => void }) {
+  const [v, setV] = useState("");
+  const sales = entries.filter((e) => e.kind === "sales" && e.item.active);
+  const services = entries.filter((e) => e.kind === "services" && e.item.active);
+  return (
+    <Select value={v} onValueChange={(val) => { setV(""); onPick(val); }}>
+      <SelectTrigger className="h-9 w-[240px]"><SelectValue placeholder="From price book…" /></SelectTrigger>
+      <SelectContent className="max-h-[360px]">
+        {sales.length > 0 && (
+          <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Sales</div>
+        )}
+        {sales.map((e) => (
+          <SelectItem key={`sales::${e.item.code}`} value={`sales::${e.item.code}`}>
+            {e.item.code} — {e.item.name} (${e.item.price})
+          </SelectItem>
+        ))}
+        {services.length > 0 && (
+          <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Services</div>
+        )}
+        {services.map((e) => (
+          <SelectItem key={`services::${e.item.code}`} value={`services::${e.item.code}`}>
+            {e.item.code} — {e.item.name} (${e.item.price})
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

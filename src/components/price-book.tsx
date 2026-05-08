@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { usePriceBook, type PriceBookKind } from "@/lib/price-book-store";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,16 +34,15 @@ export type PriceItem = {
 type Props = {
   title: string;
   description: string;
-  kind: "sales" | "services";
+  kind: PriceBookKind;
   categories: string[];
-  initialItems: PriceItem[];
 };
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
-export function PriceBook({ title, description, kind, categories, initialItems }: Props) {
-  const [items, setItems] = useState<PriceItem[]>(initialItems);
+export function PriceBook({ title, description, kind, categories }: Props) {
+  const [items, setItems] = usePriceBook(kind);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("all");
   const [open, setOpen] = useState(false);
