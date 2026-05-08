@@ -30,6 +30,7 @@ import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
+import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 
@@ -138,6 +139,11 @@ const InventoryIndexRoute = InventoryIndexRouteImport.update({
   path: '/',
   getParentRoute: () => InventoryRoute,
 } as any)
+const InventoryWarehouseRoute = InventoryWarehouseRouteImport.update({
+  id: '/warehouse',
+  path: '/warehouse',
+  getParentRoute: () => InventoryRoute,
+} as any)
 const InventoryItemsRoute = InventoryItemsRouteImport.update({
   id: '/items',
   path: '/items',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
 }
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory': typeof InventoryIndexRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
 }
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
 }
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/warehouse'
     | '/inventory/'
     | '/inventory/items/new'
   fileRoutesByTo: FileRoutesByTo
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/warehouse'
     | '/inventory'
     | '/inventory/items/new'
   id:
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/warehouse'
     | '/inventory/'
     | '/inventory/items/new'
   fileRoutesById: FileRoutesById
@@ -473,6 +485,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryIndexRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/inventory/warehouse': {
+      id: '/inventory/warehouse'
+      path: '/warehouse'
+      fullPath: '/inventory/warehouse'
+      preLoaderRoute: typeof InventoryWarehouseRouteImport
+      parentRoute: typeof InventoryRoute
+    }
     '/inventory/items': {
       id: '/inventory/items'
       path: '/items'
@@ -504,11 +523,13 @@ const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
 
 interface InventoryRouteChildren {
   InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
+  InventoryWarehouseRoute: typeof InventoryWarehouseRoute
   InventoryIndexRoute: typeof InventoryIndexRoute
 }
 
 const InventoryRouteChildren: InventoryRouteChildren = {
   InventoryItemsRoute: InventoryItemsRouteWithChildren,
+  InventoryWarehouseRoute: InventoryWarehouseRoute,
   InventoryIndexRoute: InventoryIndexRoute,
 }
 
@@ -541,3 +562,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
