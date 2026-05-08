@@ -31,6 +31,7 @@ import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
+import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 
@@ -144,6 +145,11 @@ const InventoryWarehouseRoute = InventoryWarehouseRouteImport.update({
   path: '/warehouse',
   getParentRoute: () => InventoryRoute,
 } as any)
+const InventoryVansRoute = InventoryVansRouteImport.update({
+  id: '/vans',
+  path: '/vans',
+  getParentRoute: () => InventoryRoute,
+} as any)
 const InventoryItemsRoute = InventoryItemsRouteImport.update({
   id: '/items',
   path: '/items',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory': typeof InventoryIndexRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
+  '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
   '/inventory/': typeof InventoryIndexRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory/'
     | '/inventory/items/new'
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory'
     | '/inventory/items/new'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '/technicians'
     | '/tickets'
     | '/inventory/items'
+    | '/inventory/vans'
     | '/inventory/warehouse'
     | '/inventory/'
     | '/inventory/items/new'
@@ -492,6 +504,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryWarehouseRouteImport
       parentRoute: typeof InventoryRoute
     }
+    '/inventory/vans': {
+      id: '/inventory/vans'
+      path: '/vans'
+      fullPath: '/inventory/vans'
+      preLoaderRoute: typeof InventoryVansRouteImport
+      parentRoute: typeof InventoryRoute
+    }
     '/inventory/items': {
       id: '/inventory/items'
       path: '/items'
@@ -523,12 +542,14 @@ const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
 
 interface InventoryRouteChildren {
   InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
+  InventoryVansRoute: typeof InventoryVansRoute
   InventoryWarehouseRoute: typeof InventoryWarehouseRoute
   InventoryIndexRoute: typeof InventoryIndexRoute
 }
 
 const InventoryRouteChildren: InventoryRouteChildren = {
   InventoryItemsRoute: InventoryItemsRouteWithChildren,
+  InventoryVansRoute: InventoryVansRoute,
   InventoryWarehouseRoute: InventoryWarehouseRoute,
   InventoryIndexRoute: InventoryIndexRoute,
 }
@@ -562,3 +583,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
