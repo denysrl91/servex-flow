@@ -1,0 +1,1 @@
+ALTER TYPE public.estimate_status ADD VALUE IF NOT EXISTS 'converted';

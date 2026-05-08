@@ -212,45 +212,114 @@ export type Database = {
           },
         ]
       }
+      estimate_line_items: {
+        Row: {
+          company_id: string
+          created_at: string
+          description: string
+          estimate_id: string
+          id: string
+          item_id: string | null
+          option_id: string | null
+          quantity: number
+          sort_order: number
+          status: string
+          total: number
+          type: string
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          description: string
+          estimate_id: string
+          id?: string
+          item_id?: string | null
+          option_id?: string | null
+          quantity?: number
+          sort_order?: number
+          status?: string
+          total?: number
+          type?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          description?: string
+          estimate_id?: string
+          id?: string
+          item_id?: string | null
+          option_id?: string | null
+          quantity?: number
+          sort_order?: number
+          status?: string
+          total?: number
+          type?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       estimate_options: {
         Row: {
           amount: number
           company_id: string
           created_at: string
           description: string | null
+          efficiency_rating: string | null
           estimate_id: string
+          highlights: string[] | null
           id: string
+          is_recommended: boolean
           is_selected: boolean
+          monthly_payment: number | null
           name: string
           sort_order: number
           status: string
+          tier: string | null
           updated_at: string
+          warranty_years: number | null
         }
         Insert: {
           amount?: number
           company_id: string
           created_at?: string
           description?: string | null
+          efficiency_rating?: string | null
           estimate_id: string
+          highlights?: string[] | null
           id?: string
+          is_recommended?: boolean
           is_selected?: boolean
+          monthly_payment?: number | null
           name: string
           sort_order?: number
           status?: string
+          tier?: string | null
           updated_at?: string
+          warranty_years?: number | null
         }
         Update: {
           amount?: number
           company_id?: string
           created_at?: string
           description?: string | null
+          efficiency_rating?: string | null
           estimate_id?: string
+          highlights?: string[] | null
           id?: string
+          is_recommended?: boolean
           is_selected?: boolean
+          monthly_payment?: number | null
           name?: string
           sort_order?: number
           status?: string
+          tier?: string | null
           updated_at?: string
+          warranty_years?: number | null
         }
         Relationships: [
           {
@@ -269,6 +338,42 @@ export type Database = {
           },
         ]
       }
+      estimate_photos: {
+        Row: {
+          caption: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          estimate_id: string
+          id: string
+          status: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          caption?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          estimate_id: string
+          id?: string
+          status?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          caption?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          estimate_id?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       estimates: {
         Row: {
           approved_at: string | null
@@ -276,12 +381,16 @@ export type Database = {
           created_at: string
           created_by: string | null
           customer_id: string
+          equipment_id: string | null
           estimate_number: string
           expires_at: string | null
           id: string
           job_id: string | null
           notes: string | null
           property_id: string | null
+          signature_data: string | null
+          signed_at: string | null
+          signed_by_name: string | null
           status: Database["public"]["Enums"]["estimate_status"]
           subtotal: number
           tax: number
@@ -295,12 +404,16 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           customer_id: string
+          equipment_id?: string | null
           estimate_number: string
           expires_at?: string | null
           id?: string
           job_id?: string | null
           notes?: string | null
           property_id?: string | null
+          signature_data?: string | null
+          signed_at?: string | null
+          signed_by_name?: string | null
           status?: Database["public"]["Enums"]["estimate_status"]
           subtotal?: number
           tax?: number
@@ -314,12 +427,16 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           customer_id?: string
+          equipment_id?: string | null
           estimate_number?: string
           expires_at?: string | null
           id?: string
           job_id?: string | null
           notes?: string | null
           property_id?: string | null
+          signature_data?: string | null
+          signed_at?: string | null
+          signed_by_name?: string | null
           status?: Database["public"]["Enums"]["estimate_status"]
           subtotal?: number
           tax?: number
@@ -1781,7 +1898,13 @@ export type Database = {
         | "needs_service"
         | "out_of_service"
         | "decommissioned"
-      estimate_status: "draft" | "sent" | "approved" | "rejected" | "expired"
+      estimate_status:
+        | "draft"
+        | "sent"
+        | "approved"
+        | "rejected"
+        | "expired"
+        | "converted"
       inv_txn_type: "receipt" | "issue" | "transfer" | "adjustment" | "return"
       invoice_status: "draft" | "sent" | "partial" | "paid" | "overdue" | "void"
       job_priority: "low" | "medium" | "high" | "urgent"
@@ -1973,7 +2096,14 @@ export const Constants = {
         "out_of_service",
         "decommissioned",
       ],
-      estimate_status: ["draft", "sent", "approved", "rejected", "expired"],
+      estimate_status: [
+        "draft",
+        "sent",
+        "approved",
+        "rejected",
+        "expired",
+        "converted",
+      ],
       inv_txn_type: ["receipt", "issue", "transfer", "adjustment", "return"],
       invoice_status: ["draft", "sent", "partial", "paid", "overdue", "void"],
       job_priority: ["low", "medium", "high", "urgent"],
