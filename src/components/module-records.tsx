@@ -176,7 +176,7 @@ export function ModuleRecords({
       subtitle: subtitleVal ? subtitleVal.slice(0, 200) : null,
       status: statusVal,
       notes: notesVal ? notesVal.slice(0, 2000) : null,
-      data: dataObj,
+      data: dataObj as never,
       created_by: user?.id ?? null,
     });
     setSaving(false);
