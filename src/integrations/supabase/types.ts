@@ -796,6 +796,75 @@ export type Database = {
           },
         ]
       }
+      installations: {
+        Row: {
+          brand: string | null
+          company_id: string
+          completed_date: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          equipment_type: string | null
+          id: string
+          install_number: string
+          model: string | null
+          notes: string | null
+          permit_number: string | null
+          property_id: string | null
+          scheduled_date: string | null
+          serial_number: string | null
+          status: string
+          technician_id: string | null
+          total_value: number
+          updated_at: string
+          warranty_years: number | null
+        }
+        Insert: {
+          brand?: string | null
+          company_id: string
+          completed_date?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          equipment_type?: string | null
+          id?: string
+          install_number: string
+          model?: string | null
+          notes?: string | null
+          permit_number?: string | null
+          property_id?: string | null
+          scheduled_date?: string | null
+          serial_number?: string | null
+          status?: string
+          technician_id?: string | null
+          total_value?: number
+          updated_at?: string
+          warranty_years?: number | null
+        }
+        Update: {
+          brand?: string | null
+          company_id?: string
+          completed_date?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          equipment_type?: string | null
+          id?: string
+          install_number?: string
+          model?: string | null
+          notes?: string | null
+          permit_number?: string | null
+          property_id?: string | null
+          scheduled_date?: string | null
+          serial_number?: string | null
+          status?: string
+          technician_id?: string | null
+          total_value?: number
+          updated_at?: string
+          warranty_years?: number | null
+        }
+        Relationships: []
+      }
       inventory_items: {
         Row: {
           barcode: string | null
@@ -1568,6 +1637,69 @@ export type Database = {
           },
         ]
       }
+      pm_schedules: {
+        Row: {
+          agreement_id: string | null
+          assigned_tech_id: string | null
+          checklist: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          equipment_id: string | null
+          frequency: string
+          id: string
+          last_visit: string | null
+          name: string
+          next_visit: string | null
+          notes: string | null
+          property_id: string | null
+          status: string
+          updated_at: string
+          visits_per_year: number
+        }
+        Insert: {
+          agreement_id?: string | null
+          assigned_tech_id?: string | null
+          checklist?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          equipment_id?: string | null
+          frequency?: string
+          id?: string
+          last_visit?: string | null
+          name: string
+          next_visit?: string | null
+          notes?: string | null
+          property_id?: string | null
+          status?: string
+          updated_at?: string
+          visits_per_year?: number
+        }
+        Update: {
+          agreement_id?: string | null
+          assigned_tech_id?: string | null
+          checklist?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          equipment_id?: string | null
+          frequency?: string
+          id?: string
+          last_visit?: string | null
+          name?: string
+          next_visit?: string | null
+          notes?: string | null
+          property_id?: string | null
+          status?: string
+          updated_at?: string
+          visits_per_year?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1611,6 +1743,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      projects: {
+        Row: {
+          actual_cost: number
+          budget: number
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          notes: string | null
+          project_manager_id: string | null
+          property_id: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          actual_cost?: number
+          budget?: number
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          project_manager_id?: string | null
+          property_id?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          actual_cost?: number
+          budget?: number
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          project_manager_id?: string | null
+          property_id?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       properties: {
         Row: {
@@ -2051,6 +2240,66 @@ export type Database = {
           },
         ]
       }
+      slas: {
+        Row: {
+          commercial_account_id: string | null
+          company_id: string
+          coverage_window: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          effective_date: string | null
+          expiration_date: string | null
+          id: string
+          name: string
+          notes: string | null
+          penalty_amount: number
+          priority: string
+          resolution_time_hours: number
+          response_time_hours: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          commercial_account_id?: string | null
+          company_id: string
+          coverage_window?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          effective_date?: string | null
+          expiration_date?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          penalty_amount?: number
+          priority?: string
+          resolution_time_hours?: number
+          response_time_hours?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          commercial_account_id?: string | null
+          company_id?: string
+          coverage_window?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          effective_date?: string | null
+          expiration_date?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          penalty_amount?: number
+          priority?: string
+          resolution_time_hours?: number
+          response_time_hours?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       technicians: {
         Row: {
           company_id: string
@@ -2109,6 +2358,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      time_entries: {
+        Row: {
+          approved: boolean
+          approved_by: string | null
+          billable: boolean
+          clock_in: string | null
+          clock_out: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          entry_date: string
+          entry_type: string
+          hours: number
+          id: string
+          job_id: string | null
+          notes: string | null
+          status: string
+          technician_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved?: boolean
+          approved_by?: string | null
+          billable?: boolean
+          clock_in?: string | null
+          clock_out?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          entry_date?: string
+          entry_type?: string
+          hours?: number
+          id?: string
+          job_id?: string | null
+          notes?: string | null
+          status?: string
+          technician_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved?: boolean
+          approved_by?: string | null
+          billable?: boolean
+          clock_in?: string | null
+          clock_out?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          entry_date?: string
+          entry_type?: string
+          hours?: number
+          id?: string
+          job_id?: string | null
+          notes?: string | null
+          status?: string
+          technician_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
