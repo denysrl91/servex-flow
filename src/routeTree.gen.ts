@@ -59,6 +59,7 @@ import { Route as CommissionsRouteImport } from './routes/commissions'
 import { Route as CommercialRouteImport } from './routes/commercial'
 import { Route as BusinessIntelligenceRouteImport } from './routes/business-intelligence'
 import { Route as AutomationRouteImport } from './routes/automation'
+import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as ApiAccessRouteImport } from './routes/api-access'
 import { Route as AiBrainRouteImport } from './routes/ai-brain'
 import { Route as IndexRouteImport } from './routes/index'
@@ -328,6 +329,11 @@ const AutomationRoute = AutomationRouteImport.update({
   path: '/automation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetsRoute = AssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAccessRoute = ApiAccessRouteImport.update({
   id: '/api-access',
   path: '/api-access',
@@ -424,6 +430,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-brain': typeof AiBrainRoute
   '/api-access': typeof ApiAccessRoute
+  '/assets': typeof AssetsRoute
   '/automation': typeof AutomationRoute
   '/business-intelligence': typeof BusinessIntelligenceRoute
   '/commercial': typeof CommercialRoute
@@ -494,6 +501,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-brain': typeof AiBrainRoute
   '/api-access': typeof ApiAccessRoute
+  '/assets': typeof AssetsRoute
   '/automation': typeof AutomationRoute
   '/business-intelligence': typeof BusinessIntelligenceRoute
   '/commercial': typeof CommercialRoute
@@ -564,6 +572,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/ai-brain': typeof AiBrainRoute
   '/api-access': typeof ApiAccessRoute
+  '/assets': typeof AssetsRoute
   '/automation': typeof AutomationRoute
   '/business-intelligence': typeof BusinessIntelligenceRoute
   '/commercial': typeof CommercialRoute
@@ -636,6 +645,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ai-brain'
     | '/api-access'
+    | '/assets'
     | '/automation'
     | '/business-intelligence'
     | '/commercial'
@@ -706,6 +716,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ai-brain'
     | '/api-access'
+    | '/assets'
     | '/automation'
     | '/business-intelligence'
     | '/commercial'
@@ -775,6 +786,7 @@ export interface FileRouteTypes {
     | '/'
     | '/ai-brain'
     | '/api-access'
+    | '/assets'
     | '/automation'
     | '/business-intelligence'
     | '/commercial'
@@ -846,6 +858,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AiBrainRoute: typeof AiBrainRoute
   ApiAccessRoute: typeof ApiAccessRoute
+  AssetsRoute: typeof AssetsRoute
   AutomationRoute: typeof AutomationRoute
   BusinessIntelligenceRoute: typeof BusinessIntelligenceRoute
   CommercialRoute: typeof CommercialRoute
@@ -1250,6 +1263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AutomationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assets': {
+      id: '/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api-access': {
       id: '/api-access'
       path: '/api-access'
@@ -1490,6 +1510,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiBrainRoute: AiBrainRoute,
   ApiAccessRoute: ApiAccessRoute,
+  AssetsRoute: AssetsRoute,
   AutomationRoute: AutomationRoute,
   BusinessIntelligenceRoute: BusinessIntelligenceRoute,
   CommercialRoute: CommercialRoute,
