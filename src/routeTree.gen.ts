@@ -55,6 +55,7 @@ import { Route as CustomerPortalRouteImport } from './routes/customer-portal'
 import { Route as CrmRouteImport } from './routes/crm'
 import { Route as CommunicationsRouteImport } from './routes/communications'
 import { Route as CommissionsRouteImport } from './routes/commissions'
+import { Route as CommercialRouteImport } from './routes/commercial'
 import { Route as BusinessIntelligenceRouteImport } from './routes/business-intelligence'
 import { Route as AutomationRouteImport } from './routes/automation'
 import { Route as ApiAccessRouteImport } from './routes/api-access'
@@ -306,6 +307,11 @@ const CommissionsRoute = CommissionsRouteImport.update({
   path: '/commissions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommercialRoute = CommercialRouteImport.update({
+  id: '/commercial',
+  path: '/commercial',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BusinessIntelligenceRoute = BusinessIntelligenceRouteImport.update({
   id: '/business-intelligence',
   path: '/business-intelligence',
@@ -414,6 +420,7 @@ export interface FileRoutesByFullPath {
   '/api-access': typeof ApiAccessRoute
   '/automation': typeof AutomationRoute
   '/business-intelligence': typeof BusinessIntelligenceRoute
+  '/commercial': typeof CommercialRoute
   '/commissions': typeof CommissionsRoute
   '/communications': typeof CommunicationsRoute
   '/crm': typeof CrmRoute
@@ -482,6 +489,7 @@ export interface FileRoutesByTo {
   '/api-access': typeof ApiAccessRoute
   '/automation': typeof AutomationRoute
   '/business-intelligence': typeof BusinessIntelligenceRoute
+  '/commercial': typeof CommercialRoute
   '/commissions': typeof CommissionsRoute
   '/communications': typeof CommunicationsRoute
   '/crm': typeof CrmRoute
@@ -550,6 +558,7 @@ export interface FileRoutesById {
   '/api-access': typeof ApiAccessRoute
   '/automation': typeof AutomationRoute
   '/business-intelligence': typeof BusinessIntelligenceRoute
+  '/commercial': typeof CommercialRoute
   '/commissions': typeof CommissionsRoute
   '/communications': typeof CommunicationsRoute
   '/crm': typeof CrmRoute
@@ -620,6 +629,7 @@ export interface FileRouteTypes {
     | '/api-access'
     | '/automation'
     | '/business-intelligence'
+    | '/commercial'
     | '/commissions'
     | '/communications'
     | '/crm'
@@ -688,6 +698,7 @@ export interface FileRouteTypes {
     | '/api-access'
     | '/automation'
     | '/business-intelligence'
+    | '/commercial'
     | '/commissions'
     | '/communications'
     | '/crm'
@@ -755,6 +766,7 @@ export interface FileRouteTypes {
     | '/api-access'
     | '/automation'
     | '/business-intelligence'
+    | '/commercial'
     | '/commissions'
     | '/communications'
     | '/crm'
@@ -824,6 +836,7 @@ export interface RootRouteChildren {
   ApiAccessRoute: typeof ApiAccessRoute
   AutomationRoute: typeof AutomationRoute
   BusinessIntelligenceRoute: typeof BusinessIntelligenceRoute
+  CommercialRoute: typeof CommercialRoute
   CommissionsRoute: typeof CommissionsRoute
   CommunicationsRoute: typeof CommunicationsRoute
   CrmRoute: typeof CrmRoute
@@ -1196,6 +1209,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/commercial': {
+      id: '/commercial'
+      path: '/commercial'
+      fullPath: '/commercial'
+      preLoaderRoute: typeof CommercialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/business-intelligence': {
       id: '/business-intelligence'
       path: '/business-intelligence'
@@ -1452,6 +1472,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAccessRoute: ApiAccessRoute,
   AutomationRoute: AutomationRoute,
   BusinessIntelligenceRoute: BusinessIntelligenceRoute,
+  CommercialRoute: CommercialRoute,
   CommissionsRoute: CommissionsRoute,
   CommunicationsRoute: CommunicationsRoute,
   CrmRoute: CrmRoute,
