@@ -35,6 +35,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MembershipsRouteImport } from './routes/memberships'
 import { Route as MembershipBillingRouteImport } from './routes/membership-billing'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LocationsRouteImport } from './routes/locations'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as InventoryRouteImport } from './routes/inventory'
@@ -205,6 +206,11 @@ const MembershipBillingRoute = MembershipBillingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocationsRoute = LocationsRouteImport.update({
+  id: '/locations',
+  path: '/locations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JobsRoute = JobsRouteImport.update({
@@ -441,6 +447,7 @@ export interface FileRoutesByFullPath {
   '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/locations': typeof LocationsRoute
   '/login': typeof LoginRoute
   '/membership-billing': typeof MembershipBillingRoute
   '/memberships': typeof MembershipsRoute
@@ -509,6 +516,7 @@ export interface FileRoutesByTo {
   '/integrations': typeof IntegrationsRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/locations': typeof LocationsRoute
   '/login': typeof LoginRoute
   '/membership-billing': typeof MembershipBillingRoute
   '/memberships': typeof MembershipsRoute
@@ -579,6 +587,7 @@ export interface FileRoutesById {
   '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
+  '/locations': typeof LocationsRoute
   '/login': typeof LoginRoute
   '/membership-billing': typeof MembershipBillingRoute
   '/memberships': typeof MembershipsRoute
@@ -650,6 +659,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/invoices'
     | '/jobs'
+    | '/locations'
     | '/login'
     | '/membership-billing'
     | '/memberships'
@@ -718,6 +728,7 @@ export interface FileRouteTypes {
     | '/integrations'
     | '/invoices'
     | '/jobs'
+    | '/locations'
     | '/login'
     | '/membership-billing'
     | '/memberships'
@@ -787,6 +798,7 @@ export interface FileRouteTypes {
     | '/inventory'
     | '/invoices'
     | '/jobs'
+    | '/locations'
     | '/login'
     | '/membership-billing'
     | '/memberships'
@@ -857,6 +869,7 @@ export interface RootRouteChildren {
   InventoryRoute: typeof InventoryRouteWithChildren
   InvoicesRoute: typeof InvoicesRoute
   JobsRoute: typeof JobsRouteWithChildren
+  LocationsRoute: typeof LocationsRoute
   LoginRoute: typeof LoginRoute
   MembershipBillingRoute: typeof MembershipBillingRoute
   MembershipsRoute: typeof MembershipsRoute
@@ -1067,6 +1080,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/locations': {
+      id: '/locations'
+      path: '/locations'
+      fullPath: '/locations'
+      preLoaderRoute: typeof LocationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jobs': {
@@ -1493,6 +1513,7 @@ const rootRouteChildren: RootRouteChildren = {
   InventoryRoute: InventoryRouteWithChildren,
   InvoicesRoute: InvoicesRoute,
   JobsRoute: JobsRouteWithChildren,
+  LocationsRoute: LocationsRoute,
   LoginRoute: LoginRoute,
   MembershipBillingRoute: MembershipBillingRoute,
   MembershipsRoute: MembershipsRoute,
