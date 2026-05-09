@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as TrainingRouteImport } from './routes/training'
 import { Route as TimeTrackingRouteImport } from './routes/time-tracking'
 import { Route as TicketsRouteImport } from './routes/tickets'
@@ -75,6 +76,11 @@ import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 import { Route as EstimatesEstimateIdProposalRouteImport } from './routes/estimates.$estimateId.proposal'
 
+const VendorsRoute = VendorsRouteImport.update({
+  id: '/vendors',
+  path: '/vendors',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrainingRoute = TrainingRouteImport.update({
   id: '/training',
   path: '/training',
@@ -453,6 +459,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
   '/training': typeof TrainingRoute
+  '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
@@ -519,6 +526,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
   '/training': typeof TrainingRoute
+  '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
@@ -587,6 +595,7 @@ export interface FileRoutesById {
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
   '/training': typeof TrainingRoute
+  '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
   '/estimates/$estimateId': typeof EstimatesEstimateIdRouteWithChildren
@@ -656,6 +665,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time-tracking'
     | '/training'
+    | '/vendors'
     | '/customers/$customerId'
     | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
@@ -722,6 +732,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time-tracking'
     | '/training'
+    | '/vendors'
     | '/customers/$customerId'
     | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
@@ -789,6 +800,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time-tracking'
     | '/training'
+    | '/vendors'
     | '/customers/$customerId'
     | '/equipment/$equipmentId'
     | '/estimates/$estimateId'
@@ -857,10 +869,18 @@ export interface RootRouteChildren {
   TicketsRoute: typeof TicketsRoute
   TimeTrackingRoute: typeof TimeTrackingRoute
   TrainingRoute: typeof TrainingRoute
+  VendorsRoute: typeof VendorsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vendors': {
+      id: '/vendors'
+      path: '/vendors'
+      fullPath: '/vendors'
+      preLoaderRoute: typeof VendorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/training': {
       id: '/training'
       path: '/training'
@@ -1477,6 +1497,7 @@ const rootRouteChildren: RootRouteChildren = {
   TicketsRoute: TicketsRoute,
   TimeTrackingRoute: TimeTrackingRoute,
   TrainingRoute: TrainingRoute,
+  VendorsRoute: VendorsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
