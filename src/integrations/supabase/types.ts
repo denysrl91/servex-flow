@@ -14,6 +14,198 @@ export type Database = {
   }
   public: {
     Tables: {
+      assets: {
+        Row: {
+          asset_tag: string | null
+          assigned_to: string | null
+          category: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          location_id: string | null
+          manufacturer: string | null
+          model: string | null
+          name: string
+          next_service_date: string | null
+          notes: string | null
+          purchase_date: string | null
+          purchase_price: number | null
+          serial_number: string | null
+          status: string
+          updated_at: string
+          warranty_expires: string | null
+        }
+        Insert: {
+          asset_tag?: string | null
+          assigned_to?: string | null
+          category?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          location_id?: string | null
+          manufacturer?: string | null
+          model?: string | null
+          name: string
+          next_service_date?: string | null
+          notes?: string | null
+          purchase_date?: string | null
+          purchase_price?: number | null
+          serial_number?: string | null
+          status?: string
+          updated_at?: string
+          warranty_expires?: string | null
+        }
+        Update: {
+          asset_tag?: string | null
+          assigned_to?: string | null
+          category?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          location_id?: string | null
+          manufacturer?: string | null
+          model?: string | null
+          name?: string
+          next_service_date?: string | null
+          notes?: string | null
+          purchase_date?: string | null
+          purchase_price?: number | null
+          serial_number?: string | null
+          status?: string
+          updated_at?: string
+          warranty_expires?: string | null
+        }
+        Relationships: []
+      }
+      business_locations: {
+        Row: {
+          address: string | null
+          city: string | null
+          company_id: string
+          country: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          manager_id: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          postal_code: string | null
+          region: string | null
+          status: string
+          timezone: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          company_id: string
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          manager_id?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          status?: string
+          timezone?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          company_id?: string
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          manager_id?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          status?: string
+          timezone?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      commercial_accounts: {
+        Row: {
+          account_manager_id: string | null
+          account_name: string
+          company_id: string
+          contract_end: string | null
+          contract_start: string | null
+          contract_value: number
+          created_at: string
+          created_by: string | null
+          credit_limit: number
+          customer_id: string | null
+          email: string | null
+          id: string
+          industry: string | null
+          notes: string | null
+          payment_terms: string | null
+          phone: string | null
+          primary_contact: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          account_manager_id?: string | null
+          account_name: string
+          company_id: string
+          contract_end?: string | null
+          contract_start?: string | null
+          contract_value?: number
+          created_at?: string
+          created_by?: string | null
+          credit_limit?: number
+          customer_id?: string | null
+          email?: string | null
+          id?: string
+          industry?: string | null
+          notes?: string | null
+          payment_terms?: string | null
+          phone?: string | null
+          primary_contact?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          account_manager_id?: string | null
+          account_name?: string
+          company_id?: string
+          contract_end?: string | null
+          contract_start?: string | null
+          contract_value?: number
+          created_at?: string
+          created_by?: string | null
+          credit_limit?: number
+          customer_id?: string | null
+          email?: string | null
+          id?: string
+          industry?: string | null
+          notes?: string | null
+          payment_terms?: string | null
+          phone?: string | null
+          primary_contact?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           address: string | null
@@ -2009,6 +2201,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vendors: {
+        Row: {
+          address: string | null
+          category: string | null
+          company_id: string
+          contact_name: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          lead_time_days: number | null
+          name: string
+          notes: string | null
+          payment_terms: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          category?: string | null
+          company_id: string
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          lead_time_days?: number | null
+          name: string
+          notes?: string | null
+          payment_terms?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          category?: string | null
+          company_id?: string
+          contact_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          lead_time_days?: number | null
+          name?: string
+          notes?: string | null
+          payment_terms?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
       }
       warehouses: {
         Row: {
