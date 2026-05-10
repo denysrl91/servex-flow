@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, FileText, ExternalLink } from "lucide-react";
+import { Plus, FileText, ExternalLink, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchEstimates, STATUS_LABEL, STATUS_TONE, type EstimateRow } from "@/lib/estimates-api";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/estimates")({ component: EstimatesPage });
 
@@ -26,6 +27,14 @@ function EstimatesPage() {
       setLoading(false);
     })();
   }, []);
+
+  const remove = async (id: string) => {
+    if (!confirm("Delete this estimate?")) return;
+    const { error } = await supabase.from("estimates").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Estimate deleted");
+    setRows((r) => r.filter((e) => e.id !== id));
+  };
 
   return (
     <>
@@ -76,6 +85,7 @@ function EstimatesPage() {
                         <Link to="/estimates/$estimateId/proposal" params={{ estimateId: r.id }}>
                           <Button size="sm" variant="ghost"><ExternalLink className="h-4 w-4" /></Button>
                         </Link>
+                        <Button size="sm" variant="ghost" onClick={() => remove(r.id)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
                       </div>
                     </td>
                   </tr>
