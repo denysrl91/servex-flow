@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Users, Building2 } from "lucide-react";
+import { Plus, Search, Users, Building2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 type Customer = {
@@ -65,6 +65,15 @@ function CustomersPage() {
     setOpen(false);
     toast.success("Customer added");
     navigate({ to: "/customers/$customerId", params: { customerId: data.id } });
+  };
+
+  const remove = async (e: React.MouseEvent, id: string, name: string) => {
+    e.stopPropagation();
+    if (!confirm(`Delete customer "${name}"? This cannot be undone.`)) return;
+    const { error } = await supabase.from("customers").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Customer deleted");
+    setRows((r) => r.filter((c) => c.id !== id));
   };
 
   return (
@@ -122,6 +131,7 @@ function CustomersPage() {
                   <th className="px-4 py-3 text-left">Phone</th>
                   <th className="px-4 py-3 text-left">Tags</th>
                   <th className="px-4 py-3 text-right">Lifetime value</th>
+                  <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
@@ -143,6 +153,9 @@ function CustomersPage() {
                     <td className="px-4 py-3 text-muted-foreground">{c.phone ?? "—"}</td>
                     <td className="px-4 py-3"><div className="flex flex-wrap gap-1">{c.tags?.slice(0, 3).map((t) => <Badge key={t} variant="secondary" className="text-[10px]">{t}</Badge>)}</div></td>
                     <td className="px-4 py-3 text-right font-medium">${Number(c.lifetime_value ?? 0).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                      <Button size="icon" variant="ghost" onClick={(e) => remove(e, c.id, c.name)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
