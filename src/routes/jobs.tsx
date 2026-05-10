@@ -12,8 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { jobs as mockJobs } from "@/lib/mock-data";
-import { Plus, Wrench } from "lucide-react";
+import { Plus, Wrench, Briefcase, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/jobs")({ component: JobsPage });
@@ -152,7 +151,9 @@ function JobsPage() {
         </Dialog>
       } />
       <div className="p-6">
-        {realRows.length > 0 ? (
+        {q.isLoading ? (
+          <div className="text-sm text-muted-foreground">Loading…</div>
+        ) : realRows.length > 0 ? (
           <DataTable
             rows={realRows}
             columns={[
@@ -163,26 +164,28 @@ function JobsPage() {
               { key: "status", header: "Status", render: (r) => <Badge className="bg-primary/10 text-primary border-transparent">{r.status}</Badge> },
               { key: "total_value", header: "Value", className: "text-right", render: (r) => <span className="font-medium">${Number(r.total_value).toFixed(0)}</span> },
               { key: "actions", header: "", render: (r) => (
-                <Button asChild size="sm" variant="outline">
-                  <Link to="/jobs/$jobId/parts" params={{ jobId: r.id }}><Wrench className="mr-2 h-3.5 w-3.5" /> Parts</Link>
-                </Button>
+                <div className="flex items-center justify-end gap-2">
+                  <Button asChild size="sm" variant="outline">
+                    <Link to="/jobs/$jobId/parts" params={{ jobId: r.id }}><Wrench className="mr-2 h-3.5 w-3.5" /> Parts</Link>
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={async () => {
+                    if (!confirm("Delete this job?")) return;
+                    const { error } = await supabase.from("jobs").delete().eq("id", r.id);
+                    if (error) return toast.error(error.message);
+                    toast.success("Job deleted");
+                    q.refetch();
+                  }}><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
+                </div>
               ) },
             ]}
           />
         ) : (
-          <DataTable
-            rows={mockJobs}
-            columns={[
-              { key: "id", header: "Job" },
-              { key: "title", header: "Description", render: (r) => <span className="font-medium">{r.title}</span> },
-              { key: "customer", header: "Customer" },
-              { key: "tech", header: "Technician" },
-              { key: "scheduled", header: "Scheduled" },
-              { key: "priority", header: "Priority", render: (r) => <Badge variant="outline">{r.priority}</Badge> },
-              { key: "status", header: "Status", render: (r) => <Badge className="bg-primary/10 text-primary border-transparent">{r.status}</Badge> },
-              { key: "value", header: "Value", render: (r) => <span className="font-medium">${r.value}</span>, className: "text-right" },
-            ]}
-          />
+          <div className="flex flex-col items-center rounded-lg border border-dashed border-border bg-card p-12 text-center">
+            <Briefcase className="h-10 w-10 text-muted-foreground" />
+            <h3 className="mt-3 text-base font-semibold">No jobs yet</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Create your first work order to start dispatching.</p>
+            <Button className="mt-4" size="sm" onClick={() => setOpen(true)}><Plus className="mr-2 h-4 w-4" /> New job</Button>
+          </div>
         )}
       </div>
     </>
