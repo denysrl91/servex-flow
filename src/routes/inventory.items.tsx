@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchItems, fetchStock, isLow, margin, totalOnHand } from "@/lib/inventory-api";
 import { PageHeader } from "@/components/page-header";
@@ -7,14 +7,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/data-table";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Trash2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/inventory/items")({ component: ItemsPage });
 
 function ItemsPage() {
+  const qc = useQueryClient();
   const [q, setQ] = useState("");
   const items = useQuery({ queryKey: ["inv-items"], queryFn: fetchItems });
   const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
+
+  const remove = async (id: string, name: string) => {
+    if (!confirm(`Delete item "${name}"?`)) return;
+    const { error } = await supabase.from("inventory_items").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Item deleted");
+    qc.invalidateQueries({ queryKey: ["inv-items"] });
+  };
 
   const rows = (items.data ?? [])
     .filter((i) => {
@@ -62,6 +73,9 @@ function ItemsPage() {
             { key: "unit_price", header: "Price", className: "text-right", render: (r) => `$${Number(r.unit_price).toFixed(2)}` },
             { key: "margin", header: "Margin", className: "text-right", render: (r) => `${margin(r).toFixed(0)}%` },
             { key: "barcode", header: "Barcode", render: (r) => r.barcode ?? <span className="text-muted-foreground">—</span> },
+            { key: "actions", header: "", className: "text-right", render: (r) => (
+              <Button size="icon" variant="ghost" onClick={() => remove(r.id, r.name)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
+            )},
           ]}
         />
       </div>
