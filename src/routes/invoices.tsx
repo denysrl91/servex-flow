@@ -15,8 +15,11 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Plus, Receipt, CircleDollarSign, AlertTriangle, CheckCircle2, DollarSign } from "lucide-react";
+import { Plus, Receipt, CircleDollarSign, AlertTriangle, CheckCircle2, DollarSign, Trash2 } from "lucide-react";
 import { useTenantList, useTenantMutation, fmtMoney, fmtDate } from "@/lib/use-tenant";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import type { Database } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/invoices")({ component: InvoicesPage });
@@ -33,6 +36,7 @@ const TONE: Record<string, string> = {
 };
 
 function InvoicesPage() {
+  const qc = useQueryClient();
   const invoicesQ = useTenantList<Invoice>("invoices", { orderBy: { column: "created_at", ascending: false }, limit: 200 });
   const customersQ = useTenantList<Customer>("customers", { select: "id,name", orderBy: { column: "name", ascending: true } });
   const customerMap = useMemo(
@@ -113,6 +117,14 @@ function InvoicesPage() {
         setPayForm({ amount: "", method: "card", reference: "" });
       },
     });
+
+  const removeInvoice = async (id: string) => {
+    if (!confirm("Delete this invoice? Linked payments will remain.")) return;
+    const { error } = await supabase.from("invoices").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Invoice deleted");
+    qc.invalidateQueries({ queryKey: ["invoices"] });
+  };
 
   const rows = invoicesQ.data ?? [];
   const totalOutstanding = rows.reduce((s, r) => s + Number(r.balance_due), 0);
@@ -241,6 +253,9 @@ function InvoicesPage() {
                       ) : (
                         <span className="text-xs text-muted-foreground">Paid</span>
                       )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button size="icon" variant="ghost" onClick={() => removeInvoice(r.id)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
                     </TableCell>
                   </TableRow>
                 ))}
