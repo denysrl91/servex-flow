@@ -178,10 +178,10 @@ function AppShell() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b hairline glass-strong px-4">
-            <SidebarTrigger />
+          <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b hairline glass-strong px-3 sm:gap-3 sm:px-4">
+            <SidebarTrigger className="shrink-0" />
             <Select defaultValue="acme">
-              <SelectTrigger className="hidden h-9 w-[180px] border-border/60 bg-card/40 md:flex">
+              <SelectTrigger className="hidden h-9 w-[200px] border-border/60 bg-card/40 md:flex">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -190,22 +190,35 @@ function AppShell() {
                 <SelectItem value="bay">Bay Area Climate</SelectItem>
               </SelectContent>
             </Select>
-            <div className="relative hidden flex-1 max-w-md md:block">
+            <div className="relative hidden min-w-0 flex-1 max-w-xl md:block">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search customers, jobs, invoices..." className="pl-9" />
+              <Input
+                placeholder="Search customers, jobs, invoices…"
+                className="h-9 border-border/60 bg-card/40 pl-9"
+              />
             </div>
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ml-auto flex items-center gap-1 sm:gap-2">
+              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Search">
+                <Search className="h-4 w-4" />
+              </Button>
               <ThemeToggle />
-              <Button variant="ghost" size="icon"><Bell className="h-4 w-4" /></Button>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground glow-primary" style={{ backgroundImage: "var(--gradient-primary)" }}>
+              <Button variant="ghost" size="icon" aria-label="Notifications" className="relative">
+                <Bell className="h-4 w-4" />
+                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-destructive" />
+              </Button>
+              <div
+                className="hidden h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-primary-foreground glow-primary sm:flex"
+                style={{ backgroundImage: "var(--gradient-primary)" }}
+                title={user.email ?? ""}
+              >
                 {initials}
               </div>
-              <Button variant="ghost" size="icon" onClick={() => signOut()} title="Sign out">
+              <Button variant="ghost" size="icon" onClick={() => signOut()} title="Sign out" aria-label="Sign out">
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
           </header>
-          <main className="flex-1 overflow-x-hidden">
+          <main className="flex-1 overflow-x-hidden animate-fade-in">
             <Outlet />
           </main>
         </div>
