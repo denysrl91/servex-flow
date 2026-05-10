@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Wrench } from "lucide-react";
+import { Plus, Wrench, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const TYPES = ["Air Conditioner", "Furnace", "Heat Pump", "Mini-Split", "Boiler", "Air Handler", "Thermostat", "Water Heater", "Rooftop Unit"];
@@ -34,6 +34,15 @@ function EquipmentPage() {
   };
   useEffect(() => { load(); }, []);
   const pmap = Object.fromEntries(props.map((p) => [p.id, p.name ?? p.address]));
+
+  const remove = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (!confirm("Delete this equipment record?")) return;
+    const { error } = await supabase.from("equipment").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Equipment deleted");
+    setRows((r) => r.filter((x) => x.id !== id));
+  };
 
   const create = async () => {
     if (!companyId) return toast.error("Missing company");
@@ -108,7 +117,7 @@ function EquipmentPage() {
           <div className="overflow-hidden rounded-lg border border-border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
-                <tr><th className="px-4 py-3 text-left">Equipment</th><th className="px-4 py-3 text-left">Property</th><th className="px-4 py-3 text-left">Specs</th><th className="px-4 py-3 text-left">Installed</th><th className="px-4 py-3 text-left">Warranty</th><th className="px-4 py-3 text-left">Status</th></tr>
+                <tr><th className="px-4 py-3 text-left">Equipment</th><th className="px-4 py-3 text-left">Property</th><th className="px-4 py-3 text-left">Specs</th><th className="px-4 py-3 text-left">Installed</th><th className="px-4 py-3 text-left">Warranty</th><th className="px-4 py-3 text-left">Status</th><th /></tr>
               </thead>
               <tbody>
                 {rows.map((e) => (
@@ -119,6 +128,9 @@ function EquipmentPage() {
                     <td className="px-4 py-3 text-muted-foreground">{e.installed_on ?? "—"}</td>
                     <td className="px-4 py-3 text-muted-foreground">{e.warranty_expires ?? "—"}</td>
                     <td className="px-4 py-3"><Badge variant="outline" className="capitalize">{e.status}</Badge></td>
+                    <td className="px-4 py-3 text-right" onClick={(ev) => ev.stopPropagation()}>
+                      <Button size="icon" variant="ghost" onClick={(ev) => remove(ev, e.id)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
