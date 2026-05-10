@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, MapPin } from "lucide-react";
+import { Plus, MapPin, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const PROPERTY_TYPES = ["single_family", "multi_family", "condo", "commercial", "industrial"] as const;
@@ -35,6 +35,15 @@ function PropertiesPage() {
   };
   useEffect(() => { load(); }, []);
   const cmap = Object.fromEntries(customers.map((c) => [c.id, c.name]));
+
+  const remove = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (!confirm("Delete this property? This cannot be undone.")) return;
+    const { error } = await supabase.from("properties").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Property deleted");
+    setRows((r) => r.filter((p) => p.id !== id));
+  };
 
   const create = async () => {
     if (!companyId) return toast.error("Missing company");
@@ -104,7 +113,7 @@ function PropertiesPage() {
           <div className="overflow-hidden rounded-lg border border-border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
-                <tr><th className="px-4 py-3 text-left">Property</th><th className="px-4 py-3 text-left">Customer</th><th className="px-4 py-3 text-left">Type</th><th className="px-4 py-3 text-right">Sq ft</th><th className="px-4 py-3 text-right">Systems</th></tr>
+                <tr><th className="px-4 py-3 text-left">Property</th><th className="px-4 py-3 text-left">Customer</th><th className="px-4 py-3 text-left">Type</th><th className="px-4 py-3 text-right">Sq ft</th><th className="px-4 py-3 text-right">Systems</th><th /></tr>
               </thead>
               <tbody>
                 {rows.map((p) => (
@@ -114,6 +123,9 @@ function PropertiesPage() {
                     <td className="px-4 py-3"><Badge variant="outline" className="capitalize">{p.type?.replace("_", " ")}</Badge></td>
                     <td className="px-4 py-3 text-right">{p.square_feet ?? "—"}</td>
                     <td className="px-4 py-3 text-right font-medium">{p.system_count ?? 1}</td>
+                    <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                      <Button size="icon" variant="ghost" onClick={(e) => remove(e, p.id)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
