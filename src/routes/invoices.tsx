@@ -16,7 +16,6 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Plus, Receipt, CircleDollarSign, AlertTriangle, CheckCircle2, DollarSign } from "lucide-react";
-import { toast } from "sonner";
 import { useTenantList, useTenantMutation, fmtMoney, fmtDate } from "@/lib/use-tenant";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -310,5 +309,3 @@ function Kpi({ icon: Icon, label, value }: { icon: typeof Receipt; label: string
   );
 }
 
-// silence unused imports
-void toast;
