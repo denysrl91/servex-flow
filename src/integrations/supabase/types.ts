@@ -2622,7 +2622,10 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_company_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_company_admin: {
+        Args: { _company_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       agreement_status: "draft" | "active" | "paused" | "expired" | "cancelled"
