@@ -222,14 +222,15 @@ function InvoicesPage() {
                   <TableHead className="text-right">Balance</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead />
+                  <TableHead />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {invoicesQ.isLoading && (
-                  <TableRow><TableCell colSpan={8} className="py-8 text-center text-muted-foreground">Loading…</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={9} className="py-8 text-center text-muted-foreground">Loading…</TableCell></TableRow>
                 )}
                 {!invoicesQ.isLoading && rows.length === 0 && (
-                  <TableRow><TableCell colSpan={8} className="py-12 text-center text-muted-foreground">
+                  <TableRow><TableCell colSpan={9} className="py-12 text-center text-muted-foreground">
                     No invoices yet. Create one above or convert an estimate.{" "}
                     <Link to="/estimates" className="text-primary hover:underline">View estimates →</Link>
                   </TableCell></TableRow>
