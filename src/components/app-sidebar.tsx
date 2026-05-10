@@ -101,21 +101,26 @@ const systemNav = [
 function NavGroup({ label, items, currentPath }: { label: string; items: typeof overviewNav; currentPath: string }) {
   const { state } = useSidebar();
   return (
-    <SidebarGroup>
+    <SidebarGroup className="px-1.5 pb-1.5 pt-2 first:pt-1">
       {state !== "collapsed" && (
-        <SidebarGroupLabel className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/50">
+        <SidebarGroupLabel className="px-3 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
           {label}
         </SidebarGroupLabel>
       )}
       <SidebarGroupContent>
-        <SidebarMenu>
+        <SidebarMenu className="gap-0.5">
           {items.map((item) => {
             const active = item.url === "/" ? currentPath === "/" : currentPath.startsWith(item.url);
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={active}
+                  tooltip={item.title}
+                  className="h-9 rounded-md data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:shadow-[inset_2px_0_0_0_var(--sidebar-primary)]"
+                >
                   <Link to={item.url} className="flex items-center gap-3">
-                    <item.icon className="h-4 w-4 shrink-0" />
+                    <item.icon className={`h-4 w-4 shrink-0 ${active ? "text-sidebar-primary" : "text-sidebar-foreground/70"}`} />
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
