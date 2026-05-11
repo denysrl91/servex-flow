@@ -121,7 +121,7 @@ function NewEstimate() {
       <PageHeader
         title="New estimate"
         description="Start a proposal for a customer."
-        actions={<Link to="/estimates"><Button variant="outline" size="sm">Cancel</Button></Link>}
+        actions={<Button asChild variant="outline" size="sm"><Link to="/estimates">Cancel</Link></Button>}
       />
       <form onSubmit={onSubmit} className="mx-auto max-w-3xl space-y-4 p-6">
         <Card>

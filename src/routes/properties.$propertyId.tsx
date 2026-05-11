@@ -51,7 +51,7 @@ function PropertyProfile() {
       <PageHeader
         title={p.name ?? p.address}
         description={p.address}
-        actions={<Link to="/properties"><Button variant="outline" size="sm"><ArrowLeft className="mr-2 h-4 w-4" /> All properties</Button></Link>}
+        actions={<Button asChild variant="outline" size="sm"><Link to="/properties"><ArrowLeft className="mr-2 h-4 w-4" /> All properties</Link></Button>}
       />
       <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-4">

@@ -23,11 +23,9 @@ function LowStock() {
         title="Low Stock"
         description="Items at or below reorder point across every location."
         actions={
-          <Link to="/purchase-orders">
-            <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
-              <ShoppingCart className="mr-2 h-4 w-4" /> Create PO
-            </Button>
-          </Link>
+          <Button asChild size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
+            <Link to="/purchase-orders"><ShoppingCart className="mr-2 h-4 w-4" /> Create PO</Link>
+          </Button>
         }
       />
       <div className="p-6">

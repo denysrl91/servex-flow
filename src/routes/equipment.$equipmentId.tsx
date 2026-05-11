@@ -71,7 +71,7 @@ function EquipmentProfile() {
       <PageHeader
         title={`${e.brand ?? ""} ${e.model ?? ""}`.trim() || e.type}
         description={`${e.type}${e.serial_number ? " • S/N " + e.serial_number : ""}`}
-        actions={<Link to="/equipment"><Button variant="outline" size="sm"><ArrowLeft className="mr-2 h-4 w-4" /> All equipment</Button></Link>}
+        actions={<Button asChild variant="outline" size="sm"><Link to="/equipment"><ArrowLeft className="mr-2 h-4 w-4" /> All equipment</Link></Button>}
       />
       <div className="grid gap-6 p-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-4">
