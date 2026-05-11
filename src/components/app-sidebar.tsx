@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  LayoutDashboard, Users, Briefcase, Receipt, Package, HardHat, BarChart3,
+  LayoutDashboard, Users, Briefcase, Calendar, FileText, Receipt, Package, HardHat, BarChart3,
   Settings, Snowflake, ChevronRight,
 } from "lucide-react";
 import {
@@ -23,8 +23,6 @@ const NAV: Section[] = [
     title: "Dashboard", url: "/", icon: LayoutDashboard,
     children: [
       { title: "Main Dashboard", url: "/" },
-      { title: "AI Insights", url: "/ai-brain" },
-      { title: "Executive Overview", url: "/executive-dashboard" },
     ],
   },
   {
@@ -33,35 +31,32 @@ const NAV: Section[] = [
       { title: "Customers", url: "/customers" },
       { title: "Properties", url: "/properties" },
       { title: "Equipment", url: "/equipment" },
-      { title: "Communications", url: "/communications" },
-      { title: "Documents", url: "/documents" },
-      { title: "Memberships", url: "/memberships" },
     ],
   },
   {
-    title: "Operations", url: "/jobs", icon: Briefcase,
+    title: "Jobs", url: "/jobs", icon: Briefcase,
+    children: [
+      { title: "Jobs", url: "/jobs" },
+    ],
+  },
+  {
+    title: "Schedule & Dispatch", url: "/schedule", icon: Calendar,
     children: [
       { title: "Schedule", url: "/schedule" },
       { title: "Dispatch Board", url: "/dispatch" },
-      { title: "Jobs", url: "/jobs" },
-      { title: "Service Tickets", url: "/tickets" },
-      { title: "Projects", url: "/projects" },
-      { title: "Installations", url: "/installations" },
-      { title: "Fleet", url: "/fleet" },
-      { title: "Forms & Checklists", url: "/forms" },
     ],
   },
   {
-    title: "Sales", url: "/invoices", icon: Receipt,
+    title: "Estimates", url: "/estimates", icon: FileText,
     children: [
       { title: "Estimates", url: "/estimates" },
+    ],
+  },
+  {
+    title: "Invoices & Payments", url: "/invoices", icon: Receipt,
+    children: [
       { title: "Invoices", url: "/invoices" },
       { title: "Payments", url: "/payments" },
-      { title: "Financing", url: "/financing" },
-      { title: "Membership Billing", url: "/membership-billing" },
-      { title: "Sales Pipeline", url: "/pipeline" },
-      { title: "Sales Price Book", url: "/sales-catalog" },
-      { title: "Service Price Book", url: "/services-catalog" },
     ],
   },
   {
@@ -71,39 +66,24 @@ const NAV: Section[] = [
       { title: "Van Inventory", url: "/inventory/vans" },
       { title: "Warehouse", url: "/inventory/warehouse" },
       { title: "Transfers", url: "/inventory/transfer" },
-      { title: "Vendors", url: "/vendors" },
-      { title: "Purchase Orders", url: "/purchase-orders" },
     ],
   },
   {
     title: "Team", url: "/technicians", icon: HardHat,
     children: [
       { title: "Technicians", url: "/technicians" },
-      { title: "Payroll", url: "/payroll" },
-      { title: "Time Tracking", url: "/time-tracking" },
-      { title: "Commissions", url: "/commissions" },
-      { title: "Training", url: "/training" },
     ],
   },
   {
     title: "Reports", url: "/reports", icon: BarChart3,
     children: [
       { title: "Reports", url: "/reports" },
-      { title: "Forecasting", url: "/forecasting" },
-      { title: "Business Intelligence", url: "/business-intelligence" },
     ],
   },
   {
     title: "Settings", url: "/settings", icon: Settings,
     children: [
       { title: "Company Settings", url: "/settings" },
-      { title: "Integrations", url: "/integrations" },
-      { title: "Automation", url: "/automation" },
-      { title: "API Access", url: "/api-access" },
-      { title: "Customer Portal", url: "/customer-portal" },
-      { title: "Online Booking", url: "/online-booking" },
-      { title: "Notifications", url: "/notifications" },
-      { title: "Reviews", url: "/reviews" },
     ],
   },
 ];
