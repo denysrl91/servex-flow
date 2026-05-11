@@ -78,7 +78,7 @@ function JobDetailPage() {
       description: form.description || null,
       customer_id: form.customer_id || null,
       property_id: form.property_id || null,
-      technician_id: form.technician_id || null,
+      technician_id: (form.technician_id || null) as string | null,
       priority: form.priority as "low" | "medium" | "high" | "urgent",
       status: form.status as "scheduled" | "dispatched" | "in_progress" | "completed" | "cancelled" | "unassigned" | "on_the_way" | "arrived" | "invoiced" | "paid",
       scheduled_start: start?.toISOString() ?? null,

@@ -65,6 +65,7 @@ import { Route as AiBrainRouteImport } from './routes/ai-brain'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as PropertiesPropertyIdRouteImport } from './routes/properties.$propertyId'
+import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
 import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
@@ -360,6 +361,11 @@ const PropertiesPropertyIdRoute = PropertiesPropertyIdRouteImport.update({
   path: '/$propertyId',
   getParentRoute: () => PropertiesRoute,
 } as any)
+const JobsJobIdRoute = JobsJobIdRouteImport.update({
+  id: '/$jobId',
+  path: '/$jobId',
+  getParentRoute: () => JobsRoute,
+} as any)
 const InventoryWarehouseRoute = InventoryWarehouseRouteImport.update({
   id: '/warehouse',
   path: '/warehouse',
@@ -411,9 +417,9 @@ const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
   getParentRoute: () => CustomersRoute,
 } as any)
 const JobsJobIdPartsRoute = JobsJobIdPartsRouteImport.update({
-  id: '/$jobId/parts',
-  path: '/$jobId/parts',
-  getParentRoute: () => JobsRoute,
+  id: '/parts',
+  path: '/parts',
+  getParentRoute: () => JobsJobIdRoute,
 } as any)
 const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
   id: '/new',
@@ -498,6 +504,7 @@ export interface FileRoutesByFullPath {
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/jobs/$jobId': typeof JobsJobIdRouteWithChildren
   '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
@@ -569,6 +576,7 @@ export interface FileRoutesByTo {
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/jobs/$jobId': typeof JobsJobIdRouteWithChildren
   '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
@@ -642,6 +650,7 @@ export interface FileRoutesById {
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
+  '/jobs/$jobId': typeof JobsJobIdRouteWithChildren
   '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
@@ -716,6 +725,7 @@ export interface FileRouteTypes {
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/jobs/$jobId'
     | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
@@ -787,6 +797,7 @@ export interface FileRouteTypes {
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/jobs/$jobId'
     | '/properties/$propertyId'
     | '/inventory'
     | '/estimates/$estimateId/proposal'
@@ -859,6 +870,7 @@ export interface FileRouteTypes {
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
+    | '/jobs/$jobId'
     | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
@@ -1318,6 +1330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertiesPropertyIdRouteImport
       parentRoute: typeof PropertiesRoute
     }
+    '/jobs/$jobId': {
+      id: '/jobs/$jobId'
+      path: '/$jobId'
+      fullPath: '/jobs/$jobId'
+      preLoaderRoute: typeof JobsJobIdRouteImport
+      parentRoute: typeof JobsRoute
+    }
     '/inventory/warehouse': {
       id: '/inventory/warehouse'
       path: '/warehouse'
@@ -1390,10 +1409,10 @@ declare module '@tanstack/react-router' {
     }
     '/jobs/$jobId/parts': {
       id: '/jobs/$jobId/parts'
-      path: '/$jobId/parts'
+      path: '/parts'
       fullPath: '/jobs/$jobId/parts'
       preLoaderRoute: typeof JobsJobIdPartsRouteImport
-      parentRoute: typeof JobsRoute
+      parentRoute: typeof JobsJobIdRoute
     }
     '/inventory/items/new': {
       id: '/inventory/items/new'
@@ -1506,12 +1525,24 @@ const InventoryRouteWithChildren = InventoryRoute._addFileChildren(
   InventoryRouteChildren,
 )
 
-interface JobsRouteChildren {
+interface JobsJobIdRouteChildren {
   JobsJobIdPartsRoute: typeof JobsJobIdPartsRoute
 }
 
-const JobsRouteChildren: JobsRouteChildren = {
+const JobsJobIdRouteChildren: JobsJobIdRouteChildren = {
   JobsJobIdPartsRoute: JobsJobIdPartsRoute,
+}
+
+const JobsJobIdRouteWithChildren = JobsJobIdRoute._addFileChildren(
+  JobsJobIdRouteChildren,
+)
+
+interface JobsRouteChildren {
+  JobsJobIdRoute: typeof JobsJobIdRouteWithChildren
+}
+
+const JobsRouteChildren: JobsRouteChildren = {
+  JobsJobIdRoute: JobsJobIdRouteWithChildren,
 }
 
 const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
