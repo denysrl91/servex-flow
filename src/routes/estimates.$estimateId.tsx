@@ -319,7 +319,7 @@ function BuilderPage() {
         }
       />
 
-      <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           {/* Tier tabs */}
           <div className="grid gap-3 sm:grid-cols-3">

@@ -108,7 +108,7 @@ function EditItem() {
   return (
     <>
       <PageHeader title={`Edit ${form.name || "item"}`} description="Update details, pricing, and stock." />
-      <form onSubmit={onSubmit} className="space-y-4 p-6">
+      <form onSubmit={onSubmit} className="space-y-4 p-4 md:p-6">
         <Card>
           <CardHeader><CardTitle className="text-base">Basics</CardTitle></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">

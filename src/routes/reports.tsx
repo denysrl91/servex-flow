@@ -62,7 +62,7 @@ function ReportsPage() {
   return (
     <>
       <PageHeader title="Reports" description="Live performance, revenue and operational metrics." />
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-4 md:p-6">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {cards.map((r) => (
             <Card key={r.title}>

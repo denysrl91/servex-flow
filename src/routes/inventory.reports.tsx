@@ -38,7 +38,7 @@ function InventoryReports() {
   return (
     <>
       <PageHeader title="Inventory Reports" description="Stock value, coverage, and category mix." />
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-4 md:p-6">
         <div className="grid gap-4 md:grid-cols-4">
           {kpis.map((k) => (
             <Card key={k.label} className="premium-card">

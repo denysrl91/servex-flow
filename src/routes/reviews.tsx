@@ -119,7 +119,7 @@ function ReviewsPage() {
           </Dialog>
         }
       />
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-4 md:p-6">
         <div className="flex flex-wrap items-center gap-4">
           <div className="rounded-lg border border-border bg-card px-4 py-3">
             <div className="text-xs uppercase text-muted-foreground">Average</div>

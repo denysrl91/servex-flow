@@ -16,7 +16,7 @@ function CRM() {
   return (
     <>
       <PageHeader title="CRM" description="Customer relationships, properties, and equipment in one place." />
-      <div className="grid gap-4 p-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 p-4 md:p-6 md:grid-cols-2 xl:grid-cols-4">
         {tiles.map((t) => (
           <Link key={t.to} to={t.to}>
             <Card className="premium-card transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-elegant)]">

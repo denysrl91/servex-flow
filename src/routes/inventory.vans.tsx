@@ -15,7 +15,7 @@ function VanStock() {
   return (
     <>
       <PageHeader title="Van Stock" description="What each technician has on their truck right now." />
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-4 md:p-6">
         {vans.length === 0 && (
           <p className="text-sm text-muted-foreground">No vans yet. Add a van location from Settings.</p>
         )}

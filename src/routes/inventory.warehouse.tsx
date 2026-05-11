@@ -15,7 +15,7 @@ function WarehouseStock() {
   return (
     <>
       <PageHeader title="Warehouse Stock" description="Stock across all warehouse locations." />
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-4 md:p-6">
         {warehouses.length === 0 && (
           <p className="text-sm text-muted-foreground">No warehouses yet. Add one from Settings to begin tracking stock.</p>
         )}

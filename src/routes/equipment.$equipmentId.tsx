@@ -73,7 +73,7 @@ function EquipmentProfile() {
         description={`${e.type}${e.serial_number ? " • S/N " + e.serial_number : ""}`}
         actions={<Button asChild variant="outline" size="sm"><Link to="/equipment"><ArrowLeft className="mr-2 h-4 w-4" /> All equipment</Link></Button>}
       />
-      <div className="grid gap-6 p-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[1fr_340px]">
         <div className="space-y-4">
           <Card>
             <CardHeader><CardTitle className="text-base">Specifications</CardTitle></CardHeader>

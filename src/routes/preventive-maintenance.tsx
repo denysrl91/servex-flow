@@ -148,7 +148,7 @@ function Page() {
           </Dialog>
         }
       />
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-4 md:p-6">
         <div className="relative max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input className="pl-9" placeholder="Search PM schedules…" value={q} onChange={(e) => setQ(e.target.value)} />

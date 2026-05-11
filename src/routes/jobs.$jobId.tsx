@@ -139,7 +139,7 @@ function JobDetailPage() {
       />
       <div className="p-6">
         <Card>
-          <CardContent className="grid gap-4 p-6 sm:grid-cols-2">
+          <CardContent className="grid gap-4 p-4 md:p-6 sm:grid-cols-2">
             <Field label="Title" className="sm:col-span-2"><Input value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} /></Field>
             <Field label="Customer">
               <Select value={form.customer_id} onValueChange={(v) => setForm({ ...form, customer_id: v, property_id: "" })}>

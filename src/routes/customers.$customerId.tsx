@@ -110,7 +110,7 @@ function CustomerProfile() {
         }
       />
 
-      <div className="grid gap-6 p-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[320px_1fr]">
         {/* Left rail */}
         <aside className="space-y-4">
           <Card>
