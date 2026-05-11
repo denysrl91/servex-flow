@@ -76,7 +76,9 @@ const loadProfile = async (currentUser: User) => {
     setCompanyId(workspaceId);
     setRoles(((rolesData ?? []) as { role: AppRole }[]).map((r) => r.role));
   } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
     console.error("Workspace/profile setup failed:", error);
+    toast.error(`Workspace setup failed: ${msg}`);
     setCompanyId(null);
     setRoles([]);
   }
