@@ -35,28 +35,36 @@ export type StockRow = {
   quantity: number;
 };
 
-export async function fetchItems() {
+export async function fetchItems(companyId: string) {
+  if (!companyId) return [] as Item[];
   const { data, error } = await supabase
     .from("inventory_items")
     .select("*")
+    .eq("company_id", companyId)
     .eq("status", "active")
     .order("name");
   if (error) throw error;
   return (data ?? []) as Item[];
 }
 
-export async function fetchLocations() {
+export async function fetchLocations(companyId: string) {
+  if (!companyId) return [] as Location[];
   const { data, error } = await supabase
     .from("inventory_locations")
     .select("*")
+    .eq("company_id", companyId)
     .eq("status", "active")
     .order("name");
   if (error) throw error;
   return (data ?? []) as Location[];
 }
 
-export async function fetchStock() {
-  const { data, error } = await supabase.from("inventory_stock").select("*");
+export async function fetchStock(companyId: string) {
+  if (!companyId) return [] as StockRow[];
+  const { data, error } = await supabase
+    .from("inventory_stock")
+    .select("*")
+    .eq("company_id", companyId);
   if (error) throw error;
   return (data ?? []) as StockRow[];
 }
