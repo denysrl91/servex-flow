@@ -76,7 +76,7 @@ function JobDetailPage() {
     const { error } = await supabase.from("jobs").update({
       title: form.title.trim(),
       description: form.description || null,
-      customer_id: form.customer_id || null,
+      customer_id: form.customer_id,
       property_id: form.property_id || null,
       technician_id: (form.technician_id || null) as string | null,
       priority: form.priority as "low" | "medium" | "high" | "urgent",
