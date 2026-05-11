@@ -20,10 +20,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -147,7 +146,7 @@ const PUBLIC_ROUTES = ["/login", "/signup", "/forgot-password", "/reset-password
 function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, companyId } = useAuth();
   const isPublic = PUBLIC_ROUTES.includes(location.pathname);
 
   useEffect(() => {
@@ -173,6 +172,34 @@ function AppShell() {
     .slice(0, 2)
     .toUpperCase();
 
+  return <AuthedShell user={user} signOut={signOut} companyId={companyId} initials={initials} />;
+}
+
+function AuthedShell({
+  user,
+  signOut,
+  companyId,
+  initials,
+}: {
+  user: NonNullable<ReturnType<typeof useAuth>["user"]>;
+  signOut: ReturnType<typeof useAuth>["signOut"];
+  companyId: string | null;
+  initials: string;
+}) {
+  const { data: company } = useQuery({
+    queryKey: ["header-company", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("companies")
+        .select("name")
+        .eq("id", companyId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const companyName = company?.name?.trim() || "My Company";
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
@@ -180,16 +207,13 @@ function AppShell() {
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b hairline glass-strong px-3 sm:gap-3 sm:px-4">
             <SidebarTrigger className="shrink-0" />
-            <Select defaultValue="acme">
-              <SelectTrigger className="hidden h-9 w-[200px] border-border/60 bg-card/40 md:flex">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="acme">Acme HVAC Co.</SelectItem>
-                <SelectItem value="north">Northstar Mechanical</SelectItem>
-                <SelectItem value="bay">Bay Area Climate</SelectItem>
-              </SelectContent>
-            </Select>
+            <Link
+              to="/settings"
+              className="hidden h-9 max-w-[220px] items-center truncate rounded-md border border-border/60 bg-card/40 px-3 text-sm font-medium text-foreground/90 hover:bg-muted/40 md:flex"
+              title={companyName}
+            >
+              <span className="truncate">{companyName}</span>
+            </Link>
             <div className="relative hidden min-w-0 flex-1 max-w-xl md:block">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
