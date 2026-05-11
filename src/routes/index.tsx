@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,26 +17,29 @@ function startOfDay(d = new Date()) { const x = new Date(d); x.setHours(0, 0, 0,
 function startOfMonth() { const x = new Date(); x.setDate(1); x.setHours(0, 0, 0, 0); return x.toISOString(); }
 
 function Dashboard() {
+  const { companyId } = useAuth();
   const dash = useQuery({
-    queryKey: ["dashboard-overview"],
+    queryKey: ["dashboard-overview", companyId],
+    enabled: !!companyId,
     queryFn: async () => {
+      const cid = companyId!;
       const today = startOfDay();
       const month = startOfMonth();
       const [
         invToday, invMonth, openInv, jobsActive, jobsToday, completedToday,
         recentJobs, recentInvoices, lowStock, techs, tickets,
       ] = await Promise.all([
-        supabase.from("payments").select("amount").gte("paid_at", today),
-        supabase.from("payments").select("amount").gte("paid_at", month),
-        supabase.from("invoices").select("balance_due,due_at,status").gt("balance_due", 0),
-        supabase.from("jobs").select("id", { count: "exact", head: true }).in("status", ["scheduled", "dispatched", "in_progress", "on_the_way", "arrived"]),
-        supabase.from("jobs").select("id", { count: "exact", head: true }).gte("scheduled_start", today),
-        supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "completed").gte("actual_end", today),
-        supabase.from("jobs").select("id,job_number,title,status,priority,scheduled_start,total_value,customer_id").order("scheduled_start", { ascending: false }).limit(6),
-        supabase.from("invoices").select("id,invoice_number,total,balance_due,status,due_at,customer_id").order("created_at", { ascending: false }).limit(6),
-        supabase.from("inventory_items").select("id,name,sku,reorder_point,min_stock_level").limit(50),
-        supabase.from("technicians").select("id,full_name,role_title,status").order("full_name").limit(8),
-        supabase.from("service_tickets").select("id,ticket_number,subject,priority,status,created_at").in("status", ["open", "in_progress"]).order("created_at", { ascending: false }).limit(5),
+        supabase.from("payments").select("amount").eq("company_id", cid).gte("paid_at", today),
+        supabase.from("payments").select("amount").eq("company_id", cid).gte("paid_at", month),
+        supabase.from("invoices").select("balance_due,due_at,status").eq("company_id", cid).gt("balance_due", 0),
+        supabase.from("jobs").select("id", { count: "exact", head: true }).eq("company_id", cid).in("status", ["scheduled", "dispatched", "in_progress", "on_the_way", "arrived"]),
+        supabase.from("jobs").select("id", { count: "exact", head: true }).eq("company_id", cid).gte("scheduled_start", today),
+        supabase.from("jobs").select("id", { count: "exact", head: true }).eq("company_id", cid).eq("status", "completed").gte("actual_end", today),
+        supabase.from("jobs").select("id,job_number,title,status,priority,scheduled_start,total_value,customer_id").eq("company_id", cid).order("scheduled_start", { ascending: false }).limit(6),
+        supabase.from("invoices").select("id,invoice_number,total,balance_due,status,due_at,customer_id").eq("company_id", cid).order("created_at", { ascending: false }).limit(6),
+        supabase.from("inventory_items").select("id,name,sku,reorder_point,min_stock_level").eq("company_id", cid).limit(50),
+        supabase.from("technicians").select("id,full_name,role_title,status").eq("company_id", cid).order("full_name").limit(8),
+        supabase.from("service_tickets").select("id,ticket_number,subject,priority,status,created_at").eq("company_id", cid).in("status", ["open", "in_progress"]).order("created_at", { ascending: false }).limit(5),
       ]);
 
       const sum = (rows: { amount?: number }[] | null) =>
@@ -51,7 +55,7 @@ function Dashboard() {
       ].filter(Boolean) as string[]));
       const custMap = new Map<string, string>();
       if (cIds.length) {
-        const { data } = await supabase.from("customers").select("id,name").in("id", cIds);
+        const { data } = await supabase.from("customers").select("id,name").eq("company_id", cid).in("id", cIds);
         (data ?? []).forEach((c) => custMap.set(c.id, c.name));
       }
 
