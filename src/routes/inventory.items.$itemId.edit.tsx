@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/inventory/items/edit")({ component: EditItem });
+export const Route = createFileRoute("/inventory/items/$itemId/edit")({ component: EditItem });
 
 function EditItem() {
   const { itemId } = Route.useParams();
