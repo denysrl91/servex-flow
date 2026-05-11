@@ -91,3 +91,51 @@ export function isLow(item: Item, qty: number) {
   const threshold = Math.max(item.reorder_point ?? 0, item.min_stock_level ?? 0);
   return qty <= threshold;
 }
+
+/**
+ * Returns the id of the company's default warehouse location, creating one
+ * if none exists. Used so each item always has somewhere to hold its quantity.
+ */
+export async function ensureDefaultLocation(companyId: string): Promise<string> {
+  const { data: existing, error: readErr } = await supabase
+    .from("inventory_locations")
+    .select("id")
+    .eq("company_id", companyId)
+    .eq("status", "active")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (readErr) throw readErr;
+  if (existing?.id) return existing.id;
+
+  const { data: created, error: insErr } = await supabase
+    .from("inventory_locations")
+    .insert({ company_id: companyId, name: "Main Warehouse", type: "warehouse" })
+    .select("id")
+    .single();
+  if (insErr) throw insErr;
+  return created.id;
+}
+
+/** Sets the on-hand quantity for an item at the company's default location. */
+export async function setItemQuantity(companyId: string, itemId: string, quantity: number) {
+  const locationId = await ensureDefaultLocation(companyId);
+  const { data: existing } = await supabase
+    .from("inventory_stock")
+    .select("id")
+    .eq("item_id", itemId)
+    .eq("location_id", locationId)
+    .maybeSingle();
+  if (existing?.id) {
+    const { error } = await supabase
+      .from("inventory_stock")
+      .update({ quantity })
+      .eq("id", existing.id);
+    if (error) throw error;
+  } else {
+    const { error } = await supabase
+      .from("inventory_stock")
+      .insert({ company_id: companyId, item_id: itemId, location_id: locationId, quantity });
+    if (error) throw error;
+  }
+}

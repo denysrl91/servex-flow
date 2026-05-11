@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { setItemQuantity } from "@/lib/inventory-api";
-import { useQueryClient } from "@tanstack/react-query";
+import { setItemQuantity, fetchStock, totalOnHand } from "@/lib/inventory-api";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,39 +13,63 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/inventory/items/new")({ component: NewItem });
+export const Route = createFileRoute("/inventory/items/$itemId/edit")({ component: EditItem });
 
-function NewItem() {
+function EditItem() {
+  const { itemId } = Route.useParams();
   const navigate = useNavigate();
   const { companyId } = useAuth();
   const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({
-    sku: "",
-    name: "",
-    description: "",
-    category: "",
-    unit: "each",
-    unit_cost: "0",
-    unit_price: "0",
-    quantity: "0",
-    reorder_point: "0",
-    min_stock_level: "0",
-    barcode: "",
-    vendor_name: "",
-    vendor_email: "",
-    vendor_phone: "",
-    track_serial: false,
+  const [form, setForm] = useState<any>(null);
+
+  const item = useQuery({
+    queryKey: ["inv-item", itemId],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("inventory_items").select("*").eq("id", itemId).single();
+      if (error) throw error;
+      return data;
+    },
   });
-  const set = (k: keyof typeof form, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }));
+  const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
+
+  useEffect(() => {
+    if (item.data && stock.data && !form) {
+      const qty = totalOnHand(item.data.id, stock.data);
+      setForm({
+        sku: item.data.sku ?? "",
+        name: item.data.name ?? "",
+        description: item.data.description ?? "",
+        category: item.data.category ?? "",
+        unit: item.data.unit ?? "each",
+        unit_cost: String(item.data.unit_cost ?? 0),
+        unit_price: String(item.data.unit_price ?? 0),
+        quantity: String(qty),
+        reorder_point: String(item.data.reorder_point ?? 0),
+        min_stock_level: String(item.data.min_stock_level ?? 0),
+        barcode: item.data.barcode ?? "",
+        vendor_name: item.data.vendor_name ?? "",
+        vendor_email: item.data.vendor_email ?? "",
+        vendor_phone: item.data.vendor_phone ?? "",
+        track_serial: !!item.data.track_serial,
+      });
+    }
+  }, [item.data, stock.data, form]);
+
+  if (item.isLoading || !form) {
+    return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
+  }
+  if (item.error) {
+    return <div className="p-6 text-sm text-destructive">{(item.error as Error).message}</div>;
+  }
+
+  const set = (k: string, v: string | boolean) => setForm((f: any) => ({ ...f, [k]: v }));
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!companyId) return toast.error("No company is linked to your account yet. Please refresh the page or sign out and back in.");
-    if (!form.sku.trim() || !form.name.trim()) return toast.error("SKU and Name are required");
+    if (!companyId) return toast.error("No company linked to your account.");
     setSaving(true);
-    const { data: created, error } = await supabase.from("inventory_items").insert({
-      company_id: companyId,
+    const { error } = await supabase.from("inventory_items").update({
       sku: form.sku.trim(),
       name: form.name.trim(),
       description: form.description || null,
@@ -60,40 +84,38 @@ function NewItem() {
       vendor_email: form.vendor_email || null,
       vendor_phone: form.vendor_phone || null,
       track_serial: form.track_serial,
-    }).select("id").single();
+    }).eq("id", itemId);
     if (error) {
       setSaving(false);
-      console.error("inventory_items insert failed", error);
-      return toast.error(error.message || "Could not save item");
+      console.error("inventory_items update failed", error);
+      return toast.error(error.message);
     }
-    const qty = Number(form.quantity) || 0;
-    if (qty > 0 && created?.id) {
-      try {
-        await setItemQuantity(companyId, created.id, qty);
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error("inventory_stock insert failed", err);
-        toast.error(`Item saved, but stock setup failed: ${msg}`);
-      }
+    try {
+      await setItemQuantity(companyId, itemId, Number(form.quantity) || 0);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("stock update failed", err);
+      toast.error(`Item updated, but stock failed: ${msg}`);
     }
     setSaving(false);
     qc.invalidateQueries({ queryKey: ["inv-items"] });
     qc.invalidateQueries({ queryKey: ["inv-stock"] });
-    toast.success("Item added");
+    qc.invalidateQueries({ queryKey: ["inv-item", itemId] });
+    toast.success("Item updated");
     navigate({ to: "/inventory/items" });
   };
 
   return (
     <>
-      <PageHeader title="Add inventory item" description="Track parts, equipment, and supplies." />
+      <PageHeader title={`Edit ${form.name || "item"}`} description="Update details, pricing, and stock." />
       <form onSubmit={onSubmit} className="space-y-4 p-6">
         <Card>
           <CardHeader><CardTitle className="text-base">Basics</CardTitle></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
-            <Field label="SKU" required><Input required value={form.sku} onChange={(e) => set("sku", e.target.value)} placeholder="e.g. CAP-440-30" /></Field>
-            <Field label="Name" required><Input required value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="e.g. Run Capacitor 440V 30µF" /></Field>
-            <Field label="Category"><Input value={form.category} onChange={(e) => set("category", e.target.value)} placeholder="Capacitors, Refrigerant, Filter..." /></Field>
-            <Field label="Unit"><Input value={form.unit} onChange={(e) => set("unit", e.target.value)} placeholder="each, lb, ft" /></Field>
+            <Field label="SKU" required><Input required value={form.sku} onChange={(e) => set("sku", e.target.value)} /></Field>
+            <Field label="Name" required><Input required value={form.name} onChange={(e) => set("name", e.target.value)} /></Field>
+            <Field label="Category"><Input value={form.category} onChange={(e) => set("category", e.target.value)} /></Field>
+            <Field label="Unit"><Input value={form.unit} onChange={(e) => set("unit", e.target.value)} /></Field>
             <Field label="Description" className="md:col-span-2"><Textarea value={form.description} onChange={(e) => set("description", e.target.value)} /></Field>
           </CardContent>
         </Card>
@@ -112,7 +134,7 @@ function NewItem() {
         <Card>
           <CardHeader><CardTitle className="text-base">Identifiers & vendor</CardTitle></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
-            <Field label="Barcode / QR code"><Input value={form.barcode} onChange={(e) => set("barcode", e.target.value)} placeholder="Scan or type code" /></Field>
+            <Field label="Barcode / QR code"><Input value={form.barcode} onChange={(e) => set("barcode", e.target.value)} /></Field>
             <Field label="Vendor name"><Input value={form.vendor_name} onChange={(e) => set("vendor_name", e.target.value)} /></Field>
             <Field label="Vendor email"><Input type="email" value={form.vendor_email} onChange={(e) => set("vendor_email", e.target.value)} /></Field>
             <Field label="Vendor phone"><Input value={form.vendor_phone} onChange={(e) => set("vendor_phone", e.target.value)} /></Field>
@@ -120,7 +142,6 @@ function NewItem() {
               <Switch checked={form.track_serial} onCheckedChange={(v) => set("track_serial", v)} />
               <div>
                 <div className="text-sm font-medium">Track serial numbers</div>
-                <div className="text-xs text-muted-foreground">For equipment like compressors, condensers, furnaces.</div>
               </div>
             </div>
           </CardContent>
@@ -128,8 +149,8 @@ function NewItem() {
 
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={() => navigate({ to: "/inventory/items" })}>Cancel</Button>
-          <Button type="submit" disabled={saving || !companyId} style={{ backgroundImage: "var(--gradient-primary)" }}>
-            {saving ? "Saving..." : !companyId ? "Loading workspace…" : "Save item"}
+          <Button type="submit" disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>
+            {saving ? "Saving..." : "Save changes"}
           </Button>
         </div>
       </form>

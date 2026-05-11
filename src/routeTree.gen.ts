@@ -78,6 +78,7 @@ import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$cus
 import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
 import { Route as EstimatesEstimateIdProposalRouteImport } from './routes/estimates.$estimateId.proposal'
+import { Route as InventoryItemsItemIdEditRouteImport } from './routes/inventory.items.$itemId.edit'
 
 const VendorsRoute = VendorsRouteImport.update({
   id: '/vendors',
@@ -425,6 +426,12 @@ const EstimatesEstimateIdProposalRoute =
     path: '/proposal',
     getParentRoute: () => EstimatesEstimateIdRoute,
   } as any)
+const InventoryItemsItemIdEditRoute =
+  InventoryItemsItemIdEditRouteImport.update({
+    id: '/$itemId/edit',
+    path: '/$itemId/edit',
+    getParentRoute: () => InventoryItemsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -496,6 +503,7 @@ export interface FileRoutesByFullPath {
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
+  '/inventory/items/$itemId/edit': typeof InventoryItemsItemIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -566,6 +574,7 @@ export interface FileRoutesByTo {
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
+  '/inventory/items/$itemId/edit': typeof InventoryItemsItemIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -638,6 +647,7 @@ export interface FileRoutesById {
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
+  '/inventory/items/$itemId/edit': typeof InventoryItemsItemIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -711,6 +721,7 @@ export interface FileRouteTypes {
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
+    | '/inventory/items/$itemId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -781,6 +792,7 @@ export interface FileRouteTypes {
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
+    | '/inventory/items/$itemId/edit'
   id:
     | '__root__'
     | '/'
@@ -852,6 +864,7 @@ export interface FileRouteTypes {
     | '/estimates/$estimateId/proposal'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
+    | '/inventory/items/$itemId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1396,6 +1409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimatesEstimateIdProposalRouteImport
       parentRoute: typeof EstimatesEstimateIdRoute
     }
+    '/inventory/items/$itemId/edit': {
+      id: '/inventory/items/$itemId/edit'
+      path: '/$itemId/edit'
+      fullPath: '/inventory/items/$itemId/edit'
+      preLoaderRoute: typeof InventoryItemsItemIdEditRouteImport
+      parentRoute: typeof InventoryItemsRoute
+    }
   }
 }
 
@@ -1450,10 +1470,12 @@ const EstimatesRouteWithChildren = EstimatesRoute._addFileChildren(
 
 interface InventoryItemsRouteChildren {
   InventoryItemsNewRoute: typeof InventoryItemsNewRoute
+  InventoryItemsItemIdEditRoute: typeof InventoryItemsItemIdEditRoute
 }
 
 const InventoryItemsRouteChildren: InventoryItemsRouteChildren = {
   InventoryItemsNewRoute: InventoryItemsNewRoute,
+  InventoryItemsItemIdEditRoute: InventoryItemsItemIdEditRoute,
 }
 
 const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
@@ -1565,3 +1587,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
