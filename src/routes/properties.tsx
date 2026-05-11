@@ -13,7 +13,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, MapPin, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-const PROPERTY_TYPES = ["single_family", "multi_family", "condo", "commercial", "industrial"] as const;
+const PROPERTY_TYPES = [
+  "single_family",
+  "multi_family",
+  "office",
+  "retail",
+  "industrial",
+  "healthcare",
+  "education",
+  "other",
+] as const;
 
 export const Route = createFileRoute("/properties")({ component: PropertiesPage });
 
