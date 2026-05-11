@@ -1,0 +1,333 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { PageHeader } from "@/components/page-header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/inventory/items/new")({
+  component: NewInventoryItemPage,
+});
+
+type FormState = {
+  sku: string;
+  name: string;
+  description: string;
+  category: string;
+  unit: string;
+  unit_cost: string;
+  unit_price: string;
+  reorder_point: string;
+  min_stock_level: string;
+  barcode: string;
+  vendor_name: string;
+  vendor_email: string;
+  vendor_phone: string;
+  track_serial: boolean;
+};
+
+const initialForm: FormState = {
+  sku: "",
+  name: "",
+  description: "",
+  category: "",
+  unit: "each",
+  unit_cost: "0",
+  unit_price: "0",
+  reorder_point: "0",
+  min_stock_level: "0",
+  barcode: "",
+  vendor_name: "",
+  vendor_email: "",
+  vendor_phone: "",
+  track_serial: false,
+};
+
+function toMoney(value: string) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function toInteger(value: string) {
+  const number = parseInt(value, 10);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function NewInventoryItemPage() {
+  const navigate = useNavigate();
+  const { companyId, loading } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState<FormState>(initialForm);
+
+  const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
+    setForm((current) => ({ ...current, [key]: value }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (loading) {
+      toast.error("Workspace is still loading. Please wait a moment.");
+      return;
+    }
+
+    if (!companyId) {
+      toast.error("No company workspace found. Please log out, log back in, and confirm company settings are created.");
+      return;
+    }
+
+    if (!form.sku.trim()) {
+      toast.error("SKU is required.");
+      return;
+    }
+
+    if (!form.name.trim()) {
+      toast.error("Item name is required.");
+      return;
+    }
+
+    setSaving(true);
+
+    const payload = {
+      company_id: companyId,
+      sku: form.sku.trim(),
+      name: form.name.trim(),
+      description: form.description.trim() || null,
+      category: form.category.trim() || null,
+      unit: form.unit.trim() || "each",
+      unit_cost: toMoney(form.unit_cost),
+      unit_price: toMoney(form.unit_price),
+      reorder_point: toInteger(form.reorder_point),
+      min_stock_level: toInteger(form.min_stock_level),
+      barcode: form.barcode.trim() || null,
+      vendor_name: form.vendor_name.trim() || null,
+      vendor_email: form.vendor_email.trim() || null,
+      vendor_phone: form.vendor_phone.trim() || null,
+      track_serial: form.track_serial,
+      status: "active",
+    };
+
+    const { error } = await supabase.from("inventory_items").insert(payload);
+
+    setSaving(false);
+
+    if (error) {
+      console.error("Inventory item insert failed:", error);
+      toast.error(`Inventory save failed: ${error.message}`);
+      return;
+    }
+
+    toast.success("Inventory item created successfully.");
+    navigate({ to: "/inventory/items" });
+  };
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="New Inventory Item"
+        description="Create a real inventory item saved to your live database."
+        actions={
+          <Button variant="outline" onClick={() => navigate({ to: "/inventory/items" })}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Inventory
+          </Button>
+        }
+      />
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Item Details</CardTitle>
+          </CardHeader>
+
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="sku">SKU *</Label>
+              <Input
+                id="sku"
+                value={form.sku}
+                onChange={(event) => setField("sku", event.target.value)}
+                placeholder="CAP-440-30"
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="name">Item Name *</Label>
+              <Input
+                id="name"
+                value={form.name}
+                onChange={(event) => setField("name", event.target.value)}
+                placeholder="Dual Run Capacitor 45/5"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Input
+                id="category"
+                value={form.category}
+                onChange={(event) => setField("category", event.target.value)}
+                placeholder="Electrical"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="unit">Unit</Label>
+              <Input
+                id="unit"
+                value={form.unit}
+                onChange={(event) => setField("unit", event.target.value)}
+                placeholder="each"
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={form.description}
+                onChange={(event) => setField("description", event.target.value)}
+                placeholder="Optional item description"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Pricing & Stock Controls</CardTitle>
+          </CardHeader>
+
+          <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="space-y-2">
+              <Label htmlFor="unit_cost">Unit Cost</Label>
+              <Input
+                id="unit_cost"
+                type="number"
+                min="0"
+                step="0.01"
+                value={form.unit_cost}
+                onChange={(event) => setField("unit_cost", event.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="unit_price">Sale Price</Label>
+              <Input
+                id="unit_price"
+                type="number"
+                min="0"
+                step="0.01"
+                value={form.unit_price}
+                onChange={(event) => setField("unit_price", event.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="reorder_point">Reorder Point</Label>
+              <Input
+                id="reorder_point"
+                type="number"
+                min="0"
+                value={form.reorder_point}
+                onChange={(event) => setField("reorder_point", event.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="min_stock_level">Minimum Stock</Label>
+              <Input
+                id="min_stock_level"
+                type="number"
+                min="0"
+                value={form.min_stock_level}
+                onChange={(event) => setField("min_stock_level", event.target.value)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Vendor & Tracking</CardTitle>
+          </CardHeader>
+
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="barcode">Barcode</Label>
+              <Input
+                id="barcode"
+                value={form.barcode}
+                onChange={(event) => setField("barcode", event.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div>
+                <Label htmlFor="track_serial">Track Serial Numbers</Label>
+                <p className="text-sm text-muted-foreground">Use for serialized parts or equipment.</p>
+              </div>
+              <Switch
+                id="track_serial"
+                checked={form.track_serial}
+                onCheckedChange={(checked) => setField("track_serial", checked)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="vendor_name">Vendor Name</Label>
+              <Input
+                id="vendor_name"
+                value={form.vendor_name}
+                onChange={(event) => setField("vendor_name", event.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="vendor_email">Vendor Email</Label>
+              <Input
+                id="vendor_email"
+                type="email"
+                value={form.vendor_email}
+                onChange={(event) => setField("vendor_email", event.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="vendor_phone">Vendor Phone</Label>
+              <Input
+                id="vendor_phone"
+                value={form.vendor_phone}
+                onChange={(event) => setField("vendor_phone", event.target.value)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate({ to: "/inventory/items" })}
+            disabled={saving}
+          >
+            Cancel
+          </Button>
+
+          <Button type="submit" disabled={saving || loading}>
+            {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+            Save Inventory Item
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
