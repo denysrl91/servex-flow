@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/page-header";
@@ -104,7 +104,9 @@ function SchedulePage() {
             <Button variant="outline" size="icon" onClick={() => shift(-1)}><ChevronLeft className="h-4 w-4" /></Button>
             <Button variant="outline" size="sm" onClick={() => { const d = new Date(); d.setHours(0,0,0,0); setCursor(d); }}>Today</Button>
             <Button variant="outline" size="icon" onClick={() => shift(1)}><ChevronRight className="h-4 w-4" /></Button>
-            <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}><Plus className="mr-2 h-4 w-4" /> Schedule</Button>
+            <Button asChild size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
+              <Link to="/jobs"><Plus className="mr-2 h-4 w-4" /> Schedule job</Link>
+            </Button>
           </>
         }
       />
