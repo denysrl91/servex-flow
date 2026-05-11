@@ -274,9 +274,9 @@ function BuilderPage() {
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Badge className={`${STATUS_TONE[est.status]} border-transparent`}>{STATUS_LABEL[est.status]}</Badge>
-            <Link to="/estimates/$estimateId/proposal" params={{ estimateId: est.id }}>
-              <Button variant="outline" size="sm"><ExternalLink className="mr-2 h-4 w-4" /> Customer view</Button>
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/estimates/$estimateId/proposal" params={{ estimateId: est.id }}><ExternalLink className="mr-2 h-4 w-4" /> Customer view</Link>
+            </Button>
             <Button size="sm" variant="outline" onClick={sendToCustomer} disabled={busy}><Send className="mr-2 h-4 w-4" /> Mark sent</Button>
             <Button size="sm" variant="outline" onClick={convertToJob} disabled={busy}>Convert to job</Button>
             <Button size="sm" onClick={convertToInvoice} disabled={busy} style={{ backgroundImage: "var(--gradient-primary)" }}>
@@ -471,9 +471,9 @@ function BuilderPage() {
           <Card>
             <CardHeader><CardTitle className="text-base">Next steps</CardTitle></CardHeader>
             <CardContent className="space-y-2 text-sm">
-              <Link to="/estimates/$estimateId/proposal" params={{ estimateId: est.id }} className="block">
-                <Button className="w-full" variant="outline"><ExternalLink className="mr-2 h-4 w-4" /> Open customer proposal</Button>
-              </Link>
+              <Button asChild className="w-full" variant="outline">
+                <Link to="/estimates/$estimateId/proposal" params={{ estimateId: est.id }}><ExternalLink className="mr-2 h-4 w-4" /> Open customer proposal</Link>
+              </Button>
               <Button className="w-full" onClick={convertToInvoice} disabled={busy} style={{ backgroundImage: "var(--gradient-primary)" }}>
                 Convert to invoice <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
