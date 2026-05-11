@@ -6,7 +6,9 @@ import {
   type ReactNode,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { ensureWorkspace } from "@/lib/workspace.functions";
 
 export type AppRole =
   | "owner"
@@ -94,31 +96,34 @@ async function ensureWorkspace(user: User) {
 
   return companyId;
 }
-
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const repairWorkspace = useServerFn(ensureWorkspace);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
 
-  const loadProfile = async (currentUser: User) => {
-    try {
-      const workspaceId = await ensureWorkspace(currentUser);
+const loadProfile = async (currentUser: User) => {
+  try {
+    const workspaceId = await ensureWorkspace(currentUser);
 
-      const { data: rolesData } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", currentUser.id)
-        .eq("company_id", workspaceId);
+    const { data: rolesData, error: rolesError } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", currentUser.id)
+      .eq("company_id", workspaceId);
 
-      setCompanyId(workspaceId);
-      setRoles(((rolesData ?? []) as { role: AppRole }[]).map((r) => r.role));
-    } catch (error) {
-      console.error("Workspace/profile setup failed:", error);
-      setCompanyId(null);
-      setRoles([]);
-    }
+    if (rolesError) throw rolesError;
+
+    setCompanyId(workspaceId);
+    setRoles(((rolesData ?? []) as { role: AppRole }[]).map((r) => r.role));
+  } catch (error) {
+    console.error("Workspace/profile setup failed:", error);
+    setCompanyId(null);
+    setRoles([]);
+  }
+};
   };
 
   useEffect(() => {
