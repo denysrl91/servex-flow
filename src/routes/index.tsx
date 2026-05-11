@@ -182,7 +182,7 @@ function Dashboard() {
               {!d ? <SkeletonRows /> : d.recentInvoices.length === 0 ? (
                 <EmptyState icon={FileText} title="No invoices yet" description="Generate an invoice from a completed job." cta={{ to: "/invoices", label: "Create invoice" }} />
               ) : (
-                <div className="overflow-hidden rounded-md border border-border/60">
+                <div className="overflow-x-auto rounded-md border border-border/60">
                   <table className="w-full text-sm">
                     <thead className="bg-muted/40 text-xs uppercase tracking-wider text-muted-foreground">
                       <tr><th className="px-3 py-2 text-left">Invoice</th><th className="px-3 py-2 text-left">Customer</th><th className="px-3 py-2 text-left">Status</th><th className="px-3 py-2 text-right">Total</th><th className="px-3 py-2 text-right">Balance</th></tr>

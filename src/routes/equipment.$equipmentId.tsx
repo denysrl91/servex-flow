@@ -113,7 +113,7 @@ function EquipmentProfile() {
                   ) : (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                       {photos.map((p) => (
-                        <div key={p.id} className="group relative overflow-hidden rounded-md border border-border">
+                        <div key={p.id} className="group relative overflow-x-auto rounded-md border border-border">
                           <img src={p.url} alt={p.caption ?? ""} className="aspect-square w-full object-cover" />
                           <button onClick={() => removePhoto(p.id)} className="absolute right-1 top-1 rounded bg-background/80 p-1 opacity-0 transition group-hover:opacity-100"><Trash2 className="h-3 w-3" /></button>
                           {p.caption && <div className="truncate bg-card px-2 py-1 text-[11px]">{p.caption}</div>}
@@ -172,7 +172,7 @@ function EquipmentProfile() {
 function HistoryTable({ jobs, empty }: { jobs: any[]; empty: string }) {
   if (!jobs.length) return <div className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted-foreground">{empty}</div>;
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-card">
+    <div className="overflow-x-auto rounded-md border border-border bg-card">
       <table className="w-full text-sm">
         <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
           <tr><th className="px-3 py-2 text-left">Job</th><th className="px-3 py-2 text-left">Title</th><th className="px-3 py-2 text-left">Date</th><th className="px-3 py-2 text-left">Status</th></tr>

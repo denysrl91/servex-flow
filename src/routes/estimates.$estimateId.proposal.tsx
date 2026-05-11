@@ -204,7 +204,7 @@ function ProposalPage() {
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Site photos</h3>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {photos.map((p) => (
-                <figure key={p.id} className="overflow-hidden rounded-lg border border-border bg-card">
+                <figure key={p.id} className="overflow-x-auto rounded-lg border border-border bg-card">
                   <img src={p.url} alt={p.caption ?? ""} className="aspect-square w-full object-cover" />
                   {p.caption && <figcaption className="px-2 py-1 text-[11px] text-muted-foreground">{p.caption}</figcaption>}
                 </figure>
@@ -227,7 +227,7 @@ function ProposalPage() {
               </div>
             </div>
 
-            <div className="mt-5 overflow-hidden rounded-md border border-border">
+            <div className="mt-5 overflow-x-auto rounded-md border border-border">
               <table className="w-full text-sm">
                 <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
                   <tr><th className="px-3 py-2 text-left">Item</th><th className="px-3 py-2 text-right">Qty</th><th className="px-3 py-2 text-right">Total</th></tr>

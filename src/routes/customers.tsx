@@ -121,7 +121,7 @@ function CustomersPage() {
             <p className="mt-1 text-sm text-muted-foreground">Add your first account to start tracking jobs, invoices, and equipment.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="overflow-x-auto rounded-lg border border-border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
