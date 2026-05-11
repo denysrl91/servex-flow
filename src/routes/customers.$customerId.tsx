@@ -49,7 +49,7 @@ function CustomerProfile() {
       supabase.from("jobs").select("id,job_number,title,status,scheduled_start,total_value").eq("customer_id", customerId).order("created_at", { ascending: false }).limit(50),
       supabase.from("estimates").select("id,estimate_number,title,status,total,created_at").eq("customer_id", customerId).order("created_at", { ascending: false }).limit(50),
       supabase.from("invoices").select("id,invoice_number,total,balance_due,status,issued_at").eq("customer_id", customerId).order("created_at", { ascending: false }).limit(50),
-      supabase.from("service_tickets").select("id,ticket_number,subject,status,priority,created_at").eq("customer_id", customerId).order("created_at", { ascending: false }).limit(50),
+      Promise.resolve({ data: [] as any[] }),
       supabase.from("maintenance_agreements").select("id,name,status,frequency,annual_price,next_visit").eq("customer_id", customerId).order("created_at", { ascending: false }),
       supabase.from("customer_communications").select("*").eq("customer_id", customerId).order("created_at", { ascending: false }).limit(100),
       supabase.from("customer_photos").select("*").eq("customer_id", customerId).order("created_at", { ascending: false }),
