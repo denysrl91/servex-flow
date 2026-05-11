@@ -7,6 +7,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export type AppRole =
   | "owner"
@@ -30,68 +31,28 @@ type AuthCtx = {
 
 const Ctx = createContext<AuthCtx | undefined>(undefined);
 
-async function ensureWorkspace(user: User) {
-  let { data: profile, error: profileError } = await supabase
+async function ensureWorkspace(user: User): Promise<string> {
+  // First try a quick read in case everything is already provisioned.
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("id, company_id")
+    .select("company_id")
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profileError) throw profileError;
-
-  if (profile?.company_id) {
+  if (!profileError && profile?.company_id) {
     return profile.company_id;
   }
 
-  const companyName =
-    user.user_metadata?.company_name ||
-    user.user_metadata?.full_name ||
-    user.email?.split("@")[0] ||
-    "My HVAC Company";
-
-  const { data: company, error: companyError } = await supabase
-    .from("companies")
-    .insert({
-      name: companyName,
-      email: user.email ?? null,
-    })
-    .select("id")
-    .single();
-
-  if (companyError) throw companyError;
-
-  const companyId = company.id;
-
-  if (!profile) {
-    const { error: insertProfileError } = await supabase.from("profiles").insert({
-      id: user.id,
-      company_id: companyId,
-      full_name: user.user_metadata?.full_name ?? user.email ?? "Owner",
-      email: user.email ?? "",
-    });
-
-    if (insertProfileError) throw insertProfileError;
-  } else {
-    const { error: updateProfileError } = await supabase
-      .from("profiles")
-      .update({ company_id: companyId })
-      .eq("id", user.id);
-
-    if (updateProfileError) throw updateProfileError;
+  // Call the SECURITY DEFINER RPC that creates/repairs profile + company + owner role.
+  const { data: workspaceId, error: rpcError } = await supabase.rpc("ensure_user_workspace");
+  if (rpcError) {
+    console.error("ensure_user_workspace RPC failed:", rpcError);
+    throw rpcError;
   }
-
-  await supabase.from("user_roles").upsert(
-    {
-      user_id: user.id,
-      company_id: companyId,
-      role: "owner",
-    },
-    {
-      onConflict: "user_id,company_id,role",
-    }
-  );
-
-  return companyId;
+  if (!workspaceId) {
+    throw new Error("Workspace setup returned no company id");
+  }
+  return workspaceId as string;
 }
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -115,7 +76,9 @@ const loadProfile = async (currentUser: User) => {
     setCompanyId(workspaceId);
     setRoles(((rolesData ?? []) as { role: AppRole }[]).map((r) => r.role));
   } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
     console.error("Workspace/profile setup failed:", error);
+    toast.error(`Workspace setup failed: ${msg}`);
     setCompanyId(null);
     setRoles([]);
   }
