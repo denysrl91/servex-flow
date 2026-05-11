@@ -31,7 +31,7 @@ function EditItem() {
       return data;
     },
   });
-  const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
+  const stock = useQuery({ queryKey: ["inv-stock", companyId], queryFn: () => fetchStock(companyId!), enabled: !!companyId });
 
   useEffect(() => {
     if (item.data && stock.data && !form) {

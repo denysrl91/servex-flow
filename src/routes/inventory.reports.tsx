@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { fetchItems, fetchLocations, fetchStock, totalOnHand, isLow, inventoryValue } from "@/lib/inventory-api";
 import { PageHeader } from "@/components/page-header";
@@ -8,9 +9,10 @@ import { Package, Warehouse, AlertTriangle, DollarSign } from "lucide-react";
 export const Route = createFileRoute("/inventory/reports")({ component: InventoryReports });
 
 function InventoryReports() {
-  const items = useQuery({ queryKey: ["inv-items"], queryFn: fetchItems });
-  const locs = useQuery({ queryKey: ["inv-locs"], queryFn: fetchLocations });
-  const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
+  const { companyId } = useAuth();
+  const items = useQuery({ queryKey: ["inv-items", companyId], queryFn: () => fetchItems(companyId!), enabled: !!companyId });
+  const locs = useQuery({ queryKey: ["inv-locs", companyId], queryFn: () => fetchLocations(companyId!), enabled: !!companyId });
+  const stock = useQuery({ queryKey: ["inv-stock", companyId], queryFn: () => fetchStock(companyId!), enabled: !!companyId });
 
   const itemsArr = items.data ?? [];
   const stockArr = stock.data ?? [];

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchItems, fetchStock, isLow, margin, totalOnHand } from "@/lib/inventory-api";
@@ -16,8 +17,9 @@ export const Route = createFileRoute("/inventory/items")({ component: ItemsPage 
 function ItemsPage() {
   const qc = useQueryClient();
   const [q, setQ] = useState("");
-  const items = useQuery({ queryKey: ["inv-items"], queryFn: fetchItems });
-  const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
+  const { companyId } = useAuth();
+  const items = useQuery({ queryKey: ["inv-items", companyId], queryFn: () => fetchItems(companyId!), enabled: !!companyId });
+  const stock = useQuery({ queryKey: ["inv-stock", companyId], queryFn: () => fetchStock(companyId!), enabled: !!companyId });
 
   const remove = async (id: string, name: string) => {
     if (!confirm(`Delete item "${name}"?`)) return;

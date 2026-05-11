@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { fetchItems, fetchStock, totalOnHand, isLow } from "@/lib/inventory-api";
 import { PageHeader } from "@/components/page-header";
@@ -10,8 +11,9 @@ import { AlertTriangle, ShoppingCart } from "lucide-react";
 export const Route = createFileRoute("/inventory/low-stock")({ component: LowStock });
 
 function LowStock() {
-  const items = useQuery({ queryKey: ["inv-items"], queryFn: fetchItems });
-  const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
+  const { companyId } = useAuth();
+  const items = useQuery({ queryKey: ["inv-items", companyId], queryFn: () => fetchItems(companyId!), enabled: !!companyId });
+  const stock = useQuery({ queryKey: ["inv-stock", companyId], queryFn: () => fetchStock(companyId!), enabled: !!companyId });
   const list = (items.data ?? [])
     .map((i) => ({ item: i, qty: totalOnHand(i.id, stock.data ?? []) }))
     .filter(({ item, qty }) => isLow(item, qty))
