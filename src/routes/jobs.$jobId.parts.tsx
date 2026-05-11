@@ -64,9 +64,9 @@ function JobPartsPage() {
     },
   });
 
-  const items = useQuery({ queryKey: ["inv-items"], queryFn: fetchItems });
-  const stock = useQuery({ queryKey: ["inv-stock"], queryFn: fetchStock });
-  const locs = useQuery({ queryKey: ["inv-locs"], queryFn: fetchLocations });
+  const items = useQuery({ queryKey: ["inv-items", companyId], queryFn: () => fetchItems(companyId!), enabled: !!companyId });
+  const stock = useQuery({ queryKey: ["inv-stock", companyId], queryFn: () => fetchStock(companyId!), enabled: !!companyId });
+  const locs = useQuery({ queryKey: ["inv-locs", companyId], queryFn: () => fetchLocations(companyId!), enabled: !!companyId });
 
   const [search, setSearch] = useState("");
   const [lines, setLines] = useState<Line[]>([]);
