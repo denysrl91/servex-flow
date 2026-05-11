@@ -77,8 +77,8 @@ import { Route as EquipmentEquipmentIdRouteImport } from './routes/equipment.$eq
 import { Route as CustomersCustomerIdRouteImport } from './routes/customers.$customerId'
 import { Route as JobsJobIdPartsRouteImport } from './routes/jobs.$jobId.parts'
 import { Route as InventoryItemsNewRouteImport } from './routes/inventory.items.new'
-import { Route as InventoryItemsEditRouteImport } from './routes/inventory.items..edit'
 import { Route as EstimatesEstimateIdProposalRouteImport } from './routes/estimates.$estimateId.proposal'
+import { Route as InventoryItemsItemIdEditRouteImport } from './routes/inventory.items.$itemId.edit'
 
 const VendorsRoute = VendorsRouteImport.update({
   id: '/vendors',
@@ -420,16 +420,17 @@ const InventoryItemsNewRoute = InventoryItemsNewRouteImport.update({
   path: '/new',
   getParentRoute: () => InventoryItemsRoute,
 } as any)
-const InventoryItemsEditRoute = InventoryItemsEditRouteImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => InventoryItemsRoute,
-} as any)
 const EstimatesEstimateIdProposalRoute =
   EstimatesEstimateIdProposalRouteImport.update({
     id: '/proposal',
     path: '/proposal',
     getParentRoute: () => EstimatesEstimateIdRoute,
+  } as any)
+const InventoryItemsItemIdEditRoute =
+  InventoryItemsItemIdEditRouteImport.update({
+    id: '/$itemId/edit',
+    path: '/$itemId/edit',
+    getParentRoute: () => InventoryItemsRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -500,9 +501,9 @@ export interface FileRoutesByFullPath {
   '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
-  '/inventory/items/edit': typeof InventoryItemsEditRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
+  '/inventory/items/$itemId/edit': typeof InventoryItemsItemIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -571,9 +572,9 @@ export interface FileRoutesByTo {
   '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
-  '/inventory/items/edit': typeof InventoryItemsEditRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
+  '/inventory/items/$itemId/edit': typeof InventoryItemsItemIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -644,9 +645,9 @@ export interface FileRoutesById {
   '/properties/$propertyId': typeof PropertiesPropertyIdRoute
   '/inventory/': typeof InventoryIndexRoute
   '/estimates/$estimateId/proposal': typeof EstimatesEstimateIdProposalRoute
-  '/inventory/items/edit': typeof InventoryItemsEditRoute
   '/inventory/items/new': typeof InventoryItemsNewRoute
   '/jobs/$jobId/parts': typeof JobsJobIdPartsRoute
+  '/inventory/items/$itemId/edit': typeof InventoryItemsItemIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -718,9 +719,9 @@ export interface FileRouteTypes {
     | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
-    | '/inventory/items/edit'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
+    | '/inventory/items/$itemId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -789,9 +790,9 @@ export interface FileRouteTypes {
     | '/properties/$propertyId'
     | '/inventory'
     | '/estimates/$estimateId/proposal'
-    | '/inventory/items/edit'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
+    | '/inventory/items/$itemId/edit'
   id:
     | '__root__'
     | '/'
@@ -861,9 +862,9 @@ export interface FileRouteTypes {
     | '/properties/$propertyId'
     | '/inventory/'
     | '/estimates/$estimateId/proposal'
-    | '/inventory/items/edit'
     | '/inventory/items/new'
     | '/jobs/$jobId/parts'
+    | '/inventory/items/$itemId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1401,19 +1402,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryItemsNewRouteImport
       parentRoute: typeof InventoryItemsRoute
     }
-    '/inventory/items/edit': {
-      id: '/inventory/items/edit'
-      path: '/edit'
-      fullPath: '/inventory/items/edit'
-      preLoaderRoute: typeof InventoryItemsEditRouteImport
-      parentRoute: typeof InventoryItemsRoute
-    }
     '/estimates/$estimateId/proposal': {
       id: '/estimates/$estimateId/proposal'
       path: '/proposal'
       fullPath: '/estimates/$estimateId/proposal'
       preLoaderRoute: typeof EstimatesEstimateIdProposalRouteImport
       parentRoute: typeof EstimatesEstimateIdRoute
+    }
+    '/inventory/items/$itemId/edit': {
+      id: '/inventory/items/$itemId/edit'
+      path: '/$itemId/edit'
+      fullPath: '/inventory/items/$itemId/edit'
+      preLoaderRoute: typeof InventoryItemsItemIdEditRouteImport
+      parentRoute: typeof InventoryItemsRoute
     }
   }
 }
@@ -1468,13 +1469,13 @@ const EstimatesRouteWithChildren = EstimatesRoute._addFileChildren(
 )
 
 interface InventoryItemsRouteChildren {
-  InventoryItemsEditRoute: typeof InventoryItemsEditRoute
   InventoryItemsNewRoute: typeof InventoryItemsNewRoute
+  InventoryItemsItemIdEditRoute: typeof InventoryItemsItemIdEditRoute
 }
 
 const InventoryItemsRouteChildren: InventoryItemsRouteChildren = {
-  InventoryItemsEditRoute: InventoryItemsEditRoute,
   InventoryItemsNewRoute: InventoryItemsNewRoute,
+  InventoryItemsItemIdEditRoute: InventoryItemsItemIdEditRoute,
 }
 
 const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
@@ -1586,3 +1587,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
