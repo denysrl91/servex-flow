@@ -213,6 +213,17 @@ function BuilderPage() {
     reload();
   };
 
+  const setStatus = async (status: EstimateRow["status"]) => {
+    setBusy(true);
+    const patch: Partial<EstimateRow> = { status };
+    if (status === "approved") patch.approved_at = new Date().toISOString();
+    const { error } = await supabase.from("estimates").update(patch).eq("id", est.id);
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success(`Estimate ${status}`);
+    reload();
+  };
+
   const convertToJob = async () => {
     if (!companyId) return;
     setBusy(true);
@@ -240,10 +251,15 @@ function BuilderPage() {
     if (!companyId) return;
     setBusy(true);
     const invNumber = `INV-${Date.now().toString().slice(-6)}`;
-    const subtotal = Number(est.subtotal);
-    const tax = Number(est.tax);
-    const total = Number(est.total);
-    const { error } = await supabase.from("invoices").insert({
+    // Use the selected/recommended option's lines if available
+    const selectedOpt = opts.find((o) => o.is_selected) ?? opts.find((o) => o.is_recommended) ?? opts[0] ?? null;
+    const carryLines = selectedOpt
+      ? lines.filter((l) => l.option_id === selectedOpt.id)
+      : lines;
+    const subtotal = carryLines.reduce((s, l) => s + Number(l.total || l.quantity * l.unit_price), 0) || Number(est.subtotal);
+    const tax = Math.round(subtotal * 0.08 * 100) / 100;
+    const total = subtotal + tax;
+    const { data: inv, error } = await supabase.from("invoices").insert({
       company_id: companyId,
       invoice_number: invNumber,
       customer_id: est.customer_id,
@@ -255,11 +271,26 @@ function BuilderPage() {
       balance_due: total,
       status: "draft",
       created_by: user?.id ?? null,
-    });
+    }).select("id").single();
+    if (error || !inv) { setBusy(false); return toast.error(error?.message ?? "Could not create invoice"); }
+    if (carryLines.length > 0) {
+      const rows = carryLines.map((l, i) => ({
+        company_id: companyId,
+        invoice_id: inv.id,
+        item_id: l.item_id,
+        description: l.description,
+        type: l.type === "labor" ? "service" : l.type,
+        quantity: l.quantity,
+        unit_price: l.unit_price,
+        total: Number(l.total || l.quantity * l.unit_price),
+        sort_order: i,
+      }));
+      const { error: liErr } = await supabase.from("invoice_line_items").insert(rows);
+      if (liErr) { setBusy(false); return toast.error(`Invoice created, but line items failed: ${liErr.message}`); }
+    }
     setBusy(false);
-    if (error) return toast.error(error.message);
     await supabase.from("estimates").update({ status: "converted" }).eq("id", est.id);
-    toast.success("Invoice created");
+    toast.success("Invoice created with line items");
     navigate({ to: "/invoices" });
   };
 
@@ -278,6 +309,8 @@ function BuilderPage() {
               <Link to="/estimates/$estimateId/proposal" params={{ estimateId: est.id }}><ExternalLink className="mr-2 h-4 w-4" /> Customer view</Link>
             </Button>
             <Button size="sm" variant="outline" onClick={sendToCustomer} disabled={busy}><Send className="mr-2 h-4 w-4" /> Mark sent</Button>
+            <Button size="sm" variant="outline" onClick={() => setStatus("approved")} disabled={busy}>Approve</Button>
+            <Button size="sm" variant="outline" onClick={() => setStatus("rejected")} disabled={busy}>Reject</Button>
             <Button size="sm" variant="outline" onClick={convertToJob} disabled={busy}>Convert to job</Button>
             <Button size="sm" onClick={convertToInvoice} disabled={busy} style={{ backgroundImage: "var(--gradient-primary)" }}>
               <FileCheck className="mr-2 h-4 w-4" /> Convert to invoice
