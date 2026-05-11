@@ -54,7 +54,6 @@ async function ensureWorkspace(user: User) {
     .insert({
       name: companyName,
       email: user.email ?? null,
-      created_by: user.id,
     })
     .select("id")
     .single();
@@ -68,7 +67,7 @@ async function ensureWorkspace(user: User) {
       id: user.id,
       company_id: companyId,
       full_name: user.user_metadata?.full_name ?? user.email ?? "Owner",
-      email: user.email ?? null,
+      email: user.email ?? "",
     });
 
     if (insertProfileError) throw insertProfileError;
