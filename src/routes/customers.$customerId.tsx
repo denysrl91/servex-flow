@@ -106,7 +106,7 @@ function CustomerProfile() {
         title={c.name}
         description={`${c.type === "commercial" ? "Commercial" : "Residential"} • ${c.contact_name ?? "—"}`}
         actions={
-          <Link to="/customers"><Button variant="outline" size="sm"><ArrowLeft className="mr-2 h-4 w-4" /> All customers</Button></Link>
+          <Button asChild variant="outline" size="sm"><Link to="/customers"><ArrowLeft className="mr-2 h-4 w-4" /> All customers</Link></Button>
         }
       />
 
