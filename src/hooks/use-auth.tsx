@@ -6,9 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
-import { ensureWorkspace } from "@/lib/workspace.functions";
 
 export type AppRole =
   | "owner"
@@ -56,7 +54,6 @@ async function ensureWorkspace(user: User) {
     .insert({
       name: companyName,
       email: user.email ?? null,
-      created_by: user.id,
     })
     .select("id")
     .single();
@@ -70,7 +67,7 @@ async function ensureWorkspace(user: User) {
       id: user.id,
       company_id: companyId,
       full_name: user.user_metadata?.full_name ?? user.email ?? "Owner",
-      email: user.email ?? null,
+      email: user.email ?? "",
     });
 
     if (insertProfileError) throw insertProfileError;
@@ -97,7 +94,6 @@ async function ensureWorkspace(user: User) {
   return companyId;
 }
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const repairWorkspace = useServerFn(ensureWorkspace);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -124,7 +120,6 @@ const loadProfile = async (currentUser: User) => {
     setRoles([]);
   }
 };
-  };
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
