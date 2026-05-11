@@ -263,6 +263,75 @@ export type Database = {
         }
         Relationships: []
       }
+      company_settings: {
+        Row: {
+          address: string | null
+          city: string | null
+          company_id: string
+          company_name: string
+          country: string | null
+          created_at: string
+          created_by: string | null
+          default_payment_terms: string | null
+          email: string | null
+          estimate_prefix: string
+          id: string
+          invoice_prefix: string
+          logo_url: string | null
+          notes: string | null
+          phone: string | null
+          postal_code: string | null
+          region: string | null
+          tax_rate: number
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          company_id: string
+          company_name?: string
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          default_payment_terms?: string | null
+          email?: string | null
+          estimate_prefix?: string
+          id?: string
+          invoice_prefix?: string
+          logo_url?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          tax_rate?: number
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          company_id?: string
+          company_name?: string
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          default_payment_terms?: string | null
+          email?: string | null
+          estimate_prefix?: string
+          id?: string
+          invoice_prefix?: string
+          logo_url?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          tax_rate?: number
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       customer_communications: {
         Row: {
           body: string | null
@@ -405,6 +474,102 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      dispatch_assignments: {
+        Row: {
+          assigned_at: string
+          company_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          job_id: string
+          notes: string | null
+          scheduled_event_id: string | null
+          status: string
+          technician_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_at?: string
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          job_id: string
+          notes?: string | null
+          scheduled_event_id?: string | null
+          status?: string
+          technician_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_at?: string
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          job_id?: string
+          notes?: string | null
+          scheduled_event_id?: string | null
+          status?: string
+          technician_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          document_type: string
+          estimate_id: string | null
+          id: string
+          invoice_id: string | null
+          job_id: string | null
+          name: string
+          notes: string | null
+          property_id: string | null
+          status: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          document_type?: string
+          estimate_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          job_id?: string | null
+          name: string
+          notes?: string | null
+          property_id?: string | null
+          status?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          document_type?: string
+          estimate_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          job_id?: string | null
+          name?: string
+          notes?: string | null
+          property_id?: string | null
+          status?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
       }
       equipment: {
         Row: {
@@ -1139,6 +1304,54 @@ export type Database = {
           },
         ]
       }
+      invoice_line_items: {
+        Row: {
+          company_id: string
+          created_at: string
+          description: string
+          id: string
+          invoice_id: string
+          item_id: string | null
+          quantity: number
+          sort_order: number
+          status: string
+          total: number
+          type: string
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          description: string
+          id?: string
+          invoice_id: string
+          item_id?: string | null
+          quantity?: number
+          sort_order?: number
+          status?: string
+          total?: number
+          type?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          invoice_id?: string
+          item_id?: string | null
+          quantity?: number
+          sort_order?: number
+          status?: string
+          total?: number
+          type?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       invoices: {
         Row: {
           amount_paid: number
@@ -1477,6 +1690,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      memberships: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          end_date: string | null
+          frequency: string
+          id: string
+          name: string
+          next_visit: string | null
+          notes: string | null
+          plan_name: string | null
+          price: number
+          property_id: string | null
+          start_date: string
+          status: string
+          updated_at: string
+          visits_per_year: number
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          end_date?: string | null
+          frequency?: string
+          id?: string
+          name: string
+          next_visit?: string | null
+          notes?: string | null
+          plan_name?: string | null
+          price?: number
+          property_id?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+          visits_per_year?: number
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          end_date?: string | null
+          frequency?: string
+          id?: string
+          name?: string
+          next_visit?: string | null
+          notes?: string | null
+          plan_name?: string | null
+          price?: number
+          property_id?: string | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+          visits_per_year?: number
+        }
+        Relationships: []
       }
       module_records: {
         Row: {
@@ -2167,6 +2440,57 @@ export type Database = {
           },
         ]
       }
+      schedule_events: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          customer_id: string | null
+          description: string | null
+          ends_at: string | null
+          id: string
+          job_id: string | null
+          property_id: string | null
+          starts_at: string
+          status: string
+          technician_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          job_id?: string | null
+          property_id?: string | null
+          starts_at: string
+          status?: string
+          technician_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          job_id?: string | null
+          property_id?: string | null
+          starts_at?: string
+          status?: string
+          technician_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_tickets: {
         Row: {
           assigned_to: string | null
@@ -2614,6 +2938,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ensure_user_workspace: { Args: never; Returns: string }
       get_my_company_id: { Args: never; Returns: string }
       has_role: {
         Args: {
