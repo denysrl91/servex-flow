@@ -42,11 +42,11 @@ function EstimatesPage() {
         title="Estimates"
         description="Build sales-ready Good / Better / Best proposals."
         actions={
-          <Link to="/estimates/new">
-            <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
+          <Button asChild size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
+            <Link to="/estimates/new">
               <Plus className="mr-2 h-4 w-4" /> New Estimate
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         }
       />
       <div className="p-6">
@@ -79,12 +79,12 @@ function EstimatesPage() {
                     <td className="px-4 py-3"><Badge className={`${STATUS_TONE[r.status]} border-transparent`}>{STATUS_LABEL[r.status]}</Badge></td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex justify-end gap-2">
-                        <Link to="/estimates/$estimateId" params={{ estimateId: r.id }}>
-                          <Button size="sm" variant="ghost"><FileText className="h-4 w-4" /></Button>
-                        </Link>
-                        <Link to="/estimates/$estimateId/proposal" params={{ estimateId: r.id }}>
-                          <Button size="sm" variant="ghost"><ExternalLink className="h-4 w-4" /></Button>
-                        </Link>
+                        <Button asChild size="sm" variant="ghost">
+                          <Link to="/estimates/$estimateId" params={{ estimateId: r.id }}><FileText className="h-4 w-4" /></Link>
+                        </Button>
+                        <Button asChild size="sm" variant="ghost">
+                          <Link to="/estimates/$estimateId/proposal" params={{ estimateId: r.id }}><ExternalLink className="h-4 w-4" /></Link>
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={() => remove(r.id)} aria-label="Delete"><Trash2 className="h-4 w-4 text-muted-foreground" /></Button>
                       </div>
                     </td>
@@ -107,11 +107,9 @@ function EmptyState() {
       <p className="mt-1 max-w-sm text-sm text-muted-foreground">
         Create your first proposal — add labor, parts, equipment and present Good / Better / Best options.
       </p>
-      <Link to="/estimates/new" className="mt-4">
-        <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
-          <Plus className="mr-2 h-4 w-4" /> New Estimate
-        </Button>
-      </Link>
+      <Button asChild size="sm" className="mt-4" style={{ backgroundImage: "var(--gradient-primary)" }}>
+        <Link to="/estimates/new"><Plus className="mr-2 h-4 w-4" /> New Estimate</Link>
+      </Button>
     </div>
   );
 }
