@@ -1,4 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import {
   LayoutDashboard, Users, Briefcase, Receipt, Package, HardHat, BarChart3,
   Settings, Snowflake, ChevronRight,
