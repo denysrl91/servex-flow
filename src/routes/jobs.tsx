@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Wrench, Briefcase, Trash2 } from "lucide-react";
+import { Plus, Wrench, Briefcase, Trash2, Eye, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/jobs")({ component: JobsPage });
@@ -165,6 +165,12 @@ function JobsPage() {
               { key: "total_value", header: "Value", className: "text-right", render: (r) => <span className="font-medium">${Number(r.total_value).toFixed(0)}</span> },
               { key: "actions", header: "", render: (r) => (
                 <div className="flex items-center justify-end gap-2">
+                  <Button asChild size="sm" variant="ghost">
+                    <Link to="/jobs/$jobId" params={{ jobId: r.id }}><Eye className="mr-1 h-3.5 w-3.5" /> View</Link>
+                  </Button>
+                  <Button asChild size="sm" variant="ghost">
+                    <Link to="/jobs/$jobId" params={{ jobId: r.id }}><Pencil className="mr-1 h-3.5 w-3.5" /> Edit</Link>
+                  </Button>
                   <Button asChild size="sm" variant="outline">
                     <Link to="/jobs/$jobId/parts" params={{ jobId: r.id }}><Wrench className="mr-2 h-3.5 w-3.5" /> Parts</Link>
                   </Button>
