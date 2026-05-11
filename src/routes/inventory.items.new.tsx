@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import { setItemQuantity } from "@/lib/inventory-api";
+import { useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +18,7 @@ export const Route = createFileRoute("/inventory/items/new")({ component: NewIte
 function NewItem() {
   const navigate = useNavigate();
   const { companyId } = useAuth();
+  const qc = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     sku: "",
@@ -25,6 +28,7 @@ function NewItem() {
     unit: "each",
     unit_cost: "0",
     unit_price: "0",
+    quantity: "0",
     reorder_point: "0",
     min_stock_level: "0",
     barcode: "",
@@ -37,10 +41,10 @@ function NewItem() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!companyId) return toast.error("Workspace still loading — try again in a moment");
+    if (!companyId) return toast.error("No company is linked to your account yet. Please refresh the page or sign out and back in.");
     if (!form.sku.trim() || !form.name.trim()) return toast.error("SKU and Name are required");
     setSaving(true);
-    const { error } = await supabase.from("inventory_items").insert({
+    const { data: created, error } = await supabase.from("inventory_items").insert({
       company_id: companyId,
       sku: form.sku.trim(),
       name: form.name.trim(),
@@ -56,12 +60,25 @@ function NewItem() {
       vendor_email: form.vendor_email || null,
       vendor_phone: form.vendor_phone || null,
       track_serial: form.track_serial,
-    });
-    setSaving(false);
+    }).select("id").single();
     if (error) {
+      setSaving(false);
       console.error("inventory_items insert failed", error);
       return toast.error(error.message || "Could not save item");
     }
+    const qty = Number(form.quantity) || 0;
+    if (qty > 0 && created?.id) {
+      try {
+        await setItemQuantity(companyId, created.id, qty);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error("inventory_stock insert failed", err);
+        toast.error(`Item saved, but stock setup failed: ${msg}`);
+      }
+    }
+    setSaving(false);
+    qc.invalidateQueries({ queryKey: ["inv-items"] });
+    qc.invalidateQueries({ queryKey: ["inv-stock"] });
     toast.success("Item added");
     navigate({ to: "/inventory/items" });
   };
@@ -86,6 +103,7 @@ function NewItem() {
           <CardContent className="grid gap-4 md:grid-cols-4">
             <Field label="Unit cost ($)"><Input type="number" step="0.01" min="0" value={form.unit_cost} onChange={(e) => set("unit_cost", e.target.value)} /></Field>
             <Field label="Sale price ($)"><Input type="number" step="0.01" min="0" value={form.unit_price} onChange={(e) => set("unit_price", e.target.value)} /></Field>
+            <Field label="Quantity on hand"><Input type="number" min="0" value={form.quantity} onChange={(e) => set("quantity", e.target.value)} /></Field>
             <Field label="Reorder at"><Input type="number" min="0" value={form.reorder_point} onChange={(e) => set("reorder_point", e.target.value)} /></Field>
             <Field label="Minimum stock"><Input type="number" min="0" value={form.min_stock_level} onChange={(e) => set("min_stock_level", e.target.value)} /></Field>
           </CardContent>
