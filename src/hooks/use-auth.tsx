@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { ensureWorkspace } from "@/lib/workspace.functions";
 
 export type AppRole =
   | "owner"
@@ -25,6 +27,7 @@ type AuthCtx = {
 const Ctx = createContext<AuthCtx | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const repairWorkspace = useServerFn(ensureWorkspace);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,10 +35,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
 
   const loadProfile = async (uid: string) => {
-    const [{ data: profile }, { data: rolesData }] = await Promise.all([
+    let [{ data: profile }, { data: rolesData }] = await Promise.all([
       supabase.from("profiles").select("company_id").eq("id", uid).maybeSingle(),
       supabase.from("user_roles").select("role").eq("user_id", uid),
     ]);
+    if (!profile?.company_id || !rolesData?.length) {
+      await repairWorkspace();
+      [{ data: profile }, { data: rolesData }] = await Promise.all([
+        supabase.from("profiles").select("company_id").eq("id", uid).maybeSingle(),
+        supabase.from("user_roles").select("role").eq("user_id", uid),
+      ]);
+    }
     setCompanyId(profile?.company_id ?? null);
     setRoles(((rolesData ?? []) as { role: AppRole }[]).map((r) => r.role));
   };
