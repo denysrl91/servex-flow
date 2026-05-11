@@ -120,6 +120,22 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const currentPath = useRouterState({ select: (s) => s.location.pathname });
+  const { user, companyId, roles } = useAuth();
+  const { data: company } = useQuery({
+    queryKey: ["sidebar-company", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("companies")
+        .select("name")
+        .eq("id", companyId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const companyName = company?.name?.trim() || "My Company";
+  const userLabel = (user?.user_metadata as { full_name?: string } | undefined)?.full_name || user?.email || "Signed in";
+  const roleLabel = roles[0] ? roles[0].replace(/_/g, " ") : null;
 
   return (
     <Sidebar collapsible="icon">
@@ -199,8 +215,8 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border">
         {!collapsed && (
           <div className="px-2 py-2 text-xs text-sidebar-foreground/60">
-            <p className="font-medium text-sidebar-foreground">Acme HVAC Co.</p>
-            <p>Pro Plan · 12 seats</p>
+            <p className="truncate font-medium text-sidebar-foreground">{companyName}</p>
+            <p className="truncate">{userLabel}{roleLabel ? ` · ${roleLabel}` : ""}</p>
           </div>
         )}
       </SidebarFooter>
