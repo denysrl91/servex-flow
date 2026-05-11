@@ -110,7 +110,7 @@ function CustomerProfile() {
         }
       />
 
-      <div className="grid gap-6 p-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[320px_1fr]">
         {/* Left rail */}
         <aside className="space-y-4">
           <Card>
@@ -249,7 +249,7 @@ function CustomerProfile() {
                   ) : (
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                       {photos.map((p) => (
-                        <div key={p.id} className="group relative overflow-hidden rounded-md border border-border">
+                        <div key={p.id} className="group relative overflow-x-auto rounded-md border border-border">
                           <img src={p.url} alt={p.caption ?? ""} className="aspect-square w-full object-cover" />
                           <button onClick={() => removePhoto(p.id)} className="absolute right-1 top-1 rounded bg-background/80 p-1 opacity-0 transition group-hover:opacity-100"><Trash2 className="h-3 w-3" /></button>
                           {p.caption && <div className="truncate bg-card px-2 py-1 text-[11px]">{p.caption}</div>}
@@ -297,7 +297,7 @@ function SimpleList({ rows, render, empty }: { rows: any[]; render: (r: any) => 
 function SimpleTable({ cols, rows, empty }: { cols: string[]; rows: React.ReactNode[][]; empty: string }) {
   if (!rows.length) return <div className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted-foreground">{empty}</div>;
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-card">
+    <div className="overflow-x-auto rounded-md border border-border bg-card">
       <table className="w-full text-sm">
         <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
           <tr>{cols.map((c, i) => <th key={i} className="px-3 py-2 text-left">{c}</th>)}</tr>

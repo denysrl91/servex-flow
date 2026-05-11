@@ -61,7 +61,7 @@ function SettingsPage() {
   return (
     <>
       <PageHeader title="Settings" description="Company profile and contact details." />
-      <div className="grid gap-6 p-6 lg:grid-cols-2">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Company</CardTitle>

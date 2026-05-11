@@ -86,7 +86,7 @@ function NewItem() {
   return (
     <>
       <PageHeader title="Add inventory item" description="Track parts, equipment, and supplies." />
-      <form onSubmit={onSubmit} className="space-y-4 p-6">
+      <form onSubmit={onSubmit} className="space-y-4 p-4 md:p-6">
         <Card>
           <CardHeader><CardTitle className="text-base">Basics</CardTitle></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">

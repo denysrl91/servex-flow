@@ -107,7 +107,7 @@ function CustomersPage() {
           </Dialog>
         }
       />
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-4 md:p-6">
         <div className="relative max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Search by name, email, phone, address…" className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
@@ -121,7 +121,7 @@ function CustomersPage() {
             <p className="mt-1 text-sm text-muted-foreground">Add your first account to start tracking jobs, invoices, and equipment.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="overflow-x-auto rounded-lg border border-border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>

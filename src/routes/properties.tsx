@@ -119,7 +119,7 @@ function PropertiesPage() {
             <p className="mt-1 text-sm text-muted-foreground">Add a service location for a customer.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="overflow-x-auto rounded-lg border border-border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr><th className="px-4 py-3 text-left">Property</th><th className="px-4 py-3 text-left">Customer</th><th className="px-4 py-3 text-left">Type</th><th className="px-4 py-3 text-right">Sq ft</th><th className="px-4 py-3 text-right">Systems</th><th /></tr>

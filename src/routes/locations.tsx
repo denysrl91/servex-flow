@@ -81,7 +81,7 @@ function LocationsPage() {
             </DialogContent>
           </Dialog>
         } />
-      <div className="space-y-4 p-6">
+      <div className="space-y-4 p-4 md:p-6">
         <div className="relative max-w-sm"><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input className="pl-9" placeholder="Search locations…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
         {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : filtered.length === 0 ? (
           <div className="flex flex-col items-center rounded-lg border border-dashed border-border bg-card p-12 text-center"><MapPin className="h-10 w-10 text-muted-foreground" /><h3 className="mt-3 text-base font-semibold">No locations yet</h3><p className="mt-1 text-sm text-muted-foreground">Add your offices and branches.</p></div>

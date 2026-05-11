@@ -41,7 +41,7 @@ function Dashboard() {
           </Button>
         }
       />
-      <div className="grid gap-4 p-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 p-4 md:p-6 md:grid-cols-2 lg:grid-cols-4">
         <KpiCard icon={<Boxes className="h-4 w-4" />} label="Active items" value={itemList.length.toString()} />
         <KpiCard icon={<DollarSign className="h-4 w-4" />} label="Inventory value (cost)" value={`$${value.cost.toFixed(0)}`} hint={`Retail $${value.retail.toFixed(0)}`} />
         <KpiCard icon={<AlertTriangle className="h-4 w-4 text-destructive" />} label="Low stock" value={lowStock.length.toString()} hint="Below reorder / min level" />

@@ -114,7 +114,7 @@ function EquipmentPage() {
             <p className="mt-1 text-sm text-muted-foreground">Track every unit you've installed or serviced.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="overflow-x-auto rounded-lg border border-border bg-card">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr><th className="px-4 py-3 text-left">Equipment</th><th className="px-4 py-3 text-left">Property</th><th className="px-4 py-3 text-left">Specs</th><th className="px-4 py-3 text-left">Installed</th><th className="px-4 py-3 text-left">Warranty</th><th className="px-4 py-3 text-left">Status</th><th /></tr>

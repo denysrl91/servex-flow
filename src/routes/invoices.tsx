@@ -201,7 +201,7 @@ function InvoicesPage() {
           </Dialog>
         }
       />
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-4 md:p-6">
         <div className="grid gap-4 md:grid-cols-4">
           <Kpi icon={CircleDollarSign} label="Outstanding" value={fmtMoney(totalOutstanding)} />
           <Kpi icon={CheckCircle2} label="Collected" value={fmtMoney(totalCollected)} />

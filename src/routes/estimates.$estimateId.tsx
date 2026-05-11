@@ -319,7 +319,7 @@ function BuilderPage() {
         }
       />
 
-      <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           {/* Tier tabs */}
           <div className="grid gap-3 sm:grid-cols-3">
@@ -401,7 +401,7 @@ function BuilderPage() {
                   No items in this tier yet. Add labor, materials, or equipment.
                 </div>
               ) : (
-                <div className="overflow-hidden rounded-md border border-border">
+                <div className="overflow-x-auto rounded-md border border-border">
                   <table className="w-full text-sm">
                     <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
                       <tr>
@@ -443,7 +443,7 @@ function BuilderPage() {
               ) : (
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {photos.map((p) => (
-                    <div key={p.id} className="group relative overflow-hidden rounded-md border border-border">
+                    <div key={p.id} className="group relative overflow-x-auto rounded-md border border-border">
                       <img src={p.url} alt={p.caption ?? ""} className="aspect-square w-full object-cover" />
                       <button onClick={() => removePhoto(p.id)} className="absolute right-1 top-1 rounded bg-background/80 p-1 opacity-0 transition group-hover:opacity-100"><Trash2 className="h-3 w-3" /></button>
                       {p.caption && <div className="truncate bg-card px-2 py-1 text-[11px]">{p.caption}</div>}
