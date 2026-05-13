@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  LayoutDashboard, Users, Briefcase, Calendar, FileText, Receipt, Package, HardHat, BarChart3,
-  Settings, Snowflake, ChevronRight,
+  LayoutDashboard, Users, Wrench, FileText, Receipt, Package, HardHat,
+  BarChart3, Settings, Snowflake, ChevronRight, Megaphone, Plug,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu,
@@ -22,68 +22,118 @@ const NAV: Section[] = [
   {
     title: "Dashboard", url: "/", icon: LayoutDashboard,
     children: [
-      { title: "Main Dashboard", url: "/" },
+      { title: "Executive Dashboard", url: "/executive-dashboard" },
+      { title: "Operations Overview", url: "/" },
+      { title: "Dispatch Dashboard", url: "/dispatch" },
+      { title: "Sales Dashboard", url: "/business-intelligence" },
+      { title: "AI Insights", url: "/ai-brain" },
     ],
   },
   {
-    title: "Customers", url: "/customers", icon: Users,
+    title: "CRM", url: "/crm", icon: Users,
     children: [
+      { title: "CRM Overview", url: "/crm" },
       { title: "Customers", url: "/customers" },
       { title: "Properties", url: "/properties" },
       { title: "Equipment", url: "/equipment" },
+      { title: "Commercial Accounts", url: "/commercial" },
+      { title: "Documents & Photos", url: "/documents" },
+      { title: "Communications", url: "/communications" },
     ],
   },
   {
-    title: "Jobs", url: "/jobs", icon: Briefcase,
+    title: "Operations", url: "/jobs", icon: Wrench,
     children: [
       { title: "Jobs", url: "/jobs" },
-    ],
-  },
-  {
-    title: "Schedule & Dispatch", url: "/schedule", icon: Calendar,
-    children: [
       { title: "Schedule", url: "/schedule" },
       { title: "Dispatch Board", url: "/dispatch" },
+      { title: "Service Tickets", url: "/tickets" },
+      { title: "Installations", url: "/installations" },
+      { title: "Preventive Maintenance", url: "/preventive-maintenance" },
+      { title: "Projects", url: "/projects" },
+      { title: "Fleet Tracking", url: "/fleet" },
+      { title: "Time Tracking", url: "/time-tracking" },
+      { title: "SLA Management", url: "/sla" },
     ],
   },
   {
-    title: "Estimates", url: "/estimates", icon: FileText,
+    title: "Sales", url: "/estimates", icon: FileText,
     children: [
       { title: "Estimates", url: "/estimates" },
+      { title: "Sales Pipeline", url: "/pipeline" },
+      { title: "Price Book", url: "/sales-catalog" },
+      { title: "Service Catalog", url: "/services-catalog" },
+      { title: "Memberships", url: "/memberships" },
+      { title: "Financing", url: "/financing" },
+      { title: "Online Booking", url: "/online-booking" },
     ],
   },
   {
-    title: "Invoices & Payments", url: "/invoices", icon: Receipt,
+    title: "Billing", url: "/invoices", icon: Receipt,
     children: [
       { title: "Invoices", url: "/invoices" },
       { title: "Payments", url: "/payments" },
+      { title: "Membership Billing", url: "/membership-billing" },
     ],
   },
   {
     title: "Inventory", url: "/inventory", icon: Package,
     children: [
-      { title: "Inventory", url: "/inventory" },
-      { title: "Van Inventory", url: "/inventory/vans" },
+      { title: "Inventory Overview", url: "/inventory" },
+      { title: "Items", url: "/inventory/items" },
       { title: "Warehouse", url: "/inventory/warehouse" },
+      { title: "Van Inventory", url: "/inventory/vans" },
       { title: "Transfers", url: "/inventory/transfer" },
+      { title: "Low Stock", url: "/inventory/low-stock" },
+      { title: "Purchase Orders", url: "/purchase-orders" },
+      { title: "Vendors", url: "/vendors" },
+      { title: "Inventory Reports", url: "/inventory/reports" },
     ],
   },
   {
-    title: "Team", url: "/technicians", icon: HardHat,
+    title: "Workforce", url: "/technicians", icon: HardHat,
     children: [
       { title: "Technicians", url: "/technicians" },
+      { title: "Payroll", url: "/payroll" },
+      { title: "Commissions", url: "/commissions" },
+      { title: "Training & Certifications", url: "/training" },
     ],
   },
   {
-    title: "Reports", url: "/reports", icon: BarChart3,
+    title: "Marketing", url: "/reviews", icon: Megaphone,
+    children: [
+      { title: "Reviews", url: "/reviews" },
+      { title: "Communications", url: "/communications" },
+      { title: "Customer Portal", url: "/customer-portal" },
+      { title: "Forms", url: "/forms" },
+      { title: "Online Booking", url: "/online-booking" },
+    ],
+  },
+  {
+    title: "Reports & Analytics", url: "/reports", icon: BarChart3,
     children: [
       { title: "Reports", url: "/reports" },
+      { title: "Business Intelligence", url: "/business-intelligence" },
+      { title: "Forecasting", url: "/forecasting" },
+      { title: "Executive Dashboard", url: "/executive-dashboard" },
+      { title: "AI Brain", url: "/ai-brain" },
+    ],
+  },
+  {
+    title: "Integrations", url: "/integrations", icon: Plug,
+    children: [
+      { title: "Integrations", url: "/integrations" },
+      { title: "Automations", url: "/automation" },
+      { title: "API Access", url: "/api-access" },
     ],
   },
   {
     title: "Settings", url: "/settings", icon: Settings,
     children: [
       { title: "Company Settings", url: "/settings" },
+      { title: "Locations", url: "/locations" },
+      { title: "Assets", url: "/assets" },
+      { title: "Notifications", url: "/notifications" },
     ],
   },
 ];
