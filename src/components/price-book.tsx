@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Plus, Search, Tag, DollarSign, Percent, Layers } from "lucide-react";
+import { Plus, Search, Tag, DollarSign, Percent, Layers, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export type PriceItem = {
@@ -120,6 +120,19 @@ export function PriceBook({ title, description, kind, categories }: Props) {
   const edit = (i: PriceItem) => {
     setForm(i);
     setOpen(true);
+  };
+
+  const remove = (i: PriceItem) => {
+    if (!window.confirm(`Delete "${i.name}"? This cannot be undone.`)) return;
+    setItems(items.filter((x) => x.id !== i.id));
+    toast.success("Item deleted");
+  };
+
+  const clearAll = () => {
+    if (!items.length) return;
+    if (!window.confirm(`Delete ALL ${items.length} items from this price book? This cannot be undone.`)) return;
+    setItems([]);
+    toast.success("Price book cleared");
   };
 
   return (
@@ -323,9 +336,19 @@ export function PriceBook({ title, description, kind, categories }: Props) {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Button size="sm" variant="ghost" onClick={() => edit(i)}>
-                          Edit
-                        </Button>
+                        <div className="flex justify-end gap-1">
+                          <Button size="sm" variant="ghost" onClick={() => edit(i)}>
+                            Edit
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => remove(i)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
