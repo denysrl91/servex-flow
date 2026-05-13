@@ -141,6 +141,10 @@ export function PriceBook({ title, description, kind, categories }: Props) {
         title={title}
         description={description}
         actions={
+          <div className="flex items-center gap-2">
+          <Button size="sm" variant="outline" onClick={clearAll} disabled={!items.length}>
+            <Trash2 className="mr-2 h-4 w-4" /> Clear all
+          </Button>
           <Dialog
             open={open}
             onOpenChange={(v) => {
@@ -245,6 +249,7 @@ export function PriceBook({ title, description, kind, categories }: Props) {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+          </div>
         }
       />
       <div className="space-y-4 p-6">
