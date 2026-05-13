@@ -64,9 +64,14 @@ function read(kind: PriceBookKind): PriceItem[] {
   if (typeof window === "undefined") return seedFor(kind);
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY(kind));
-    if (!raw) return seedFor(kind);
+    if (raw === null) {
+      // First ever load — seed once, then persist so future empties stick.
+      const seeded = seedFor(kind);
+      window.localStorage.setItem(STORAGE_KEY(kind), JSON.stringify(seeded));
+      return seeded;
+    }
     const parsed = JSON.parse(raw) as PriceItem[];
-    return Array.isArray(parsed) && parsed.length ? parsed : seedFor(kind);
+    return Array.isArray(parsed) ? parsed : seedFor(kind);
   } catch {
     return seedFor(kind);
   }
