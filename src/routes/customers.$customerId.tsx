@@ -15,6 +15,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { toast } from "sonner";
 import { ArrowLeft, Mail, Phone, MapPin, Plus, Image as ImageIcon, Trash2, MessageSquare, FileText, Receipt, Wrench, Ticket, ShieldCheck, StickyNote, Tag } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
+import { createJobForCustomer, createEstimateForCustomer, createInvoiceForCustomer, recordPayment } from "@/lib/crm-api";
+import { useNavigate } from "@tanstack/react-router";
 
 type CustomerUpdate = Database["public"]["Tables"]["customers"]["Update"];
 
@@ -30,6 +32,7 @@ type Customer = {
 function CustomerProfile() {
   const { customerId } = Route.useParams();
   const { companyId, user } = useAuth();
+  const navigate = useNavigate();
   const [c, setC] = useState<Customer | null>(null);
   const [props, setProps] = useState<any[]>([]);
   const [equipment, setEquipment] = useState<any[]>([]);
@@ -218,15 +221,64 @@ function CustomerProfile() {
             </TabsContent>
 
             <TabsContent value="jobs" className="mt-4">
-              <SimpleTable empty="No jobs yet." cols={["Job #", "Title", "Status", "Scheduled", "Value"]} rows={jobs.map((j) => [j.job_number, j.title, j.status, j.scheduled_start?.slice(0, 10) ?? "—", `$${Number(j.total_value ?? 0).toLocaleString()}`])} />
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{jobs.length} job(s) on file</div>
+                <NewJobDialog
+                  companyId={companyId}
+                  userId={user?.id ?? null}
+                  customerId={c.id}
+                  defaultAddress={c.service_address ?? c.billing_address ?? ""}
+                  onCreated={(id) => { reload(); navigate({ to: "/jobs/$jobId", params: { jobId: id } }); }}
+                />
+              </div>
+              <SimpleTable empty="No jobs yet." cols={["Job #", "Title", "Status", "Scheduled", "Value", ""]} rows={jobs.map((j) => [j.job_number, j.title, j.status, j.scheduled_start?.slice(0, 10) ?? "—", `$${Number(j.total_value ?? 0).toLocaleString()}`, <Link key={j.id} to="/jobs/$jobId" params={{ jobId: j.id }} className="text-primary hover:underline">Open →</Link>])} />
             </TabsContent>
 
             <TabsContent value="estimates" className="mt-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{estimates.length} estimate(s)</div>
+                <NewEstimateDialog
+                  companyId={companyId}
+                  userId={user?.id ?? null}
+                  customerId={c.id}
+                  onCreated={(id) => { reload(); navigate({ to: "/estimates/$estimateId", params: { estimateId: id } }); }}
+                />
+              </div>
               <SimpleTable empty="No estimates yet." cols={["Estimate", "Title", "Total", "Status", ""]} rows={estimates.map((e) => [e.estimate_number, e.title, `$${Number(e.total).toLocaleString()}`, e.status, <Link key={e.id} to="/estimates/$estimateId" params={{ estimateId: e.id }} className="text-primary hover:underline">Open →</Link>])} />
             </TabsContent>
 
             <TabsContent value="invoices" className="mt-4">
-              <SimpleTable empty="No invoices yet." cols={["Invoice", "Issued", "Total", "Balance", "Status"]} rows={invoices.map((i) => [i.invoice_number, i.issued_at, `$${Number(i.total).toLocaleString()}`, `$${Number(i.balance_due).toLocaleString()}`, i.status])} />
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">{invoices.length} invoice(s) • Balance due ${balance.toLocaleString()}</div>
+                <NewInvoiceDialog
+                  companyId={companyId}
+                  userId={user?.id ?? null}
+                  customerId={c.id}
+                  onCreated={() => reload()}
+                />
+              </div>
+              <SimpleTable
+                empty="No invoices yet."
+                cols={["Invoice", "Issued", "Total", "Balance", "Status", ""]}
+                rows={invoices.map((i) => [
+                  i.invoice_number,
+                  i.issued_at,
+                  `$${Number(i.total).toLocaleString()}`,
+                  `$${Number(i.balance_due).toLocaleString()}`,
+                  i.status,
+                  Number(i.balance_due) > 0 ? (
+                    <RecordPaymentDialog
+                      key={i.id}
+                      companyId={companyId}
+                      userId={user?.id ?? null}
+                      invoiceId={i.id}
+                      customerId={c.id}
+                      maxAmount={Number(i.balance_due)}
+                      onPaid={reload}
+                    />
+                  ) : <span key={i.id} className="text-xs text-muted-foreground">Paid</span>,
+                ])}
+              />
             </TabsContent>
 
             <TabsContent value="tickets" className="mt-4">
