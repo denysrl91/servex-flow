@@ -33,6 +33,10 @@ function EstimatesPage() {
     })();
   }, []);
 
+  if (location.pathname !== "/estimates") {
+    return <Outlet />;
+  }
+
   const remove = async (id: string) => {
     if (!confirm("Delete this estimate?")) return;
     const { error } = await supabase.from("estimates").delete().eq("id", id);
