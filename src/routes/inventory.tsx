@@ -11,7 +11,6 @@ const TABS: Tab[] = [
   { to: "/inventory/vans", label: "Van Stock" },
   { to: "/inventory/transfer", label: "Transfer" },
   { to: "/inventory/low-stock", label: "Low Stock" },
-  { to: "/inventory/reports", label: "Reports" },
   { to: "/purchase-orders", label: "Purchase Orders" },
 ];
 

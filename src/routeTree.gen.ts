@@ -10,11 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VendorsRouteImport } from './routes/vendors'
-import { Route as TrainingRouteImport } from './routes/training'
 import { Route as TimeTrackingRouteImport } from './routes/time-tracking'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as TechniciansRouteImport } from './routes/technicians'
-import { Route as SubcontractorsRouteImport } from './routes/subcontractors'
 import { Route as SlaRouteImport } from './routes/sla'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -27,42 +25,27 @@ import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PurchaseOrdersRouteImport } from './routes/purchase-orders'
 import { Route as PropertiesRouteImport } from './routes/properties'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as ProductCatalogRouteImport } from './routes/product-catalog'
 import { Route as PreventiveMaintenanceRouteImport } from './routes/preventive-maintenance'
 import { Route as PipelineRouteImport } from './routes/pipeline'
-import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as PaymentsRouteImport } from './routes/payments'
-import { Route as OnlineBookingRouteImport } from './routes/online-booking'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MembershipsRouteImport } from './routes/memberships'
-import { Route as MembershipBillingRouteImport } from './routes/membership-billing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LocationsRouteImport } from './routes/locations'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as InventoryRouteImport } from './routes/inventory'
-import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as InstallationsRouteImport } from './routes/installations'
-import { Route as FormsRouteImport } from './routes/forms'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as ForecastingRouteImport } from './routes/forecasting'
 import { Route as FleetRouteImport } from './routes/fleet'
-import { Route as FinancingRouteImport } from './routes/financing'
-import { Route as ExecutiveDashboardRouteImport } from './routes/executive-dashboard'
 import { Route as EstimatesRouteImport } from './routes/estimates'
 import { Route as EquipmentRouteImport } from './routes/equipment'
-import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as CustomersRouteImport } from './routes/customers'
-import { Route as CustomerPortalRouteImport } from './routes/customer-portal'
-import { Route as CrmRouteImport } from './routes/crm'
 import { Route as CommunicationsRouteImport } from './routes/communications'
-import { Route as CommissionsRouteImport } from './routes/commissions'
 import { Route as CommercialRouteImport } from './routes/commercial'
-import { Route as BusinessIntelligenceRouteImport } from './routes/business-intelligence'
-import { Route as AutomationRouteImport } from './routes/automation'
 import { Route as AssetsRouteImport } from './routes/assets'
-import { Route as ApiAccessRouteImport } from './routes/api-access'
-import { Route as AiBrainRouteImport } from './routes/ai-brain'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InventoryIndexRouteImport } from './routes/inventory.index'
 import { Route as PropertiesPropertyIdRouteImport } from './routes/properties.$propertyId'
@@ -70,7 +53,6 @@ import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as InventoryWarehouseRouteImport } from './routes/inventory.warehouse'
 import { Route as InventoryVansRouteImport } from './routes/inventory.vans'
 import { Route as InventoryTransferRouteImport } from './routes/inventory.transfer'
-import { Route as InventoryReportsRouteImport } from './routes/inventory.reports'
 import { Route as InventoryLowStockRouteImport } from './routes/inventory.low-stock'
 import { Route as InventoryItemsRouteImport } from './routes/inventory.items'
 import { Route as EstimatesNewRouteImport } from './routes/estimates.new'
@@ -87,11 +69,6 @@ const VendorsRoute = VendorsRouteImport.update({
   path: '/vendors',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrainingRoute = TrainingRouteImport.update({
-  id: '/training',
-  path: '/training',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TimeTrackingRoute = TimeTrackingRouteImport.update({
   id: '/time-tracking',
   path: '/time-tracking',
@@ -105,11 +82,6 @@ const TicketsRoute = TicketsRouteImport.update({
 const TechniciansRoute = TechniciansRouteImport.update({
   id: '/technicians',
   path: '/technicians',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SubcontractorsRoute = SubcontractorsRouteImport.update({
-  id: '/subcontractors',
-  path: '/subcontractors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlaRoute = SlaRouteImport.update({
@@ -172,6 +144,11 @@ const ProjectsRoute = ProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductCatalogRoute = ProductCatalogRouteImport.update({
+  id: '/product-catalog',
+  path: '/product-catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PreventiveMaintenanceRoute = PreventiveMaintenanceRouteImport.update({
   id: '/preventive-maintenance',
   path: '/preventive-maintenance',
@@ -182,19 +159,9 @@ const PipelineRoute = PipelineRouteImport.update({
   path: '/pipeline',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PayrollRoute = PayrollRouteImport.update({
-  id: '/payroll',
-  path: '/payroll',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PaymentsRoute = PaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnlineBookingRoute = OnlineBookingRouteImport.update({
-  id: '/online-booking',
-  path: '/online-booking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -205,11 +172,6 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const MembershipsRoute = MembershipsRouteImport.update({
   id: '/memberships',
   path: '/memberships',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MembershipBillingRoute = MembershipBillingRouteImport.update({
-  id: '/membership-billing',
-  path: '/membership-billing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -237,19 +199,9 @@ const InventoryRoute = InventoryRouteImport.update({
   path: '/inventory',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IntegrationsRoute = IntegrationsRouteImport.update({
-  id: '/integrations',
-  path: '/integrations',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const InstallationsRoute = InstallationsRouteImport.update({
   id: '/installations',
   path: '/installations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FormsRoute = FormsRouteImport.update({
-  id: '/forms',
-  path: '/forms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -257,24 +209,9 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForecastingRoute = ForecastingRouteImport.update({
-  id: '/forecasting',
-  path: '/forecasting',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FleetRoute = FleetRouteImport.update({
   id: '/fleet',
   path: '/fleet',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FinancingRoute = FinancingRouteImport.update({
-  id: '/financing',
-  path: '/financing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExecutiveDashboardRoute = ExecutiveDashboardRouteImport.update({
-  id: '/executive-dashboard',
-  path: '/executive-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EstimatesRoute = EstimatesRouteImport.update({
@@ -287,11 +224,6 @@ const EquipmentRoute = EquipmentRouteImport.update({
   path: '/equipment',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocumentsRoute = DocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DispatchRoute = DispatchRouteImport.update({
   id: '/dispatch',
   path: '/dispatch',
@@ -302,24 +234,9 @@ const CustomersRoute = CustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CustomerPortalRoute = CustomerPortalRouteImport.update({
-  id: '/customer-portal',
-  path: '/customer-portal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CrmRoute = CrmRouteImport.update({
-  id: '/crm',
-  path: '/crm',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CommunicationsRoute = CommunicationsRouteImport.update({
   id: '/communications',
   path: '/communications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommissionsRoute = CommissionsRouteImport.update({
-  id: '/commissions',
-  path: '/commissions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommercialRoute = CommercialRouteImport.update({
@@ -327,29 +244,9 @@ const CommercialRoute = CommercialRouteImport.update({
   path: '/commercial',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BusinessIntelligenceRoute = BusinessIntelligenceRouteImport.update({
-  id: '/business-intelligence',
-  path: '/business-intelligence',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AutomationRoute = AutomationRouteImport.update({
-  id: '/automation',
-  path: '/automation',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAccessRoute = ApiAccessRouteImport.update({
-  id: '/api-access',
-  path: '/api-access',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiBrainRoute = AiBrainRouteImport.update({
-  id: '/ai-brain',
-  path: '/ai-brain',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -385,11 +282,6 @@ const InventoryVansRoute = InventoryVansRouteImport.update({
 const InventoryTransferRoute = InventoryTransferRouteImport.update({
   id: '/transfer',
   path: '/transfer',
-  getParentRoute: () => InventoryRoute,
-} as any)
-const InventoryReportsRoute = InventoryReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
   getParentRoute: () => InventoryRoute,
 } as any)
 const InventoryLowStockRoute = InventoryLowStockRouteImport.update({
@@ -447,42 +339,27 @@ const InventoryItemsItemIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/ai-brain': typeof AiBrainRoute
-  '/api-access': typeof ApiAccessRoute
   '/assets': typeof AssetsRoute
-  '/automation': typeof AutomationRoute
-  '/business-intelligence': typeof BusinessIntelligenceRoute
   '/commercial': typeof CommercialRoute
-  '/commissions': typeof CommissionsRoute
   '/communications': typeof CommunicationsRoute
-  '/crm': typeof CrmRoute
-  '/customer-portal': typeof CustomerPortalRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/documents': typeof DocumentsRoute
   '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
-  '/executive-dashboard': typeof ExecutiveDashboardRoute
-  '/financing': typeof FinancingRoute
   '/fleet': typeof FleetRoute
-  '/forecasting': typeof ForecastingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/forms': typeof FormsRoute
   '/installations': typeof InstallationsRoute
-  '/integrations': typeof IntegrationsRoute
   '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/locations': typeof LocationsRoute
   '/login': typeof LoginRoute
-  '/membership-billing': typeof MembershipBillingRoute
   '/memberships': typeof MembershipsRoute
   '/notifications': typeof NotificationsRoute
-  '/online-booking': typeof OnlineBookingRoute
   '/payments': typeof PaymentsRoute
-  '/payroll': typeof PayrollRoute
   '/pipeline': typeof PipelineRoute
   '/preventive-maintenance': typeof PreventiveMaintenanceRoute
+  '/product-catalog': typeof ProductCatalogRoute
   '/projects': typeof ProjectsRoute
   '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -495,11 +372,9 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/sla': typeof SlaRoute
-  '/subcontractors': typeof SubcontractorsRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
-  '/training': typeof TrainingRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
@@ -507,7 +382,6 @@ export interface FileRoutesByFullPath {
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/low-stock': typeof InventoryLowStockRoute
-  '/inventory/reports': typeof InventoryReportsRoute
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
@@ -521,41 +395,26 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ai-brain': typeof AiBrainRoute
-  '/api-access': typeof ApiAccessRoute
   '/assets': typeof AssetsRoute
-  '/automation': typeof AutomationRoute
-  '/business-intelligence': typeof BusinessIntelligenceRoute
   '/commercial': typeof CommercialRoute
-  '/commissions': typeof CommissionsRoute
   '/communications': typeof CommunicationsRoute
-  '/crm': typeof CrmRoute
-  '/customer-portal': typeof CustomerPortalRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/documents': typeof DocumentsRoute
   '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
-  '/executive-dashboard': typeof ExecutiveDashboardRoute
-  '/financing': typeof FinancingRoute
   '/fleet': typeof FleetRoute
-  '/forecasting': typeof ForecastingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/forms': typeof FormsRoute
   '/installations': typeof InstallationsRoute
-  '/integrations': typeof IntegrationsRoute
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/locations': typeof LocationsRoute
   '/login': typeof LoginRoute
-  '/membership-billing': typeof MembershipBillingRoute
   '/memberships': typeof MembershipsRoute
   '/notifications': typeof NotificationsRoute
-  '/online-booking': typeof OnlineBookingRoute
   '/payments': typeof PaymentsRoute
-  '/payroll': typeof PayrollRoute
   '/pipeline': typeof PipelineRoute
   '/preventive-maintenance': typeof PreventiveMaintenanceRoute
+  '/product-catalog': typeof ProductCatalogRoute
   '/projects': typeof ProjectsRoute
   '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -568,11 +427,9 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/sla': typeof SlaRoute
-  '/subcontractors': typeof SubcontractorsRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
-  '/training': typeof TrainingRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
@@ -580,7 +437,6 @@ export interface FileRoutesByTo {
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/low-stock': typeof InventoryLowStockRoute
-  '/inventory/reports': typeof InventoryReportsRoute
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
@@ -595,42 +451,27 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/ai-brain': typeof AiBrainRoute
-  '/api-access': typeof ApiAccessRoute
   '/assets': typeof AssetsRoute
-  '/automation': typeof AutomationRoute
-  '/business-intelligence': typeof BusinessIntelligenceRoute
   '/commercial': typeof CommercialRoute
-  '/commissions': typeof CommissionsRoute
   '/communications': typeof CommunicationsRoute
-  '/crm': typeof CrmRoute
-  '/customer-portal': typeof CustomerPortalRoute
   '/customers': typeof CustomersRouteWithChildren
   '/dispatch': typeof DispatchRoute
-  '/documents': typeof DocumentsRoute
   '/equipment': typeof EquipmentRouteWithChildren
   '/estimates': typeof EstimatesRouteWithChildren
-  '/executive-dashboard': typeof ExecutiveDashboardRoute
-  '/financing': typeof FinancingRoute
   '/fleet': typeof FleetRoute
-  '/forecasting': typeof ForecastingRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/forms': typeof FormsRoute
   '/installations': typeof InstallationsRoute
-  '/integrations': typeof IntegrationsRoute
   '/inventory': typeof InventoryRouteWithChildren
   '/invoices': typeof InvoicesRoute
   '/jobs': typeof JobsRouteWithChildren
   '/locations': typeof LocationsRoute
   '/login': typeof LoginRoute
-  '/membership-billing': typeof MembershipBillingRoute
   '/memberships': typeof MembershipsRoute
   '/notifications': typeof NotificationsRoute
-  '/online-booking': typeof OnlineBookingRoute
   '/payments': typeof PaymentsRoute
-  '/payroll': typeof PayrollRoute
   '/pipeline': typeof PipelineRoute
   '/preventive-maintenance': typeof PreventiveMaintenanceRoute
+  '/product-catalog': typeof ProductCatalogRoute
   '/projects': typeof ProjectsRoute
   '/properties': typeof PropertiesRouteWithChildren
   '/purchase-orders': typeof PurchaseOrdersRoute
@@ -643,11 +484,9 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/sla': typeof SlaRoute
-  '/subcontractors': typeof SubcontractorsRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
-  '/training': typeof TrainingRoute
   '/vendors': typeof VendorsRoute
   '/customers/$customerId': typeof CustomersCustomerIdRoute
   '/equipment/$equipmentId': typeof EquipmentEquipmentIdRoute
@@ -655,7 +494,6 @@ export interface FileRoutesById {
   '/estimates/new': typeof EstimatesNewRoute
   '/inventory/items': typeof InventoryItemsRouteWithChildren
   '/inventory/low-stock': typeof InventoryLowStockRoute
-  '/inventory/reports': typeof InventoryReportsRoute
   '/inventory/transfer': typeof InventoryTransferRoute
   '/inventory/vans': typeof InventoryVansRoute
   '/inventory/warehouse': typeof InventoryWarehouseRoute
@@ -671,42 +509,27 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/ai-brain'
-    | '/api-access'
     | '/assets'
-    | '/automation'
-    | '/business-intelligence'
     | '/commercial'
-    | '/commissions'
     | '/communications'
-    | '/crm'
-    | '/customer-portal'
     | '/customers'
     | '/dispatch'
-    | '/documents'
     | '/equipment'
     | '/estimates'
-    | '/executive-dashboard'
-    | '/financing'
     | '/fleet'
-    | '/forecasting'
     | '/forgot-password'
-    | '/forms'
     | '/installations'
-    | '/integrations'
     | '/inventory'
     | '/invoices'
     | '/jobs'
     | '/locations'
     | '/login'
-    | '/membership-billing'
     | '/memberships'
     | '/notifications'
-    | '/online-booking'
     | '/payments'
-    | '/payroll'
     | '/pipeline'
     | '/preventive-maintenance'
+    | '/product-catalog'
     | '/projects'
     | '/properties'
     | '/purchase-orders'
@@ -719,11 +542,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/sla'
-    | '/subcontractors'
     | '/technicians'
     | '/tickets'
     | '/time-tracking'
-    | '/training'
     | '/vendors'
     | '/customers/$customerId'
     | '/equipment/$equipmentId'
@@ -731,7 +552,6 @@ export interface FileRouteTypes {
     | '/estimates/new'
     | '/inventory/items'
     | '/inventory/low-stock'
-    | '/inventory/reports'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
@@ -745,41 +565,26 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/ai-brain'
-    | '/api-access'
     | '/assets'
-    | '/automation'
-    | '/business-intelligence'
     | '/commercial'
-    | '/commissions'
     | '/communications'
-    | '/crm'
-    | '/customer-portal'
     | '/customers'
     | '/dispatch'
-    | '/documents'
     | '/equipment'
     | '/estimates'
-    | '/executive-dashboard'
-    | '/financing'
     | '/fleet'
-    | '/forecasting'
     | '/forgot-password'
-    | '/forms'
     | '/installations'
-    | '/integrations'
     | '/invoices'
     | '/jobs'
     | '/locations'
     | '/login'
-    | '/membership-billing'
     | '/memberships'
     | '/notifications'
-    | '/online-booking'
     | '/payments'
-    | '/payroll'
     | '/pipeline'
     | '/preventive-maintenance'
+    | '/product-catalog'
     | '/projects'
     | '/properties'
     | '/purchase-orders'
@@ -792,11 +597,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/sla'
-    | '/subcontractors'
     | '/technicians'
     | '/tickets'
     | '/time-tracking'
-    | '/training'
     | '/vendors'
     | '/customers/$customerId'
     | '/equipment/$equipmentId'
@@ -804,7 +607,6 @@ export interface FileRouteTypes {
     | '/estimates/new'
     | '/inventory/items'
     | '/inventory/low-stock'
-    | '/inventory/reports'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
@@ -818,42 +620,27 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/ai-brain'
-    | '/api-access'
     | '/assets'
-    | '/automation'
-    | '/business-intelligence'
     | '/commercial'
-    | '/commissions'
     | '/communications'
-    | '/crm'
-    | '/customer-portal'
     | '/customers'
     | '/dispatch'
-    | '/documents'
     | '/equipment'
     | '/estimates'
-    | '/executive-dashboard'
-    | '/financing'
     | '/fleet'
-    | '/forecasting'
     | '/forgot-password'
-    | '/forms'
     | '/installations'
-    | '/integrations'
     | '/inventory'
     | '/invoices'
     | '/jobs'
     | '/locations'
     | '/login'
-    | '/membership-billing'
     | '/memberships'
     | '/notifications'
-    | '/online-booking'
     | '/payments'
-    | '/payroll'
     | '/pipeline'
     | '/preventive-maintenance'
+    | '/product-catalog'
     | '/projects'
     | '/properties'
     | '/purchase-orders'
@@ -866,11 +653,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/sla'
-    | '/subcontractors'
     | '/technicians'
     | '/tickets'
     | '/time-tracking'
-    | '/training'
     | '/vendors'
     | '/customers/$customerId'
     | '/equipment/$equipmentId'
@@ -878,7 +663,6 @@ export interface FileRouteTypes {
     | '/estimates/new'
     | '/inventory/items'
     | '/inventory/low-stock'
-    | '/inventory/reports'
     | '/inventory/transfer'
     | '/inventory/vans'
     | '/inventory/warehouse'
@@ -893,42 +677,27 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AiBrainRoute: typeof AiBrainRoute
-  ApiAccessRoute: typeof ApiAccessRoute
   AssetsRoute: typeof AssetsRoute
-  AutomationRoute: typeof AutomationRoute
-  BusinessIntelligenceRoute: typeof BusinessIntelligenceRoute
   CommercialRoute: typeof CommercialRoute
-  CommissionsRoute: typeof CommissionsRoute
   CommunicationsRoute: typeof CommunicationsRoute
-  CrmRoute: typeof CrmRoute
-  CustomerPortalRoute: typeof CustomerPortalRoute
   CustomersRoute: typeof CustomersRouteWithChildren
   DispatchRoute: typeof DispatchRoute
-  DocumentsRoute: typeof DocumentsRoute
   EquipmentRoute: typeof EquipmentRouteWithChildren
   EstimatesRoute: typeof EstimatesRouteWithChildren
-  ExecutiveDashboardRoute: typeof ExecutiveDashboardRoute
-  FinancingRoute: typeof FinancingRoute
   FleetRoute: typeof FleetRoute
-  ForecastingRoute: typeof ForecastingRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  FormsRoute: typeof FormsRoute
   InstallationsRoute: typeof InstallationsRoute
-  IntegrationsRoute: typeof IntegrationsRoute
   InventoryRoute: typeof InventoryRouteWithChildren
   InvoicesRoute: typeof InvoicesRoute
   JobsRoute: typeof JobsRouteWithChildren
   LocationsRoute: typeof LocationsRoute
   LoginRoute: typeof LoginRoute
-  MembershipBillingRoute: typeof MembershipBillingRoute
   MembershipsRoute: typeof MembershipsRoute
   NotificationsRoute: typeof NotificationsRoute
-  OnlineBookingRoute: typeof OnlineBookingRoute
   PaymentsRoute: typeof PaymentsRoute
-  PayrollRoute: typeof PayrollRoute
   PipelineRoute: typeof PipelineRoute
   PreventiveMaintenanceRoute: typeof PreventiveMaintenanceRoute
+  ProductCatalogRoute: typeof ProductCatalogRoute
   ProjectsRoute: typeof ProjectsRoute
   PropertiesRoute: typeof PropertiesRouteWithChildren
   PurchaseOrdersRoute: typeof PurchaseOrdersRoute
@@ -941,11 +710,9 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   SlaRoute: typeof SlaRoute
-  SubcontractorsRoute: typeof SubcontractorsRoute
   TechniciansRoute: typeof TechniciansRoute
   TicketsRoute: typeof TicketsRoute
   TimeTrackingRoute: typeof TimeTrackingRoute
-  TrainingRoute: typeof TrainingRoute
   VendorsRoute: typeof VendorsRoute
 }
 
@@ -956,13 +723,6 @@ declare module '@tanstack/react-router' {
       path: '/vendors'
       fullPath: '/vendors'
       preLoaderRoute: typeof VendorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/training': {
-      id: '/training'
-      path: '/training'
-      fullPath: '/training'
-      preLoaderRoute: typeof TrainingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/time-tracking': {
@@ -984,13 +744,6 @@ declare module '@tanstack/react-router' {
       path: '/technicians'
       fullPath: '/technicians'
       preLoaderRoute: typeof TechniciansRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/subcontractors': {
-      id: '/subcontractors'
-      path: '/subcontractors'
-      fullPath: '/subcontractors'
-      preLoaderRoute: typeof SubcontractorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sla': {
@@ -1077,6 +830,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product-catalog': {
+      id: '/product-catalog'
+      path: '/product-catalog'
+      fullPath: '/product-catalog'
+      preLoaderRoute: typeof ProductCatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/preventive-maintenance': {
       id: '/preventive-maintenance'
       path: '/preventive-maintenance'
@@ -1091,25 +851,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PipelineRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/payroll': {
-      id: '/payroll'
-      path: '/payroll'
-      fullPath: '/payroll'
-      preLoaderRoute: typeof PayrollRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/payments': {
       id: '/payments'
       path: '/payments'
       fullPath: '/payments'
       preLoaderRoute: typeof PaymentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/online-booking': {
-      id: '/online-booking'
-      path: '/online-booking'
-      fullPath: '/online-booking'
-      preLoaderRoute: typeof OnlineBookingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -1124,13 +870,6 @@ declare module '@tanstack/react-router' {
       path: '/memberships'
       fullPath: '/memberships'
       preLoaderRoute: typeof MembershipsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/membership-billing': {
-      id: '/membership-billing'
-      path: '/membership-billing'
-      fullPath: '/membership-billing'
-      preLoaderRoute: typeof MembershipBillingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1168,25 +907,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InventoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/integrations': {
-      id: '/integrations'
-      path: '/integrations'
-      fullPath: '/integrations'
-      preLoaderRoute: typeof IntegrationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/installations': {
       id: '/installations'
       path: '/installations'
       fullPath: '/installations'
       preLoaderRoute: typeof InstallationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forms': {
-      id: '/forms'
-      path: '/forms'
-      fullPath: '/forms'
-      preLoaderRoute: typeof FormsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -1196,32 +921,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forecasting': {
-      id: '/forecasting'
-      path: '/forecasting'
-      fullPath: '/forecasting'
-      preLoaderRoute: typeof ForecastingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/fleet': {
       id: '/fleet'
       path: '/fleet'
       fullPath: '/fleet'
       preLoaderRoute: typeof FleetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/financing': {
-      id: '/financing'
-      path: '/financing'
-      fullPath: '/financing'
-      preLoaderRoute: typeof FinancingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/executive-dashboard': {
-      id: '/executive-dashboard'
-      path: '/executive-dashboard'
-      fullPath: '/executive-dashboard'
-      preLoaderRoute: typeof ExecutiveDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/estimates': {
@@ -1238,13 +942,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EquipmentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/documents': {
-      id: '/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof DocumentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dispatch': {
       id: '/dispatch'
       path: '/dispatch'
@@ -1259,32 +956,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/customer-portal': {
-      id: '/customer-portal'
-      path: '/customer-portal'
-      fullPath: '/customer-portal'
-      preLoaderRoute: typeof CustomerPortalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/crm': {
-      id: '/crm'
-      path: '/crm'
-      fullPath: '/crm'
-      preLoaderRoute: typeof CrmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/communications': {
       id: '/communications'
       path: '/communications'
       fullPath: '/communications'
       preLoaderRoute: typeof CommunicationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/commissions': {
-      id: '/commissions'
-      path: '/commissions'
-      fullPath: '/commissions'
-      preLoaderRoute: typeof CommissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/commercial': {
@@ -1294,39 +970,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommercialRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/business-intelligence': {
-      id: '/business-intelligence'
-      path: '/business-intelligence'
-      fullPath: '/business-intelligence'
-      preLoaderRoute: typeof BusinessIntelligenceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/automation': {
-      id: '/automation'
-      path: '/automation'
-      fullPath: '/automation'
-      preLoaderRoute: typeof AutomationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/assets': {
       id: '/assets'
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api-access': {
-      id: '/api-access'
-      path: '/api-access'
-      fullPath: '/api-access'
-      preLoaderRoute: typeof ApiAccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai-brain': {
-      id: '/ai-brain'
-      path: '/ai-brain'
-      fullPath: '/ai-brain'
-      preLoaderRoute: typeof AiBrainRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -1376,13 +1024,6 @@ declare module '@tanstack/react-router' {
       path: '/transfer'
       fullPath: '/inventory/transfer'
       preLoaderRoute: typeof InventoryTransferRouteImport
-      parentRoute: typeof InventoryRoute
-    }
-    '/inventory/reports': {
-      id: '/inventory/reports'
-      path: '/reports'
-      fullPath: '/inventory/reports'
-      preLoaderRoute: typeof InventoryReportsRouteImport
       parentRoute: typeof InventoryRoute
     }
     '/inventory/low-stock': {
@@ -1524,7 +1165,6 @@ const InventoryItemsRouteWithChildren = InventoryItemsRoute._addFileChildren(
 interface InventoryRouteChildren {
   InventoryItemsRoute: typeof InventoryItemsRouteWithChildren
   InventoryLowStockRoute: typeof InventoryLowStockRoute
-  InventoryReportsRoute: typeof InventoryReportsRoute
   InventoryTransferRoute: typeof InventoryTransferRoute
   InventoryVansRoute: typeof InventoryVansRoute
   InventoryWarehouseRoute: typeof InventoryWarehouseRoute
@@ -1534,7 +1174,6 @@ interface InventoryRouteChildren {
 const InventoryRouteChildren: InventoryRouteChildren = {
   InventoryItemsRoute: InventoryItemsRouteWithChildren,
   InventoryLowStockRoute: InventoryLowStockRoute,
-  InventoryReportsRoute: InventoryReportsRoute,
   InventoryTransferRoute: InventoryTransferRoute,
   InventoryVansRoute: InventoryVansRoute,
   InventoryWarehouseRoute: InventoryWarehouseRoute,
@@ -1581,42 +1220,27 @@ const PropertiesRouteWithChildren = PropertiesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AiBrainRoute: AiBrainRoute,
-  ApiAccessRoute: ApiAccessRoute,
   AssetsRoute: AssetsRoute,
-  AutomationRoute: AutomationRoute,
-  BusinessIntelligenceRoute: BusinessIntelligenceRoute,
   CommercialRoute: CommercialRoute,
-  CommissionsRoute: CommissionsRoute,
   CommunicationsRoute: CommunicationsRoute,
-  CrmRoute: CrmRoute,
-  CustomerPortalRoute: CustomerPortalRoute,
   CustomersRoute: CustomersRouteWithChildren,
   DispatchRoute: DispatchRoute,
-  DocumentsRoute: DocumentsRoute,
   EquipmentRoute: EquipmentRouteWithChildren,
   EstimatesRoute: EstimatesRouteWithChildren,
-  ExecutiveDashboardRoute: ExecutiveDashboardRoute,
-  FinancingRoute: FinancingRoute,
   FleetRoute: FleetRoute,
-  ForecastingRoute: ForecastingRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  FormsRoute: FormsRoute,
   InstallationsRoute: InstallationsRoute,
-  IntegrationsRoute: IntegrationsRoute,
   InventoryRoute: InventoryRouteWithChildren,
   InvoicesRoute: InvoicesRoute,
   JobsRoute: JobsRouteWithChildren,
   LocationsRoute: LocationsRoute,
   LoginRoute: LoginRoute,
-  MembershipBillingRoute: MembershipBillingRoute,
   MembershipsRoute: MembershipsRoute,
   NotificationsRoute: NotificationsRoute,
-  OnlineBookingRoute: OnlineBookingRoute,
   PaymentsRoute: PaymentsRoute,
-  PayrollRoute: PayrollRoute,
   PipelineRoute: PipelineRoute,
   PreventiveMaintenanceRoute: PreventiveMaintenanceRoute,
+  ProductCatalogRoute: ProductCatalogRoute,
   ProjectsRoute: ProjectsRoute,
   PropertiesRoute: PropertiesRouteWithChildren,
   PurchaseOrdersRoute: PurchaseOrdersRoute,
@@ -1629,11 +1253,9 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   SlaRoute: SlaRoute,
-  SubcontractorsRoute: SubcontractorsRoute,
   TechniciansRoute: TechniciansRoute,
   TicketsRoute: TicketsRoute,
   TimeTrackingRoute: TimeTrackingRoute,
-  TrainingRoute: TrainingRoute,
   VendorsRoute: VendorsRoute,
 }
 export const routeTree = rootRouteImport
