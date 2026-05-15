@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import {
   LayoutDashboard, Users, Wrench, FileText, Receipt, Package, HardHat,
-  BarChart3, Settings, Snowflake, ChevronRight, Megaphone, Plug,
+  BarChart3, Settings, Snowflake, ChevronRight, Megaphone,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu,
@@ -22,22 +22,16 @@ const NAV: Section[] = [
   {
     title: "Dashboard", url: "/", icon: LayoutDashboard,
     children: [
-      { title: "Executive Dashboard", url: "/executive-dashboard" },
-      { title: "Operations Overview", url: "/" },
-      { title: "Dispatch Dashboard", url: "/dispatch" },
-      { title: "Sales Dashboard", url: "/business-intelligence" },
-      { title: "AI Insights", url: "/ai-brain" },
+      { title: "Overview", url: "/" },
     ],
   },
   {
-    title: "CRM", url: "/crm", icon: Users,
+    title: "CRM", url: "/customers", icon: Users,
     children: [
-      { title: "CRM Overview", url: "/crm" },
       { title: "Customers", url: "/customers" },
       { title: "Properties", url: "/properties" },
       { title: "Equipment", url: "/equipment" },
       { title: "Commercial Accounts", url: "/commercial" },
-      { title: "Documents & Photos", url: "/documents" },
       { title: "Communications", url: "/communications" },
     ],
   },
@@ -61,11 +55,10 @@ const NAV: Section[] = [
     children: [
       { title: "Estimates", url: "/estimates" },
       { title: "Sales Pipeline", url: "/pipeline" },
+      { title: "Product Catalog", url: "/product-catalog" },
       { title: "Price Book", url: "/sales-catalog" },
       { title: "Service Catalog", url: "/services-catalog" },
       { title: "Memberships", url: "/memberships" },
-      { title: "Financing", url: "/financing" },
-      { title: "Online Booking", url: "/online-booking" },
     ],
   },
   {
@@ -73,7 +66,6 @@ const NAV: Section[] = [
     children: [
       { title: "Invoices", url: "/invoices" },
       { title: "Payments", url: "/payments" },
-      { title: "Membership Billing", url: "/membership-billing" },
     ],
   },
   {
@@ -87,17 +79,13 @@ const NAV: Section[] = [
       { title: "Low Stock", url: "/inventory/low-stock" },
       { title: "Purchase Orders", url: "/purchase-orders" },
       { title: "Vendors", url: "/vendors" },
-      { title: "Inventory Reports", url: "/inventory/reports" },
     ],
   },
   {
     title: "Workforce", url: "/technicians", icon: HardHat,
     children: [
       { title: "Technicians", url: "/technicians" },
-      { title: "Subcontractors", url: "/subcontractors" },
-      { title: "Payroll", url: "/payroll" },
-      { title: "Commissions", url: "/commissions" },
-      { title: "Training & Certifications", url: "/training" },
+      { title: "Time Tracking", url: "/time-tracking" },
     ],
   },
   {
@@ -105,27 +93,12 @@ const NAV: Section[] = [
     children: [
       { title: "Reviews", url: "/reviews" },
       { title: "Communications", url: "/communications" },
-      { title: "Customer Portal", url: "/customer-portal" },
-      { title: "Forms", url: "/forms" },
-      { title: "Online Booking", url: "/online-booking" },
     ],
   },
   {
-    title: "Reports & Analytics", url: "/reports", icon: BarChart3,
+    title: "Reports", url: "/reports", icon: BarChart3,
     children: [
       { title: "Reports", url: "/reports" },
-      { title: "Business Intelligence", url: "/business-intelligence" },
-      { title: "Forecasting", url: "/forecasting" },
-      { title: "Executive Dashboard", url: "/executive-dashboard" },
-      { title: "AI Brain", url: "/ai-brain" },
-    ],
-  },
-  {
-    title: "Integrations", url: "/integrations", icon: Plug,
-    children: [
-      { title: "Integrations", url: "/integrations" },
-      { title: "Automations", url: "/automation" },
-      { title: "API Access", url: "/api-access" },
     ],
   },
   {
