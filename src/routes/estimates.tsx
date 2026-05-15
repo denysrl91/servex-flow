@@ -16,10 +16,6 @@ function EstimatesPage() {
   const [customers, setCustomers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
-  if (location.pathname !== "/estimates") {
-    return <Outlet />;
-  }
-
   useEffect(() => {
     (async () => {
       const data = await fetchEstimates().catch(() => []);
