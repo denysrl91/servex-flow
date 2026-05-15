@@ -507,3 +507,157 @@ function CommunicationLog({ comms, onLog }: { comms: any[]; onLog: (f: { channel
     </div>
   );
 }
+
+function NewJobDialog({ companyId, userId, customerId, defaultAddress, onCreated }: { companyId: string | null; userId: string | null; customerId: string; defaultAddress: string; onCreated: (id: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ title: "", description: "", scheduled_start: "", duration_minutes: "60", priority: "medium", service_address: defaultAddress, total_value: "0" });
+  const submit = async () => {
+    if (!companyId) return toast.error("Workspace loading");
+    if (!form.title.trim()) return toast.error("Title required");
+    setSaving(true);
+    try {
+      const id = await createJobForCustomer({
+        companyId, userId, customerId,
+        title: form.title.trim(),
+        description: form.description,
+        scheduledStart: form.scheduled_start ? new Date(form.scheduled_start).toISOString() : null,
+        durationMinutes: Number(form.duration_minutes) || 60,
+        priority: form.priority as "low" | "medium" | "high" | "urgent",
+        serviceAddress: form.service_address,
+        totalValue: Number(form.total_value) || 0,
+      });
+      toast.success("Job created");
+      setOpen(false);
+      onCreated(id);
+    } catch (e) { toast.error((e as Error).message); }
+    setSaving(false);
+  };
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild><Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}><Plus className="mr-2 h-4 w-4" /> New job</Button></DialogTrigger>
+      <DialogContent className="max-w-xl">
+        <DialogHeader><DialogTitle>Create job</DialogTitle></DialogHeader>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="sm:col-span-2"><FieldX label="Title *"><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="AC repair, install, maintenance…" /></FieldX></div>
+          <FieldX label="Scheduled start"><Input type="datetime-local" value={form.scheduled_start} onChange={(e) => setForm({ ...form, scheduled_start: e.target.value })} /></FieldX>
+          <FieldX label="Duration (min)"><Input type="number" value={form.duration_minutes} onChange={(e) => setForm({ ...form, duration_minutes: e.target.value })} /></FieldX>
+          <FieldX label="Priority">
+            <Select value={form.priority} onValueChange={(v) => setForm({ ...form, priority: v })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent><SelectItem value="low">Low</SelectItem><SelectItem value="medium">Medium</SelectItem><SelectItem value="high">High</SelectItem><SelectItem value="urgent">Urgent</SelectItem></SelectContent>
+            </Select>
+          </FieldX>
+          <FieldX label="Estimated value"><Input type="number" value={form.total_value} onChange={(e) => setForm({ ...form, total_value: e.target.value })} /></FieldX>
+          <div className="sm:col-span-2"><FieldX label="Service address"><Input value={form.service_address} onChange={(e) => setForm({ ...form, service_address: e.target.value })} /></FieldX></div>
+          <div className="sm:col-span-2"><FieldX label="Description"><Textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></FieldX></div>
+        </div>
+        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={submit} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>{saving ? "Creating…" : "Create job"}</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function NewEstimateDialog({ companyId, userId, customerId, onCreated }: { companyId: string | null; userId: string | null; customerId: string; onCreated: (id: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ title: "", total: "0", notes: "" });
+  const submit = async () => {
+    if (!companyId) return toast.error("Workspace loading");
+    if (!form.title.trim()) return toast.error("Title required");
+    setSaving(true);
+    try {
+      const id = await createEstimateForCustomer({ companyId, userId, customerId, title: form.title.trim(), total: Number(form.total) || 0, notes: form.notes });
+      toast.success("Estimate created");
+      setOpen(false);
+      onCreated(id);
+    } catch (e) { toast.error((e as Error).message); }
+    setSaving(false);
+  };
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild><Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}><Plus className="mr-2 h-4 w-4" /> New estimate</Button></DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader><DialogTitle>Create estimate</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <FieldX label="Title *"><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="System replacement, repair quote…" /></FieldX>
+          <FieldX label="Initial total"><Input type="number" value={form.total} onChange={(e) => setForm({ ...form, total: e.target.value })} /></FieldX>
+          <FieldX label="Notes"><Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></FieldX>
+        </div>
+        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={submit} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>{saving ? "Creating…" : "Create estimate"}</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function NewInvoiceDialog({ companyId, userId, customerId, onCreated }: { companyId: string | null; userId: string | null; customerId: string; onCreated: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ total: "0", due_at: "", notes: "" });
+  const submit = async () => {
+    if (!companyId) return toast.error("Workspace loading");
+    const total = Number(form.total);
+    if (!total || total <= 0) return toast.error("Enter an amount");
+    setSaving(true);
+    try {
+      await createInvoiceForCustomer({ companyId, userId, customerId, total, dueDate: form.due_at || null, notes: form.notes });
+      toast.success("Invoice created");
+      setOpen(false);
+      setForm({ total: "0", due_at: "", notes: "" });
+      onCreated();
+    } catch (e) { toast.error((e as Error).message); }
+    setSaving(false);
+  };
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild><Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}><Plus className="mr-2 h-4 w-4" /> New invoice</Button></DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader><DialogTitle>Create invoice</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <FieldX label="Total *"><Input type="number" value={form.total} onChange={(e) => setForm({ ...form, total: e.target.value })} /></FieldX>
+          <FieldX label="Due date"><Input type="date" value={form.due_at} onChange={(e) => setForm({ ...form, due_at: e.target.value })} /></FieldX>
+          <FieldX label="Notes"><Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></FieldX>
+        </div>
+        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={submit} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>{saving ? "Creating…" : "Create invoice"}</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function RecordPaymentDialog({ companyId, userId, invoiceId, customerId, maxAmount, onPaid }: { companyId: string | null; userId: string | null; invoiceId: string; customerId: string; maxAmount: number; onPaid: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ amount: maxAmount.toString(), method: "card", reference: "" });
+  const submit = async () => {
+    if (!companyId) return toast.error("Workspace loading");
+    const amt = Number(form.amount);
+    if (!amt || amt <= 0) return toast.error("Enter an amount");
+    setSaving(true);
+    try {
+      await recordPayment({ companyId, userId, invoiceId, customerId, amount: amt, method: form.method as "card" | "cash" | "check" | "ach" | "other", reference: form.reference });
+      toast.success("Payment recorded");
+      setOpen(false);
+      onPaid();
+    } catch (e) { toast.error((e as Error).message); }
+    setSaving(false);
+  };
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild><Button size="sm" variant="outline">Record payment</Button></DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader><DialogTitle>Record payment</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <FieldX label="Amount *"><Input type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} /></FieldX>
+          <FieldX label="Method">
+            <Select value={form.method} onValueChange={(v) => setForm({ ...form, method: v })}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent><SelectItem value="card">Card</SelectItem><SelectItem value="cash">Cash</SelectItem><SelectItem value="check">Check</SelectItem><SelectItem value="ach">ACH</SelectItem><SelectItem value="other">Other</SelectItem></SelectContent>
+            </Select>
+          </FieldX>
+          <FieldX label="Reference / memo"><Input value={form.reference} onChange={(e) => setForm({ ...form, reference: e.target.value })} placeholder="Check #, txn id…" /></FieldX>
+        </div>
+        <DialogFooter><Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button><Button onClick={submit} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>{saving ? "Saving…" : "Save payment"}</Button></DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
