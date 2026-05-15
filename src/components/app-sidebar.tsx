@@ -94,6 +94,7 @@ const NAV: Section[] = [
     title: "Workforce", url: "/technicians", icon: HardHat,
     children: [
       { title: "Technicians", url: "/technicians" },
+      { title: "Subcontractors", url: "/subcontractors" },
       { title: "Payroll", url: "/payroll" },
       { title: "Commissions", url: "/commissions" },
       { title: "Training & Certifications", url: "/training" },
