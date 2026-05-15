@@ -70,6 +70,13 @@ function SignupPage() {
     if (res.error) toast.error(res.error.message);
   };
 
+  const onApple = async () => {
+    const res = await lovable.auth.signInWithOAuth("apple", {
+      redirect_uri: window.location.origin,
+    });
+    if (res.error) toast.error(res.error.message);
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-8">
       <Card className="w-full max-w-md shadow-xl">
@@ -83,6 +90,9 @@ function SignupPage() {
         <CardContent className="space-y-4">
           <Button type="button" variant="outline" className="w-full" onClick={onGoogle}>
             Continue with Google
+          </Button>
+          <Button type="button" variant="outline" className="w-full" onClick={onApple}>
+            Continue with Apple
           </Button>
           <div className="relative text-center text-xs text-muted-foreground">
             <span className="bg-card px-2 relative z-10">or</span>
