@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Search, Inbox } from "lucide-react";
+import { Plus, Search, Inbox, Pencil, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -119,6 +119,7 @@ export function ModuleRecords({
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Record<string, unknown>>(initialForm);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => { setForm(initialForm); }, [initialForm]);
 
@@ -146,7 +147,35 @@ export function ModuleRecords({
     });
   }, [rows, q]);
 
-  const create = async () => {
+  const openCreate = () => {
+    setEditingId(null);
+    setForm(initialForm);
+    setOpen(true);
+  };
+
+  const openEdit = (r: DbRecord) => {
+    const next: Record<string, unknown> = { ...initialForm };
+    schema.fields.forEach((f) => {
+      if (f.primary) next[f.key] = r.title ?? "";
+      else if (f.secondary) next[f.key] = r.subtitle ?? (r.data?.[f.key] ?? "");
+      else if (f.key === "status") next[f.key] = r.status ?? schema.defaultStatus ?? "active";
+      else if (f.key === "notes") next[f.key] = r.notes ?? "";
+      else next[f.key] = r.data?.[f.key] ?? "";
+    });
+    setForm(next);
+    setEditingId(r.id);
+    setOpen(true);
+  };
+
+  const remove = async (r: DbRecord) => {
+    if (!confirm(`Delete this ${singular.toLowerCase()}?`)) return;
+    const { error } = await supabase.from("module_records").delete().eq("id", r.id);
+    if (error) return toast.error(error.message);
+    toast.success(`${singular} deleted`);
+    load();
+  };
+
+  const save = async () => {
     if (!companyId) return toast.error("No company on profile");
     // validate required fields
     for (const f of schema.fields) {
@@ -169,20 +198,26 @@ export function ModuleRecords({
     }
 
     setSaving(true);
-    const { error } = await supabase.from("module_records").insert({
-      company_id: companyId,
-      module_key: moduleKey,
+    const payload = {
       title: titleVal.slice(0, 150),
       subtitle: subtitleVal ? subtitleVal.slice(0, 200) : null,
       status: statusVal,
       notes: notesVal ? notesVal.slice(0, 2000) : null,
       data: dataObj as never,
-      created_by: user?.id ?? null,
-    });
+    };
+    const { error } = editingId
+      ? await supabase.from("module_records").update(payload).eq("id", editingId)
+      : await supabase.from("module_records").insert({
+          ...payload,
+          company_id: companyId,
+          module_key: moduleKey,
+          created_by: user?.id ?? null,
+        });
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success(`${singular} added`);
+    toast.success(editingId ? `${singular} updated` : `${singular} added`);
     setOpen(false);
+    setEditingId(null);
     setForm(initialForm);
     load();
   };
@@ -202,14 +237,14 @@ export function ModuleRecords({
             Capture, organise, and track {plural.toLowerCase()} for this module.
           </p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEditingId(null); }}>
           <DialogTrigger asChild>
-            <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }}>
+            <Button size="sm" style={{ backgroundImage: "var(--gradient-primary)" }} onClick={openCreate}>
               <Plus className="mr-1.5 h-4 w-4" /> Add {singular.toLowerCase()}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
-            <DialogHeader><DialogTitle>New {singular.toLowerCase()}</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{editingId ? `Edit ${singular.toLowerCase()}` : `New ${singular.toLowerCase()}`}</DialogTitle></DialogHeader>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {schema.fields.map((f) => (
                 <div key={f.key} className={`space-y-1.5 ${f.span === 2 || f.type === "textarea" ? "sm:col-span-2" : ""}`}>
@@ -222,8 +257,8 @@ export function ModuleRecords({
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button onClick={create} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>
-                {saving ? "Saving…" : "Save"}
+              <Button onClick={save} disabled={saving} style={{ backgroundImage: "var(--gradient-primary)" }}>
+                {saving ? "Saving…" : editingId ? "Update" : "Save"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -252,6 +287,7 @@ export function ModuleRecords({
                   ))}
                   {statusField ? <th className="px-4 py-2 text-left">Status</th> : null}
                   <th className="px-4 py-2 text-right whitespace-nowrap">Created</th>
+                  <th className="px-4 py-2 text-right whitespace-nowrap w-24">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -271,6 +307,16 @@ export function ModuleRecords({
                     ) : null}
                     <td className="px-4 py-2 text-right text-xs text-muted-foreground whitespace-nowrap">
                       {new Date(r.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-2 text-right whitespace-nowrap">
+                      <div className="flex justify-end gap-1">
+                        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => openEdit(r)} aria-label="Edit">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => remove(r)} aria-label="Delete">
+                          <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
