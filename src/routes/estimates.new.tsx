@@ -22,6 +22,7 @@ type CustomerOpt = { id: string; name: string; email: string | null; phone: stri
 type PropertyOpt = { id: string; label: string; customer_id: string | null; address: string };
 type InventoryItem = { id: string; sku: string; name: string; unit_price: number; category: string | null; description: string | null };
 type PriceEntry = ReturnType<typeof useAllPriceBook>[number];
+type PropertyType = "single_family" | "multi_family" | "office" | "retail" | "industrial" | "education" | "healthcare" | "other";
 type LineDraft = {
   id: string;
   optionKey: "good" | "better" | "best";
@@ -106,7 +107,7 @@ function NewEstimate() {
     property_city: "",
     property_region: "",
     property_postal_code: "",
-    property_type: "single_family",
+    property_type: "single_family" as PropertyType,
     system_count: "1",
     access_notes: "",
     expires_at: "",
@@ -439,7 +440,21 @@ function NewEstimate() {
               {form.property_mode === "new" && (
                 <>
                   <Field label="Property name"><Input value={form.property_name} onChange={(e) => set("property_name", e.target.value)} placeholder="Main house, North office, Unit 2" /></Field>
-                  <Field label="Property type"><Input value={form.property_type} onChange={(e) => set("property_type", e.target.value)} placeholder="single_family" /></Field>
+                  <Field label="Property type">
+                    <Select value={form.property_type} onValueChange={(value) => setForm((f) => ({ ...f, property_type: value as PropertyType }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="single_family">Single family</SelectItem>
+                        <SelectItem value="multi_family">Multi-family</SelectItem>
+                        <SelectItem value="office">Office</SelectItem>
+                        <SelectItem value="retail">Retail</SelectItem>
+                        <SelectItem value="industrial">Industrial</SelectItem>
+                        <SelectItem value="education">Education</SelectItem>
+                        <SelectItem value="healthcare">Healthcare</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
                   <Field label="Service address" required className="md:col-span-2"><Input value={form.property_address} onChange={(e) => set("property_address", e.target.value)} /></Field>
                   <Field label="City"><Input value={form.property_city} onChange={(e) => set("property_city", e.target.value)} /></Field>
                   <Field label="State/region"><Input value={form.property_region} onChange={(e) => set("property_region", e.target.value)} /></Field>
