@@ -14,6 +14,7 @@ import { Route as TrainingRouteImport } from './routes/training'
 import { Route as TimeTrackingRouteImport } from './routes/time-tracking'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as TechniciansRouteImport } from './routes/technicians'
+import { Route as SubcontractorsRouteImport } from './routes/subcontractors'
 import { Route as SlaRouteImport } from './routes/sla'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -104,6 +105,11 @@ const TicketsRoute = TicketsRouteImport.update({
 const TechniciansRoute = TechniciansRouteImport.update({
   id: '/technicians',
   path: '/technicians',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubcontractorsRoute = SubcontractorsRouteImport.update({
+  id: '/subcontractors',
+  path: '/subcontractors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlaRoute = SlaRouteImport.update({
@@ -489,6 +495,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/sla': typeof SlaRoute
+  '/subcontractors': typeof SubcontractorsRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
@@ -561,6 +568,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/sla': typeof SlaRoute
+  '/subcontractors': typeof SubcontractorsRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
@@ -635,6 +643,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/sla': typeof SlaRoute
+  '/subcontractors': typeof SubcontractorsRoute
   '/technicians': typeof TechniciansRoute
   '/tickets': typeof TicketsRoute
   '/time-tracking': typeof TimeTrackingRoute
@@ -710,6 +719,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/sla'
+    | '/subcontractors'
     | '/technicians'
     | '/tickets'
     | '/time-tracking'
@@ -782,6 +792,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/sla'
+    | '/subcontractors'
     | '/technicians'
     | '/tickets'
     | '/time-tracking'
@@ -855,6 +866,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/signup'
     | '/sla'
+    | '/subcontractors'
     | '/technicians'
     | '/tickets'
     | '/time-tracking'
@@ -929,6 +941,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   SlaRoute: typeof SlaRoute
+  SubcontractorsRoute: typeof SubcontractorsRoute
   TechniciansRoute: typeof TechniciansRoute
   TicketsRoute: typeof TicketsRoute
   TimeTrackingRoute: typeof TimeTrackingRoute
@@ -971,6 +984,13 @@ declare module '@tanstack/react-router' {
       path: '/technicians'
       fullPath: '/technicians'
       preLoaderRoute: typeof TechniciansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subcontractors': {
+      id: '/subcontractors'
+      path: '/subcontractors'
+      fullPath: '/subcontractors'
+      preLoaderRoute: typeof SubcontractorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sla': {
@@ -1609,6 +1629,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   SlaRoute: SlaRoute,
+  SubcontractorsRoute: SubcontractorsRoute,
   TechniciansRoute: TechniciansRoute,
   TicketsRoute: TicketsRoute,
   TimeTrackingRoute: TimeTrackingRoute,
