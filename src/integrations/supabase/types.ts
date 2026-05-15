@@ -2951,6 +2951,19 @@ export type Database = {
         Args: { _company_id: string; _user_id: string }
         Returns: boolean
       }
+      next_doc_number: {
+        Args: {
+          _column: string
+          _company_id: string
+          _prefix: string
+          _table: string
+        }
+        Returns: string
+      }
+      recalc_customer_ltv: {
+        Args: { _customer_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       agreement_status: "draft" | "active" | "paused" | "expired" | "cancelled"
