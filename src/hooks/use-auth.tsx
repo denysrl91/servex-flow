@@ -97,16 +97,23 @@ const loadProfile = async (currentUser: User) => {
       }
     });
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
+    supabase.auth.getSession()
+      .then(async ({ data }) => {
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
 
-      if (data.session?.user) {
-        await loadProfile(data.session.user);
-      }
-
-      setLoading(false);
-    });
+        if (data.session?.user) {
+          await loadProfile(data.session.user);
+        }
+      })
+      .catch((error) => {
+        console.error("Session restore failed:", error);
+        setSession(null);
+        setUser(null);
+        setCompanyId(null);
+        setRoles([]);
+      })
+      .finally(() => setLoading(false));
 
     return () => sub.subscription.unsubscribe();
   }, []);
