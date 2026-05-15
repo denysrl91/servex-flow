@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/estimates")({ component: EstimatesPage });
 
 function EstimatesPage() {
+  const location = useLocation();
   const [rows, setRows] = useState<EstimateRow[]>([]);
   const [customers, setCustomers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,10 @@ function EstimatesPage() {
       setLoading(false);
     })();
   }, []);
+
+  if (location.pathname !== "/estimates") {
+    return <Outlet />;
+  }
 
   const remove = async (id: string) => {
     if (!confirm("Delete this estimate?")) return;
